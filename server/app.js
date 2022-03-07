@@ -16,7 +16,9 @@ require("dotenv").config();
 var app = express();
 var cors = require("cors");
 
-
+app.listen(3001, () => {
+    console.log("server running at 3001");
+});
 
 // Hide credentials from public repository
 let mdb_password = process.env.MDB_PASSWORD;
