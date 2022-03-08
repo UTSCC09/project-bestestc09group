@@ -101,7 +101,7 @@ app.use('/graphql', graphqlHTTP({
     schema: schema,
     rootValue: root,
     graphiql: true,
-}));
+})).use(cors()).use(cookieParser());
 
 app.listen(3001, () => {
     console.log("server running at 3001");
@@ -137,8 +137,6 @@ var jsonToQuery = function(json) {
 }
 
 let stateKey = 'spotify_auth_state';
-
-app.use(cors()).use(cookieParser());
 
 app.get('/', (req, res) => {
     res.send('hi')
