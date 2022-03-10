@@ -2,10 +2,23 @@ const express = require("express");
 const { graphqlHTTP } = require("express-graphql");
 const { buildSchema } = require('graphql');
 const mongoose = require("mongoose");
+const request = require('request');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+
+const {
+    GraphQLID,
+    GraphALString,
+    GraphQLList,
+    GraphQLType,
+    GraphQLSchema,
+    GraphQLNonNull,
+    GraphQLObjectType
+} = require("graphql");
 
 require("dotenv").config();
 
-
+const cookie = require('cookie');
 var cors = require("cors");
 
 // TODO: decide to store list of Records or just ids
@@ -66,6 +79,7 @@ var schema = buildSchema(`
     type User {
         id: ID!,
         username: String,
+        refresh_token: String,
         initial_records: [ID!]
     },
     type Record {
@@ -89,6 +103,14 @@ app.use('/graphql', graphqlHTTP({
     schema: schema,
     rootValue: root,
     graphiql: true,
+}))
+    .use(cors())
+    .use(cookieParser())
+    .use(session({
+    secret: 'ytmp3',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {httpOnly: true, secure: true, sameSite: true}
 }));
 
 app.listen(3001, () => {
@@ -98,6 +120,17 @@ app.listen(3001, () => {
 // Hide credentials from public repository
 let mdb_password = process.env.MDB_PASSWORD;
 let db_name = process.env.DB_NAME;
+
+app.get('/', (req, res) => {
+    res.send('hi')
+})
+
+app.get('/api/client_info', (req, res) => {
+    return res.status(200).json({
+        id: process.env.CLIENT_ID,
+        secret: process.env.CLIENT_SECRET
+    })
+})
 
 // Connect to DB
 mongoose
