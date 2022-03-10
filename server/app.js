@@ -4,6 +4,7 @@ const { buildSchema } = require('graphql');
 const mongoose = require("mongoose");
 const request = require('request');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 
 const {
     GraphQLID,
@@ -17,7 +18,7 @@ const {
 
 require("dotenv").config();
 
-
+const cookie = require('cookie');
 var cors = require("cors");
 
 // TODO: decide to store list of Records or just ids
@@ -78,6 +79,7 @@ var schema = buildSchema(`
     type User {
         id: ID!,
         username: String,
+        refresh_token: String,
         initial_records: [ID!]
     },
     type Record {
@@ -101,7 +103,15 @@ app.use('/graphql', graphqlHTTP({
     schema: schema,
     rootValue: root,
     graphiql: true,
-})).use(cors()).use(cookieParser());
+}))
+    .use(cors())
+    .use(cookieParser())
+    .use(session({
+    secret: 'ytmp3',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {httpOnly: true, secure: true, sameSite: true}
+}));
 
 app.listen(3001, () => {
     console.log("server running at 3001");
@@ -142,13 +152,20 @@ app.get('/', (req, res) => {
     res.send('hi')
 })
 
+app.get('/api/client_info', (req, res) => {
+    return res.status(200).json({
+        id: process.env.CLIENT_ID,
+        secret: process.env.CLIENT_SECRET
+    })
+})
+
 app.get('/login', (req, res) => {
     let state = generateRandomString(16);
     res.cookie(stateKey, state);
     console.log('hey')
 
     // your application requests authorization
-    var scope = 'user-read-private user-read-email';
+    var scope = 'user-read-private user-read-email user-top-read';
     res.redirect('https://accounts.spotify.com/authorize?' +
         jsonToQuery({
         response_type: 'code',
@@ -199,23 +216,22 @@ app.get('/callback', function(req, res) {
                 var access_token = body.access_token,
                     refresh_token = body.refresh_token;
 
-                var options = {
-                url: 'https://api.spotify.com/v1/me',
-                headers: { 'Authorization': 'Bearer ' + access_token },
-                json: true
-                };
+                req.session.access_token = access_token;
+                
 
-                // use the access token to access the Spotify Web API
-                request.get(options, function(error, response, body) {
-                    console.log(body);
-                });
+                // var options = {
+                // url: 'https://api.spotify.com/v1/me',
+                // headers: { 'Authorization': 'Bearer ' + access_token },
+                // json: true
+                // };
 
-                // we can also pass the token to the browser to make requests from there
-                res.redirect('/#' +
-                jsonToQuery({
-                    access_token: access_token,
-                    refresh_token: refresh_token
-                }));
+                // // use the access token to access the Spotify Web API
+                // request.get(options, function(error, response, body) {
+                //     console.log(access_token)
+                //     console.log(body);
+                // });
+
+                res.redirect('/');
             } else {
                 res.redirect('/#' +
                 jsonToQuery({
@@ -225,6 +241,20 @@ app.get('/callback', function(req, res) {
         });
     }
 });
+
+app.get('/top', (req, res) => {
+    a_t = 'BQAYvK4Ol_veJBT_lmnfr7LGwcRbbWQCPGUiZMkjiQsKvK4g5DV_W6qBXU0lsb9i3yvwqH5UPnSv8UJh7M4YpFSIJ1VoGwTeqFtTotDacRLWC14wULHFVfg_C42m9akENW_V3bma0Vb20EKmXZjpTXC3fB-0xK0WM-YU0UDWYBuEQmevwXojocI';
+    let options = {
+        url: 'https://api.spotify.com/v1/me/top/tracks',
+        headers: { 'Authorization': 'Bearer ' + a_t},
+        json: true
+    };
+
+    // use the access token to access the Spotify Web API
+    request.get(options, function(error, response, body) {
+        console.log(body);
+    });
+})
 
 app.get('/refresh_token', function(req, res) {
 
