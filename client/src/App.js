@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Buffer from "Buffer";
+import {api} from './api';
 import './App.css';
 
-function App() {
+function App() { 
   const TOKEN = "https://accounts.spotify.com/api/token";
+  const [top_track, setTopTrack] = useState(0)
   let client_id = '';
   let client_secret = '';
   let access_token = null;
   let refresh_token = null;
+
 
   useEffect( () => {
     client_id = sessionStorage.getItem('client_id');
@@ -114,10 +117,18 @@ function App() {
     })
   }
 
+  function getInfo() {
+    api.getUserTopTracks((error, tracks) => {
+      setTopTrack(tracks[0].name);
+    })
+  }
+
   return (
     <div className="App">
       <header className="App-header">
         <button onClick={handleAuthorization}>Authorize with Spotify</button>
+        <button onClick={getInfo}>Get User Info</button>
+        <h1>Top Track: {top_track}</h1>
       </header>
     </div>
   );

@@ -19,5 +19,11 @@ let api = (function () {
         send("GET", "http://localhost:3001/api/client_info", null, callback);
     }
 
+    module.getUserTopTracks = function(callback) {
+        send("GET", "http://localhost:3001/api/top_tracks?access_token=" + sessionStorage.getItem('access_token'), null, callback);
+    }
+
     return module;
 })();
+
+export {api};

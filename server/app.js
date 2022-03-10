@@ -5,6 +5,7 @@ const schema = require('./schema').schema;
 const request = require('request');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const axios = require('axios');
 
 const {
     GraphQLID,
@@ -53,6 +54,20 @@ app.get('/api/client_info', (req, res) => {
     return res.status(200).json({
         id: process.env.CLIENT_ID,
         secret: process.env.CLIENT_SECRET
+    })
+})
+
+app.get('/api/top_tracks', (req, res) => {
+    axios.get('https://api.spotify.com/v1/me/top/tracks', {
+        headers: {
+            Authorization: ('Bearer ' + req.query.access_token)
+        }
+    }).then((response) => {
+        console.log(response);
+        res.status(200).json(response.data.items)
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).end(error)
     })
 })
 
