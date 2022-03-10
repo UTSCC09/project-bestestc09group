@@ -31,7 +31,7 @@ app.use('/graphql', graphqlHTTP({
     .use(cors())
     .use(cookieParser())
     .use(session({
-    secret: 'ytmp3',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {httpOnly: true, secure: true, sameSite: true}
