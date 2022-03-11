@@ -3,6 +3,14 @@ import Buffer from "Buffer";
 import {api} from './api';
 import './App.css';
 
+/* ----- Styling ----- */
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
+import Button from 'react-bootstrap/Button';
+import Nav from 'react-bootstrap/Nav';
+import './theme.scss';
+import NavbarCollapse from 'react-bootstrap/esm/NavbarCollapse';
+
 function App() { 
   const TOKEN = "https://accounts.spotify.com/api/token";
   const [top_track, setTopTrack] = useState(0)
@@ -111,7 +119,6 @@ function App() {
         state: generateRandomState(16),
         scope: scope,
       }
-
       sessionStorage.setItem('state', authorization_options.state);
       window.location.href = ('https://accounts.spotify.com/authorize?' + jsonToQuery(authorization_options))
     })
@@ -124,13 +131,19 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <button onClick={handleAuthorization}>Authorize with Spotify</button>
-        <button onClick={getInfo}>Get User Info</button>
-        <h1>Top Track: {top_track}</h1>
-      </header>
-    </div>
+    <Container fluid className="p-0">
+      <Navbar bg="light">
+        <Container fluid>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
+            <Nav className="justify-content-between container-fluid">
+              <Navbar.Brand>DiscoverWeeklyU</Navbar.Brand>
+              <Button variant="primary" onClick={handleAuthorization}>Log in with Spotify</Button>
+            </Nav>
+        </Container>
+      </Navbar>
+      <Button variant="secondary" onClick={getInfo}>Get User Info</Button>
+      <h1>Top Track: {top_track}</h1>
+    </Container>
   );
 }
 
