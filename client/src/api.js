@@ -19,8 +19,20 @@ let api = (function () {
         send("GET", "http://localhost:3001/api/client_info", null, callback);
     }
 
+    module.getPlaylistInfo = function(playlist_id, callback) {
+        send("GET", "http://localhost:3001/api/playlists/" + playlist_id + "?access_token=" + sessionStorage.getItem('access_token'), null, callback);
+    }
+
+    module.getUserPlaylists = function(callback) {
+        send("GET", "http://localhost:3001/api/playlists?access_token=" + sessionStorage.getItem('access_token'), null, callback);
+    }
+
     module.getUserTopTracks = function(callback) {
         send("GET", "http://localhost:3001/api/top_tracks?access_token=" + sessionStorage.getItem('access_token'), null, callback);
+    }
+
+    module.getUserTopArtists = function(callback) {
+        send("GET", "http://localhost:3001/api/top_artists?access_token=" + sessionStorage.getItem('access_token'), null, callback);
     }
 
     return module;

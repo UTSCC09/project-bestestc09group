@@ -57,8 +57,54 @@ app.get('/api/client_info', (req, res) => {
     })
 })
 
+// Get Playlist Info
+app.get('/api/playlists/:id', (req, res) => {
+    axios.get('https://api.spotify.com/v1/playlists/' + req.params.id, {
+        headers: {
+            Authorization: ('Bearer ' + req.query.access_token)
+        }
+    }).then((response) => {
+        console.log(response.data);
+        res.status(200).json(response.data)
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).end(error)
+    })
+})
+
+// Get Users Playlists
+app.get('/api/playlists', (req, res) => {
+    axios.get('https://api.spotify.com/v1/me/playlists', {
+        headers: {
+            Authorization: ('Bearer ' + req.query.access_token)
+        }
+    }).then((response) => {
+        console.log(response);
+        res.status(200).json(response.data.items)
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).end(error)
+    })
+})
+
+// Get users top tracks
 app.get('/api/top_tracks', (req, res) => {
-    axios.get('https://api.spotify.com/v1/me/top/tracks', {
+    axios.get('https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=50', {
+        headers: {
+            Authorization: ('Bearer ' + req.query.access_token)
+        }
+    }).then((response) => {
+        console.log(response);
+        res.status(200).json(response.data.items)
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).end(error)
+    })
+})
+
+// Get users top artists
+app.get('/api/top_artists', (req, res) => {
+    axios.get('https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50', {
         headers: {
             Authorization: ('Bearer ' + req.query.access_token)
         }
