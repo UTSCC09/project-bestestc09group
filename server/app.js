@@ -67,7 +67,7 @@ function make_query_without_access_token(json) {
     }).join('&');
 }
 
-// // Get Recommendations 
+// Get Recommendations 
 app.get('/api/recommendations', (req, res) => {
     axios.get('https://api.spotify.com/v1/recommendations?' + make_query_without_access_token(req.query).substring(1), {
         headers: {
