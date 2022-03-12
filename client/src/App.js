@@ -13,11 +13,13 @@ function App() {
 
 
   useEffect( () => {
-    client_id = sessionStorage.getItem('client_id');
-    client_secret = sessionStorage.getItem('client_secret');
-
     if (window.location.search.length > 0) {
-      handleRedirect();
+      api.getClientInfo((error, client_info) => {
+        client_id = client_info.id;
+        client_secret = client_info.secret;
+        
+        handleRedirect();
+      })
     } else {
       console.log('hi');
     }
@@ -101,8 +103,6 @@ function App() {
     api.getClientInfo((error, client_info) => {
       client_id = client_info.id;
       client_secret = client_info.secret;
-      sessionStorage.setItem('client_id', client_id);
-      sessionStorage.setItem('client_secret', client_secret);
 
       const authorization_options = {
         client_id: client_id,

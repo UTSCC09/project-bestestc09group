@@ -114,7 +114,7 @@ app.get('/api/playlists', (req, res) => {
 
 // Get users top tracks
 app.get('/api/top_tracks', (req, res) => {
-    axios.get('https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=50', {
+    axios.get('https://api.spotify.com/v1/me/top/tracks?limit=50', {
         headers: {
             Authorization: ('Bearer ' + req.query.access_token)
         }
@@ -129,13 +129,28 @@ app.get('/api/top_tracks', (req, res) => {
 
 // Get users top artists
 app.get('/api/top_artists', (req, res) => {
-    axios.get('https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50', {
+    axios.get('https://api.spotify.com/v1/me/top/artists?limit=50', {
         headers: {
             Authorization: ('Bearer ' + req.query.access_token)
         }
     }).then((response) => {
         console.log(response);
         res.status(200).json(response.data.items)
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).end(error)
+    })
+})
+
+// Get current user profile
+app.get('/api/user', (req, res) => {
+    axios.get('https://api.spotify.com/v1/me', {
+        headers: {
+            Authorization: ('Bearer ' + req.query.access_token)
+        }
+    }).then((response) => {
+        console.log(response);
+        res.status(200).json(response.data)
     }).catch((error) => {
         console.log(error);
         res.status(500).end(error)
