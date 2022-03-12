@@ -19,6 +19,10 @@ let api = (function () {
         send("GET", "http://localhost:3001/api/client_info", null, callback);
     }
 
+    module.getRecommendations = function(queryString, callback) {
+        send("GET", "http://localhost:3001/api/recommendations" + "?access_token=" + sessionStorage.getItem('access_token') + "&" + queryString, null, callback);
+    }
+
     module.getPlaylistInfo = function(playlist_id, callback) {
         send("GET", "http://localhost:3001/api/playlists/" + playlist_id + "?access_token=" + sessionStorage.getItem('access_token'), null, callback);
     }

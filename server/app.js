@@ -57,6 +57,31 @@ app.get('/api/client_info', (req, res) => {
     })
 })
 
+function make_query_without_access_token(json) {
+    return Object.keys(json).map((key) => {
+        if (key === 'access_token') {
+            return null;
+        } else {
+            return key + "=" + json[key];
+        }
+    }).join('&');
+}
+
+// // Get Recommendations 
+app.get('/api/recommendations', (req, res) => {
+    axios.get('https://api.spotify.com/v1/recommendations?' + make_query_without_access_token(req.query).substring(1), {
+        headers: {
+            Authorization: ('Bearer ' + req.query.access_token)
+        }
+    }).then((response) => {
+        console.log(response.data);
+        res.status(200).json(response.data)
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).end(error)
+    })
+})
+
 // Get Playlist Info
 app.get('/api/playlists/:id', (req, res) => {
     axios.get('https://api.spotify.com/v1/playlists/' + req.params.id, {
