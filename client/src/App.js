@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import Buffer from "Buffer";
 import {api} from './api';
 import './App.css';
 
 function App() { 
   const TOKEN = "https://accounts.spotify.com/api/token";
-  const [top_track, setTopTrack] = useState(0)
+  const [top_tracks, setTopTrack] = useState(0);
+  const [top_artists, setTopArtists] = useState(0);
   let client_id = '';
   let client_secret = '';
   let access_token = null;
@@ -13,11 +13,13 @@ function App() {
 
 
   useEffect( () => {
-    client_id = sessionStorage.getItem('client_id');
-    client_secret = sessionStorage.getItem('client_secret');
-
     if (window.location.search.length > 0) {
-      handleRedirect();
+      api.getClientInfo((error, client_info) => {
+        client_id = client_info.id;
+        client_secret = client_info.secret;
+        
+        handleRedirect();
+      })
     } else {
       console.log('hi');
     }
@@ -97,12 +99,10 @@ function App() {
   }
 
   function handleAuthorization() {
-    const scope = 'user-read-private user-read-email user-top-read';
+    const scope = 'user-read-private user-read-email user-top-read playlist-read-collaborative playlist-read-private';
     api.getClientInfo((error, client_info) => {
       client_id = client_info.id;
       client_secret = client_info.secret;
-      sessionStorage.setItem('client_id', client_id);
-      sessionStorage.setItem('client_secret', client_secret);
 
       const authorization_options = {
         client_id: client_id,
@@ -119,7 +119,21 @@ function App() {
 
   function getInfo() {
     api.getUserTopTracks((error, tracks) => {
-      setTopTrack(tracks[0].name);
+      let track_list = document.querySelector('#top_tracks');
+      tracks.map((track) => {
+        let list_item = document.createElement('li');
+        list_item.innerText = track.name;
+        track_list.appendChild(list_item);
+      })
+
+      api.getUserTopArtists((error, artists) => {
+        let artist_list = document.querySelector('#top_artists');
+        artists.map((artist) => {
+          let list_item = document.createElement('li');
+          list_item.innerText = artist.name;
+          artist_list.appendChild(list_item);
+        })
+      });
     })
   }
 
@@ -128,7 +142,12 @@ function App() {
       <header className="App-header">
         <button onClick={handleAuthorization}>Authorize with Spotify</button>
         <button onClick={getInfo}>Get User Info</button>
-        <h1>Top Track: {top_track}</h1>
+        <h1>Top Tracks</h1>
+        <ul id='top_tracks'>
+        </ul>
+        <h1>Top Artists</h1>
+        <ul id='top_artists'>
+        </ul>
       </header>
     </div>
   );
