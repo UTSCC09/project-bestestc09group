@@ -22,6 +22,7 @@ require("dotenv").config();
 
 const cookie = require('cookie');
 var cors = require("cors");
+const { User, Playlist, Track, Record, Tuning } = require("./models");
 
 var app = express();
 
@@ -67,6 +68,59 @@ function make_query_without_access_token(json) {
     }).join('&');
 }
 
+// Mongo Routes
+// Get all users
+app.get('/api/mongo/users', (req, res) => {
+    User.find({}, (err, arr) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        console.log(arr)
+        return res.status(200).json(arr);
+    })
+})
+
+// Get user by username
+app.get('/api/mongo/users/:username', (req, res) => {
+    User.findOne({username: req.params.username}, (err, arr) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        console.log(arr)
+        return res.status(200).json(arr);
+    })
+})
+
+// Get records given id
+app.get('/api/mongo/records', (req, res) => {
+    // create an array with all the ids in the query
+    let record_ids = req.query.ids.split(',');
+    record_ids = record_ids.map((id) => {
+        return mongoose.Types.ObjectId(id);
+    })
+    
+    // find documents corresponding to ids in the array
+    Record.find({_id: {$in: record_ids}}, (err, arr) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        console.log(arr)
+        return res.status(200).json(arr);
+    })
+})
+
+// Get tuning given id
+app.get('/api/mongo/tuning/:id', (req, res) => {
+    Record.findOne({_id: req.params.id}, (err, arr) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        console.log(arr)
+        return res.status(200).json(arr);
+    })
+})
+
+// Spotify API Calls
 // Get Recommendations 
 app.get('/api/recommendations', (req, res) => {
     axios.get('https://api.spotify.com/v1/recommendations?' + make_query_without_access_token(req.query).substring(1), {
