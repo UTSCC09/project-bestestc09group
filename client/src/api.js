@@ -23,6 +23,11 @@ let api = (function () {
         send("GET", "http://localhost:3001/api/top_tracks?access_token=" + sessionStorage.getItem('access_token'), null, callback);
     }
 
+    // Function to get current user for authorization purposes
+    module.getCurrentUser = function(callback) {
+        send("GET", "http://localhost:3001/api/current_user?access_token=" + sessionStorage.getItem('access_token'), null, callback);
+    }
+
     return module;
 })();
 

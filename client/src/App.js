@@ -3,13 +3,17 @@ import Buffer from "Buffer";
 import {api} from './api';
 import './App.css';
 
+/* ----- Router ----- */
+import { Route, Routes} from 'react-router-dom';
+
+/* ----- Components ------ */
+import Header from './components/Header';
+import Home from './pages/Home';
+import Recommendations from './pages/Recommendations';
+
 /* ----- Styling ----- */
-import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
-import Nav from 'react-bootstrap/Nav';
 import './theme.scss';
-import NavbarCollapse from 'react-bootstrap/esm/NavbarCollapse';
 
 function App() { 
   const TOKEN = "https://accounts.spotify.com/api/token";
@@ -130,19 +134,26 @@ function App() {
     })
   }
 
+  function isAuthenticated() {
+    api.getCurrentUser((error, data) => {
+      if (!error) return true;
+      
+      // 401: attempt to refresh auth token
+      if (error === "[401]") {
+        
+      }
+      return false;
+    });
+  }
+
   return (
     <Container fluid className="p-0">
-      <Navbar bg="light">
-        <Container fluid>
-          <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
-            <Nav className="justify-content-between container-fluid">
-              <Navbar.Brand>DiscoverWeeklyU</Navbar.Brand>
-              <Button variant="primary" onClick={handleAuthorization}>Log in with Spotify</Button>
-            </Nav>
-        </Container>
-      </Navbar>
-      <Button variant="secondary" onClick={getInfo}>Get User Info</Button>
-      <h1>Top Track: {top_track}</h1>
+      <Header logInHandler={handleAuthorization}/>
+      <Routes>
+        <Route path="/" element={<Home top_track={top_track} getInfo={getInfo}/>}/>
+        <Route path="/recommendations" element={<Recommendations auth={isAuthenticated()}/>}/>
+      </Routes>
+
     </Container>
   );
 }

@@ -71,6 +71,19 @@ app.get('/api/top_tracks', (req, res) => {
     })
 })
 
+app.get('/api/current_user', (req, res) => {
+    axios.get('https://api.spotify.com/v1/me', {
+        headers: {
+            Authorization: ('Bearer ' + req.query.access_token)
+        }
+    }).then((response) => {
+        res.status(200).json(response.data);
+    }).catch((error) => {
+        res.status(error.response.status).send();
+    })
+});
+
+
 // Connect to DB
 mongoose
     .connect("mongodb+srv://bestestcscc09group:" + mdb_password + "@cluster0.ykdmy.mongodb.net/" + db_name + "?retryWrites=true&w=majority")
