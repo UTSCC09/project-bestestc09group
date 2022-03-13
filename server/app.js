@@ -120,6 +120,46 @@ app.get('/api/mongo/tuning/:id', (req, res) => {
     })
 })
 
+// Get playlist given id
+app.get('/api/mongo/playlist/:id', (req, res) => {
+    Playlist.findOne({_id: req.params.id}, (err, arr) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        console.log(arr)
+        return res.status(200).json(arr);
+    })
+})
+
+// Get tracks given a list of ids
+app.get('/api/mongo/tracks', (req, res) => {
+    // create an array with all the ids in the query
+    let record_ids = req.query.ids.split(',');
+    record_ids = record_ids.map((id) => {
+        return mongoose.Types.ObjectId(id);
+    })
+    
+    // find documents corresponding to ids in the array
+    Track.find({_id: {$in: record_ids}}, (err, arr) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        console.log(arr)
+        return res.status(200).json(arr);
+    })
+})
+
+// Get track given a specific id
+app.get('/api/mongo/tracks/:id', (req, res) => {
+    Track.findOne({_id: req.params.id}, (err, arr) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        console.log(arr)
+        return res.status(200).json(arr);
+    })
+})
+
 // Spotify API Calls
 // Get Recommendations 
 app.get('/api/recommendations', (req, res) => {
