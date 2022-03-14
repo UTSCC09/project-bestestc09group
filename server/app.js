@@ -31,6 +31,7 @@ app.use('/graphql', graphqlHTTP({
     graphiql: true,
 }))
     .use(cors())
+    .use(express.json())
     .use(cookieParser())
     .use(session({
     secret: process.env.SESSION_SECRET,
@@ -73,7 +74,7 @@ function make_query_without_access_token(json) {
 app.get('/api/mongo/users', (req, res) => {
     User.find({}, (err, arr) => {
         if (err) {
-            return res.status(500).send(err);
+            return res.status(500).end(err);
         }
         console.log(arr)
         return res.status(200).json(arr);
@@ -84,7 +85,7 @@ app.get('/api/mongo/users', (req, res) => {
 app.get('/api/mongo/users/:username', (req, res) => {
     User.findOne({username: req.params.username}, (err, arr) => {
         if (err) {
-            return res.status(500).send(err);
+            return res.status(500).end(err);
         }
         console.log(arr)
         return res.status(200).json(arr);
@@ -102,7 +103,7 @@ app.get('/api/mongo/records', (req, res) => {
     // find documents corresponding to ids in the array
     Record.find({_id: {$in: record_ids}}, (err, arr) => {
         if (err) {
-            return res.status(500).send(err);
+            return res.status(500).end(err);
         }
         console.log(arr)
         return res.status(200).json(arr);
@@ -113,7 +114,7 @@ app.get('/api/mongo/records', (req, res) => {
 app.get('/api/mongo/tuning/:id', (req, res) => {
     Record.findOne({_id: req.params.id}, (err, arr) => {
         if (err) {
-            return res.status(500).send(err);
+            return res.status(500).end(err);
         }
         console.log(arr)
         return res.status(200).json(arr);
@@ -124,7 +125,7 @@ app.get('/api/mongo/tuning/:id', (req, res) => {
 app.get('/api/mongo/playlist/:id', (req, res) => {
     Playlist.findOne({_id: req.params.id}, (err, arr) => {
         if (err) {
-            return res.status(500).send(err);
+            return res.status(500).end(err);
         }
         console.log(arr)
         return res.status(200).json(arr);
@@ -142,7 +143,7 @@ app.get('/api/mongo/tracks', (req, res) => {
     // find documents corresponding to ids in the array
     Track.find({_id: {$in: record_ids}}, (err, arr) => {
         if (err) {
-            return res.status(500).send(err);
+            return res.status(500).end(err);
         }
         console.log(arr)
         return res.status(200).json(arr);
@@ -153,12 +154,83 @@ app.get('/api/mongo/tracks', (req, res) => {
 app.get('/api/mongo/tracks/:id', (req, res) => {
     Track.findOne({_id: req.params.id}, (err, arr) => {
         if (err) {
-            return res.status(500).send(err);
+            return res.status(500).end(err);
         }
         console.log(arr)
         return res.status(200).json(arr);
     })
 })
+
+// Create a user
+app.post('/api/mongo/users', (req, res) => {
+    User.findOne(req.body, (err, arr) => {
+        if (err) {
+            return res.status(500).end(err);
+        }
+
+        if (arr) {
+            return res.status(400).end("User already exists");
+        }
+
+        User.create(req.body)
+            .then((arr) => {
+                return res.status(200).json(arr);
+            })
+            .catch((err) => {
+                console.log(err);
+                return res.status(500).end(err);
+            })
+    })
+})
+
+// Create Tuning
+app.post('/api/mongo/tuning', (req, res) => {
+    Tuning.create(req.body)
+          .then((arr) => {
+              return res.status(200).json(arr);
+          })
+          .catch((err) => {
+              console.log(err);
+              return res.status(500).end(err);
+          })
+})
+
+// Create Record 
+app.post('/api/mongo/record', (req, res) => {
+    Record.create(req.body)
+          .then((arr) => {
+              return res.status(200).json(arr);
+          })
+          .catch((err) => {
+              console.log(err);
+              return res.status(500).end(err);
+          })
+})
+
+// Create playlist 
+app.post('/api/mongo/playlist', (req, res) => {
+    Playlist.create(req.body)
+          .then((arr) => {
+              return res.status(200).json(arr);
+          })
+          .catch((err) => {
+              console.log(err);
+              return res.status(500).end(err);
+          })
+})
+
+// Create Track
+app.post('/api/mongo/track', (req, res) => {
+    Track.create(req.body)
+          .then((arr) => {
+              return res.status(200).json(arr);
+          })
+          .catch((err) => {
+              console.log(err);
+              return res.status(500).end(err);
+          })
+})
+
 
 // Spotify API Calls
 // Get Recommendations 
