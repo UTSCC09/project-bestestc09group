@@ -1,10 +1,21 @@
 import React from 'react';
 
-const Record = ({title}) => {
+/* ----- Styling ----- */
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Tuning from './Tuning';
+
+const Record = ({tuning}) => {
     return (
-        <div>
-            {title}
-        </div>
+        <Container fluid>
+            <Row>
+                
+            </Row>
+            <Row>
+                <Tuning tuning={tuning}/>
+            </Row>
+        </Container>
     );
 }
 

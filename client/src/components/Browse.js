@@ -46,7 +46,7 @@ const Browse = () => {
                         </Card>
                     </Col>
                     {fake_data.map((data) => (
-                        <Col sm="3">
+                        <Col sm="3" key={data.title}>
                             <RecommendCard title={data.title} date={data.date}/>
                         </Col>
                     ))}
