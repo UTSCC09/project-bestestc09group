@@ -109,13 +109,135 @@ const Mutation = new GraphQLObjectType({
                     username: args.username,
                     initial_records: []
                 })
-                user.save()
+                const result = user.save()
                     .then(doc => {
                         console.log(doc);
+                        return doc;
                     })
                     .catch(err => {
                         console.log(err);
                     })
+                
+                return result;
+            }
+        },
+        addPlaylist: {
+            type: PlaylistType,
+            args: {
+                tracks: {type: new GraphQLList(GraphQLID)}
+            },
+            resolve(parent, args) {
+                let playlist = new Playlist({
+                    tracks: args.tracks
+                })
+                const result = playlist.save()
+                    .then(doc => {
+                        return doc
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                
+                    return result
+            }
+        },
+        addTrack: {
+            type: TrackType,
+            args: {
+                url: { type: GraphQLString },
+                name: { type: GraphQLString },
+                artist: { type: GraphQLString }
+            },
+            resolve(parent, args) {
+                let track = new Track({
+                    url: args.url,
+                    name: args.name,
+                    artist: args.artist
+                })
+
+                const result = track.save()
+                    .then(doc => {
+                        return doc
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+
+                return result
+            }
+        },
+        addRecord: {
+            type: RecordType,
+            args: {
+                next: { type: new GraphQLList(RecordType) },
+                previous: { type: RecordType },
+                tuning: { type: TuningType },
+                recommendations: { type: new GraphQLList(TrackType) }
+            },
+            resolve(parent, args) {
+                let record = new RecordType({
+                    next: args.next,
+                    previous: args.previous,
+                    tuning: args.tuning,
+                    recommendations: args.recommendations
+                })
+
+                const result = record.save()
+                    .then(doc => {
+                        return doc
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+
+                return result
+            }
+        },
+        addTuning: {
+            type: TuningType,
+            args: {
+                acousticness: { type: TuningFloatType },
+                danceability: { type: TuningFloatType },
+                duration_ms: { type: TuningIntType },
+                energy: { type: TuningFloatType },
+                instrumentalness: { type: TuningFloatType },
+                key: { type: TuningIntType },
+                liveness: { type: TuningFloatType },
+                loudness: { type: TuningFloatType },
+                mode: { type: TuningIntType },
+                popularity: { type: TuningIntType },
+                speechiness: { type: TuningFloatType },
+                tempo: { type: TuningFloatType },
+                time_signature: { type: TuningIntType },
+                valence: { type: TuningFloatType }
+            },
+            resolve(parent, args) {
+                let tuning = new RecordType({
+                    acousticness: args.acousticness,
+                    danceability: args.danceability,
+                    duration_ms: args.duration_ms,
+                    energy: args.energy,
+                    instrumentalness: args.instrumentalness,
+                    key: args.key,
+                    liveness: args.liveness,
+                    loudness: args.loudness,
+                    mode: args.mode,
+                    popularity: args.popularity,
+                    speechiness: args.speechiness,
+                    tempo: args.tempo,
+                    time_signature: args.time_signature,
+                    valence: args.valence,
+                })
+
+                const result = tuning.save()
+                    .then(doc => {
+                        return doc
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+
+                return result
             }
         }
     }
@@ -126,11 +248,123 @@ const Mutation = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-        playlists: {
-            type: GraphQLString,
-            args: { },
+        allUsers: {
+            type: new GraphQLList(UserType),
+            args: {},
             resolve(parent, args) {
-                return "TODO: not implemented"
+                const result = User.find({})
+                    .then((arr) => {
+                        console.log(arr);
+                        return arr
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+                
+                return result;
+            }
+        },
+        users: {
+            type: UserType,
+            args: {
+                username: { type: GraphQLString }
+            },
+            resolve(parent, args) {
+                const result = User.findOne({username: args.username})
+                    .then((arr) => {
+                        console.log(arr);
+                        return arr
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+                
+                return result;
+            }
+        },
+        playlists: {
+            type: PlaylistType,
+            args: {
+                _id: {type: GraphQLID}
+            },
+            resolve(parent, args) {
+                const result = Playlist.findOne({_id: args._id})
+                    .then((arr) => {
+                        console.log(arr);
+                        return arr
+                    })
+                    .catch((err) => {
+                        // console.log(err);
+                    })
+                return result;
+            }
+        },
+        tunings: {
+            type: TuningType,
+            args: {
+                _id: {type: GraphQLID}
+            },
+            resolve(parent, args) {
+                const result = Tuning.findOne({_id: args._id})
+                    .then((arr) => {
+                        console.log(arr);
+                        return arr
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+                return result;
+            }
+        },
+        records: {
+            type: new GraphQLList(RecordType),
+            args: {
+                ids: {type: new GraphQLList(GraphQLID)}
+            },
+            resolve(parent, args) {
+                const result = Record.find({_id: {$in: args.ids}})
+                    .then((arr) => {
+                        console.log(arr);
+                        return arr;
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+                return result;
+            }
+        },
+        allTracksInPlaylist: {
+            type: new GraphQLList(TrackType),
+            args: {
+                _id: {type: GraphQLID}
+            },
+            resolve(parent, args) {
+                const result = Track.find({_id: {$in: args._id}})
+                    .then((arr) => {
+                        console.log(arr);
+                        return arr
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+                return result;
+            }
+        },
+        tracks: {
+            type: TrackType,
+            args: {
+                _id: {type: GraphQLID}
+            },
+            resolve(parent, args) {
+                const result = Track.findOne({_id: args._id})
+                    .then((arr) => {
+                        console.log(arr);
+                        return arr
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+                return result;
             }
         }
     }
