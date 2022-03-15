@@ -5,52 +5,41 @@ const recordSchema = new Schema({
     next: { type: Array },
     previous: { type: Schema.Types.ObjectId },
     tuning: { type: Schema.Types.ObjectId, ref: 'Tuning' },
-    playlist: { type: Schema.Types.ObjectId, ref: 'Playlist'}
+    recommendations: { type: Schema.Types.ObjectId, ref: 'Playlist'}
+})
+
+
+function convertToFloat(val) {
+    return parseFloat(val.toString());
+}
+
+const tuningFloatSchema = new Schema({
+    max: {type: Schema.Types.Decimal128, get: convertToFloat},
+    min: {type: Schema.Types.Decimal128, get: convertToFloat},
+    target: {type: Schema.Types.Decimal128, get: convertToFloat}
+})
+
+const tuningIntSchema = new Schema({
+    max: Number,
+    min: Number,
+    target: Number
 })
 
 const tuningSchema = new Schema({
-    max_acousticness: Schema.Types.Decimal128,
-    max_danceability: Schema.Types.Decimal128,
-    max_duration_ms: Number,
-    max_energy: Schema.Types.Decimal128,
-    max_instrumentalness: Schema.Types.Decimal128,
-    max_key: Number,
-    max_liveness: Schema.Types.Decimal128,
-    max_loudness: Schema.Types.Decimal128,
-    max_mode: Number,
-    max_popularity: Number,
-    max_speechiness: Schema.Types.Decimal128,
-    max_tempo: Schema.Types.Decimal128,
-    max_time_signature: Number,
-    max_valence: Schema.Types.Decimal128,
-    min_acousticness: Schema.Types.Decimal128,
-    min_danceability: Schema.Types.Decimal128,
-    min_duration_ms: Number,
-    min_energy: Schema.Types.Decimal128,
-    min_instrumentalness: Schema.Types.Decimal128,
-    min_key: Number,
-    min_liveness: Schema.Types.Decimal128,
-    min_loudness: Schema.Types.Decimal128,
-    min_mode: Number,
-    min_popularity: Number,
-    min_speechiness: Schema.Types.Decimal128,
-    min_tempo: Schema.Types.Decimal128,
-    min_time_signature: Number,
-    min_valence: Schema.Types.Decimal128,
-    target_acousticness: Schema.Types.Decimal128,
-    target_danceability: Schema.Types.Decimal128,
-    target_duration_ms: Number,
-    target_energy: Schema.Types.Decimal128,
-    target_instrumentalness: Schema.Types.Decimal128,
-    target_key: Number,
-    target_liveness: Schema.Types.Decimal128,
-    target_loudness: Schema.Types.Decimal128,
-    target_mode: Number,
-    target_popularity: Number,
-    target_speechiness: Schema.Types.Decimal128,
-    target_tempo: Schema.Types.Decimal128,
-    target_time_signature: Number,
-    target_valence: Schema.Types.Decimal128
+    acousticness: tuningFloatSchema,
+    danceability: tuningFloatSchema,
+    duration_ms: tuningIntSchema,
+    energy: tuningFloatSchema,
+    instrumentalness: tuningFloatSchema,
+    key: tuningIntSchema,
+    liveness: tuningFloatSchema,
+    loudness: tuningFloatSchema,
+    mode: tuningIntSchema,
+    popularity: tuningIntSchema,
+    speechiness: tuningFloatSchema,
+    tempo: tuningFloatSchema,
+    time_signature: tuningIntSchema,
+    valence: tuningFloatSchema,
 })
 
 const trackSchema = new Schema({

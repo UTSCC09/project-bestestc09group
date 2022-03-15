@@ -8,6 +8,7 @@ const User = models.User;
 const { 
     GraphQLSchema, 
     GraphQLObjectType, 
+    GraphQLInputObjectType,
     GraphQLID, 
     GraphQLInt, 
     GraphQLFloat, 
@@ -64,8 +65,26 @@ const TuningFloatType = new GraphQLObjectType({
     })
 });
 
+const TuningFloatTypeInput = new GraphQLInputObjectType({
+    name: 'TuningFloatInput',
+    fields: () => ({
+        min: { type: GraphQLFloat },
+        max: { type: GraphQLFloat },
+        target: { type: GraphQLFloat }
+    })
+});
+
 const TuningIntType = new GraphQLObjectType({
     name: 'TuningInt',
+    fields: () => ({
+        min: { type: GraphQLInt },
+        max: { type: GraphQLInt },
+        target: { type: GraphQLInt }
+    })
+});
+
+const TuningIntTypeInput = new GraphQLInputObjectType({
+    name: 'TuningIntInput',
     fields: () => ({
         min: { type: GraphQLInt },
         max: { type: GraphQLInt },
@@ -93,6 +112,14 @@ const TuningType = new GraphQLObjectType({
         valence: { type: TuningFloatType },
     })
 });
+
+const TestType = new GraphQLObjectType({
+    name: 'Test',
+    fields: () => ({
+        _id: {type: GraphQLID},
+        input: {type: TuningIntType}
+    })
+})
 
 /* ----- Mutations ----- */
 
@@ -169,13 +196,13 @@ const Mutation = new GraphQLObjectType({
         addRecord: {
             type: RecordType,
             args: {
-                next: { type: new GraphQLList(RecordType) },
-                previous: { type: RecordType },
-                tuning: { type: TuningType },
-                recommendations: { type: new GraphQLList(TrackType) }
+                next: { type: new GraphQLList(GraphQLID) },
+                previous: { type: GraphQLID },
+                tuning: { type: GraphQLID },
+                recommendations: { type: new GraphQLList(GraphQLID) }
             },
             resolve(parent, args) {
-                let record = new RecordType({
+                let record = new Record({
                     next: args.next,
                     previous: args.previous,
                     tuning: args.tuning,
@@ -193,26 +220,39 @@ const Mutation = new GraphQLObjectType({
                 return result
             }
         },
+        addTest: {
+            type: TestType,
+            args: {
+                input: {type: TuningIntTypeInput}
+            },
+            resolve(parent, args) {
+                return new Test({input: {
+                    max: args.input.max,
+                    min: args.input.min,
+                    target: args.input.target
+                }})
+            }
+        },
         addTuning: {
             type: TuningType,
             args: {
-                acousticness: { type: TuningFloatType },
-                danceability: { type: TuningFloatType },
-                duration_ms: { type: TuningIntType },
-                energy: { type: TuningFloatType },
-                instrumentalness: { type: TuningFloatType },
-                key: { type: TuningIntType },
-                liveness: { type: TuningFloatType },
-                loudness: { type: TuningFloatType },
-                mode: { type: TuningIntType },
-                popularity: { type: TuningIntType },
-                speechiness: { type: TuningFloatType },
-                tempo: { type: TuningFloatType },
-                time_signature: { type: TuningIntType },
-                valence: { type: TuningFloatType }
+                acousticness: { type: TuningFloatTypeInput },
+                danceability: { type: TuningFloatTypeInput },
+                duration_ms: { type: TuningIntTypeInput },
+                energy: { type: TuningFloatTypeInput },
+                instrumentalness: { type: TuningFloatTypeInput },
+                key: { type: TuningIntTypeInput },
+                liveness: { type: TuningFloatTypeInput },
+                loudness: { type: TuningFloatTypeInput },
+                mode: { type: TuningIntTypeInput },
+                popularity: { type: TuningIntTypeInput },
+                speechiness: { type: TuningFloatTypeInput },
+                tempo: { type: TuningFloatTypeInput },
+                time_signature: { type: TuningIntTypeInput },
+                valence: { type: TuningFloatTypeInput }
             },
             resolve(parent, args) {
-                let tuning = new RecordType({
+                let tuning = new Tuning({
                     acousticness: args.acousticness,
                     danceability: args.danceability,
                     duration_ms: args.duration_ms,
@@ -307,7 +347,6 @@ const RootQuery = new GraphQLObjectType({
             resolve(parent, args) {
                 const result = Tuning.findOne({_id: args._id})
                     .then((arr) => {
-                        console.log(arr);
                         return arr
                     })
                     .catch((err) => {
@@ -373,5 +412,5 @@ const RootQuery = new GraphQLObjectType({
 
 exports.schema = new GraphQLSchema({
     query: RootQuery,
-    mutation: Mutation
+    mutation: Mutation,
 });

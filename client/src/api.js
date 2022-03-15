@@ -14,7 +14,7 @@ let api = (function () {
     }
 
     let module = {}
-
+    
     module.getClientInfo = function(callback) {
         send("GET", "http://localhost:3001/api/client_info", null, callback);
     }
