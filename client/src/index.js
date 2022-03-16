@@ -4,15 +4,21 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import { BrowserRouter } from 'react-router-dom';
+
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 const client = new ApolloClient({uri: "http://localhost:3001/"});
 
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
+    <BrowserRouter>
+      <ApolloProvider client={client}>
+        <App />
+      </ApolloProvider>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );
