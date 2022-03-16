@@ -5,6 +5,7 @@ const Playlist = models.Playlist;
 const Record = models.Record;
 const Tuning = models.Tuning;
 const User = models.User;
+const RecordPath = models.RecordPath;
 const { 
     GraphQLSchema, 
     GraphQLObjectType, 
@@ -28,6 +29,16 @@ const RecordType = new GraphQLObjectType({
         recommendations: { type: GraphQLID }
     })
 });
+
+const RecordPathType = new GraphQLObjectType({
+    name: 'RecordPath',
+    fields: () => ({
+        _id: { type: GraphQLID },
+        starting_record: { type: GraphQLID},
+        likes: { type: new GraphQLList(GraphQLID) },
+        dislikes: { type: new GraphQLList(GraphQLID) }
+    })
+})
 
 const UserType = new GraphQLObjectType({
     name: 'User',
@@ -212,6 +223,29 @@ const Mutation = new GraphQLObjectType({
                 return result
             }
         },
+        addRecordPath: {
+            type: RecordPathType,
+            args: {
+                starting_record: { type: GraphQLID }
+            },
+            resolve(parent, args) {
+                let recordPath = new RecordPath({
+                    starting_record: args.starting_record,
+                    likes: [],
+                    dislikes: []
+                })
+
+                const result = recordPath.save()
+                    .then(doc => {
+                        return doc
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+
+                return result
+            }
+        },
         addTuning: {
             type: TuningType,
             args: {
@@ -282,10 +316,10 @@ const Mutation = new GraphQLObjectType({
             type: UserType,
             args: {
                 username: {type: GraphQLString},
-                new_record: {type: GraphQLID}
+                new_record_path: {type: GraphQLID}
             },
             resolve(parent, args) {
-                const result = User.findOneAndUpdate({username: args.username}, {"$push": {"initial_records": args.new_record}}, {lean: true, returnDocument:"after"})
+                const result = User.findOneAndUpdate({username: args.username}, {"$push": {"initial_records": args.new_record_path}}, {lean: true, returnDocument:"after"})
                     .then((doc) => {
                         console.log(doc);
                         return doc;
@@ -296,7 +330,8 @@ const Mutation = new GraphQLObjectType({
 
                 return result;
             }
-        },        
+        },
+
     }
 });
 
@@ -385,6 +420,23 @@ const RootQuery = new GraphQLObjectType({
                     })
                     .catch((err) => {
                         console.log(err)
+                    })
+                return result;
+            }
+        },
+        recordPaths: {
+            type: new GraphQLList(RecordPathType),
+            args: {
+                starting_records: {type: new GraphQLList(GraphQLID)}
+            },
+            resolve(parent, args) {
+                const result = RecordPath.find({starting_record: {$in: args.starting_records}})
+                    .then((arr) => {
+                        console.log(arr);
+                        return arr
+                    })
+                    .catch((err) => {
+                        console.log(err);
                     })
                 return result;
             }
