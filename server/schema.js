@@ -266,7 +266,7 @@ const Mutation = new GraphQLObjectType({
                 next: {type: GraphQLID}
             },
             resolve(parent, args) {
-                const result = Record.findByIdAndUpdate(args._id, {"$push": {"next": args.next}}, {lean: true})
+                const result = Record.findByIdAndUpdate(args._id, {"$push": {"next": args.next}}, {lean: true, returnDocument:"after"})
                     .then((doc) => {
                         console.log(doc);
                         return doc;
@@ -285,7 +285,7 @@ const Mutation = new GraphQLObjectType({
                 new_record: {type: GraphQLID}
             },
             resolve(parent, args) {
-                const result = User.findOneAndUpdate({username: args.username}, {"$push": {"initial_records": args.new_record}}, {lean: true})
+                const result = User.findOneAndUpdate({username: args.username}, {"$push": {"initial_records": args.new_record}}, {lean: true, returnDocument:"after"})
                     .then((doc) => {
                         console.log(doc);
                         return doc;
@@ -296,9 +296,7 @@ const Mutation = new GraphQLObjectType({
 
                 return result;
             }
-        }
-
-        
+        },        
     }
 });
 
@@ -397,10 +395,18 @@ const RootQuery = new GraphQLObjectType({
                 _id: {type: GraphQLID}
             },
             resolve(parent, args) {
-                const result = Track.find({_id: {$in: args._id}})
-                    .then((arr) => {
-                        console.log(arr);
-                        return arr
+                const result = Playlist.findOne({_id: args._id})
+                    .then((playlist) => {
+                        const track_list = Track.find({_id: {$in: playlist.tracks}})
+                            .then((tracks) => {
+                                console.log(tracks);
+                                return tracks
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            })
+
+                        return track_list;
                     })
                     .catch((err) => {
                         console.log(err);

@@ -21,16 +21,15 @@ var cors = require("cors");
 require("dotenv").config();
 
 const cookie = require('cookie');
-var cors = require("cors");
 const { User, Playlist, Track, Record, Tuning } = require("./models");
 
 var app = express();
 
-app.use('/graphql', graphqlHTTP({
+app.use(cors())
+    .use('/graphql', graphqlHTTP({
     schema: schema,
     graphiql: true,
 }))
-    .use(cors())
     .use(express.json())
     .use(cookieParser())
     .use(session({

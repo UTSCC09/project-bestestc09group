@@ -137,11 +137,22 @@ function App() {
     })
   }
 
+  function testRoutes() {
+    api.updateRecordNextMongo("62312f2f5c3bce2a08f66212", "62317ef57489f60de0ba39be",(err, users) => {
+      if (err) {
+        console.log(err);
+      }
+
+      console.log(users);
+    })
+  }
+
   return (
     <div className="App">
       <header className="App-header">
         <button onClick={handleAuthorization}>Authorize with Spotify</button>
         <button onClick={getInfo}>Get User Info</button>
+        <button onClick={testRoutes}>Test Route</button>
         <h1>Top Tracks</h1>
         <ul id='top_tracks'>
         </ul>
