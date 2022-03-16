@@ -155,7 +155,7 @@ app.get('/api/user', (req, res) => {
         res.status(200).json(response.data)
     }).catch((error) => {
         console.log(error);
-        res.status(500).end(error)
+        res.status(error.response.status).end(error.response.statusText);
     })
 })
 

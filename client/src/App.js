@@ -1,9 +1,20 @@
-import React, { useEffect } from 'react';
+import { assertWrappingType } from 'graphql';
+import React, { useState, useEffect } from 'react';
 import {api} from './api';
 import './App.css';
 
+import { Route, Routes } from 'react-router-dom'
+
+/* ----- Components ----- */
+import Header from './components/Header';
+import Auth from './components/Auth';
+import Discover from './components/Discover';
+
 function App() { 
   const TOKEN = "https://accounts.spotify.com/api/token";
+  const [top_tracks, setTopTrack] = useState(0);
+  const [top_artists, setTopArtists] = useState(0);
+  const [auth, setAuth] = useState(isAuthorized());
   let client_id = '';
   let client_secret = '';
   let access_token = null;
@@ -21,6 +32,7 @@ function App() {
     } else {
       console.log('hi');
     }
+    isAuthorized();
   }, []);
 
   function handleRedirect() {
@@ -64,9 +76,8 @@ function App() {
     }
     else {
         console.log(this.responseText);
-        alert(this.responseText);
     }
-}
+  }
 
   function getCode() {
     let code = null;
@@ -135,18 +146,35 @@ function App() {
     })
   }
 
+  function isAuthorized(){
+    api.getUserInfo((error, data) => {
+      if (error) {
+        setAuth(false);
+        return false;
+      }
+      setAuth(true);
+      return true;
+    });
+  }
+
+  const fake_records = [{name:'test1'},{name:'test2'},{name:'test3'},{name:'test4'}]
+
   return (
     <div className="App">
-      <header className="App-header">
-        <button onClick={handleAuthorization}>Authorize with Spotify</button>
-        <button onClick={getInfo}>Get User Info</button>
+      <Header authHandler={handleAuthorization} auth={auth}/>
+      <Routes>
+        <Route path="/" element={<Auth auth={auth}/>}/>
+        {fake_records.map((data) => (
+          <Route key={data.name} path={data.name} element={<Discover title={data.name}/>}/>
+        ))}
+      </Routes>
+      {/* <button onClick={getInfo}>Get User Info</button>
         <h1>Top Tracks</h1>
         <ul id='top_tracks'>
         </ul>
         <h1>Top Artists</h1>
         <ul id='top_artists'>
-        </ul>
-      </header>
+        </ul> */}
     </div>
   );
 }
