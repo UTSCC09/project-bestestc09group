@@ -8,7 +8,6 @@ const recordSchema = new Schema({
     recommendations: { type: Schema.Types.ObjectId, ref: 'Playlist'}
 })
 
-
 function convertToFloat(val) {
     return parseFloat(val.toString());
 }

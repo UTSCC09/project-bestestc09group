@@ -22,10 +22,10 @@ const RecordType = new GraphQLObjectType({
     name: 'Record',
     fields: () => ({
         _id: { type: GraphQLID },
-        next: { type: new GraphQLList(RecordType) },
-        previous: { type: RecordType },
-        tuning: { type: TuningType },
-        recommendations: { type: new GraphQLList(TrackType) }
+        next: { type: new GraphQLList(GraphQLID) },
+        previous: { type: GraphQLID },
+        tuning: { type: GraphQLID },
+        recommendations: { type: GraphQLID }
     })
 });
 
@@ -52,7 +52,7 @@ const PlaylistType = new GraphQLObjectType({
     name: 'Playlist',
     fields: () => ({
         _id: { type: GraphQLID },
-        tracks: { type: new GraphQLList(TrackType) }
+        tracks: { type: new GraphQLList(GraphQLID) }
     })
 });
 
@@ -112,14 +112,6 @@ const TuningType = new GraphQLObjectType({
         valence: { type: TuningFloatType },
     })
 });
-
-const TestType = new GraphQLObjectType({
-    name: 'Test',
-    fields: () => ({
-        _id: {type: GraphQLID},
-        input: {type: TuningIntType}
-    })
-})
 
 /* ----- Mutations ----- */
 
@@ -199,7 +191,7 @@ const Mutation = new GraphQLObjectType({
                 next: { type: new GraphQLList(GraphQLID) },
                 previous: { type: GraphQLID },
                 tuning: { type: GraphQLID },
-                recommendations: { type: new GraphQLList(GraphQLID) }
+                recommendations: { type: GraphQLID }
             },
             resolve(parent, args) {
                 let record = new Record({
@@ -218,19 +210,6 @@ const Mutation = new GraphQLObjectType({
                     })
 
                 return result
-            }
-        },
-        addTest: {
-            type: TestType,
-            args: {
-                input: {type: TuningIntTypeInput}
-            },
-            resolve(parent, args) {
-                return new Test({input: {
-                    max: args.input.max,
-                    min: args.input.min,
-                    target: args.input.target
-                }})
             }
         },
         addTuning: {
@@ -279,7 +258,28 @@ const Mutation = new GraphQLObjectType({
 
                 return result
             }
-        }
+        },
+        updateRecordNext: {
+            type: RecordType,
+            args: {
+                _id: {type: GraphQLID},
+                next: {type: GraphQLID}
+            },
+            resolve(parent, args) {
+                const result = Record.findByIdAndUpdate(args._id, {"$push": {"next": args.next}}, {lean: true})
+                    .then((doc) => {
+                        console.log(doc);
+                        return doc;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+
+                return result;
+            }
+        },
+
+        
     }
 });
 
