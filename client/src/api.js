@@ -87,6 +87,21 @@ let api = (function () {
         }`, null, callback);
     }
 
+    // Get record path by starting record ids
+    module.getRecordPathsMongo = function(ids, callback) {
+        ids = ids.map((id) => {
+            return `"${id}"`
+        }).join(',');
+        send("POST", `http://localhost:3001/graphql?query={
+            recordPaths(starting_records: [${ids}]) {
+                _id
+                starting_record
+                likes
+                dislikes
+            }
+        }`, null, callback);
+    }
+
     // Add User
     module.newUserMongo = function(username, callback) {
         send("POST", `http://localhost:3001/graphql?query=mutation {
@@ -124,7 +139,7 @@ let api = (function () {
         send("POST", "http://localhost:3001/graphql?query=" + url_query, null, callback);
     }
 
-    // Add record
+    // Add Record
     module.newRecordMongo = function(previous, tuning, recommendations, callback) {
         send("POST", `http://localhost:3001/graphql?query=mutation {
             addRecord(previous: "${previous}", tuning: "${tuning}", recommendations: "${recommendations}") {
@@ -133,6 +148,18 @@ let api = (function () {
                 previous
                 tuning
                 recommendations
+            }
+        }`, null, callback);
+    }
+
+    // Add Record Path
+    module.newRecordMongo = function(starting_record, callback) {
+        send("POST", `http://localhost:3001/graphql?query=mutation {
+            addRecordPath(starting_record: "${starting_record}") {
+                _id
+                starting_record
+                likes
+                dislikes
             }
         }`, null, callback);
     }
@@ -234,10 +261,10 @@ let api = (function () {
         }`, null, callback);
     }
 
-    // Update User Initial Records
-    module.updateUserRecordsMongo = function(username, new_record, callback) {
+    // Update User Initial Record Paths
+    module.updateUserRecordsMongo = function(username, new_record_path, callback) {
         send("POST", `http://localhost:3001/graphql?query=mutation {
-            updateUserRecords(username:"${username}" ,new_record: "${new_record}") {
+            updateUserRecords(username:"${username}" ,new_record_path: "${new_record_path}") {
                 _id
                 username
                 initial_records

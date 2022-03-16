@@ -2,10 +2,16 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const recordSchema = new Schema({
-    next: { type: Array },
+    next: [{type: Schema.Types.ObjectId, ref: 'Record'}],
     previous: { type: Schema.Types.ObjectId },
     tuning: { type: Schema.Types.ObjectId, ref: 'Tuning' },
     recommendations: { type: Schema.Types.ObjectId, ref: 'Playlist'}
+})
+
+const recordPathSchema = new Schema({
+    starting_record: {type: Schema.Types.ObjectId, ref: 'Record'},
+    likes: [{type: Schema.Types.ObjectId, ref: 'Track'}],
+    dislikes: [{type: Schema.Types.ObjectId, ref: 'Track'}]
 })
 
 function convertToFloat(val) {
@@ -53,12 +59,13 @@ const playlistSchema = new Schema({
 
 const userSchema = new Schema({
     username: String,
-    initial_records: [{type: Schema.Types.ObjectId, ref: 'Record'}]
+    initial_records: [{type: Schema.Types.ObjectId, ref: 'RecordPath'}]
 });
 
 
 exports.Tuning = mongoose.models.Tuning || mongoose.model("Tuning", tuningSchema);
 exports.Record = mongoose.models.Record || mongoose.model('Record', recordSchema);
+exports.RecordPath = mongoose.models.RecordPath || mongoose.model('RecordPath', recordPathSchema);
 exports.Track = mongoose.models.Track || mongoose.model('Track', trackSchema);
 exports.Playlist = mongoose.models.Playlist || mongoose.model('Playlist', playlistSchema); 
 exports.User = mongoose.models.User || mongoose.model('User', userSchema);
