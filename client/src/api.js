@@ -137,6 +137,90 @@ let api = (function () {
         }`, null, callback);
     }
 
+    // Add Tuning
+    module.newTuningMongo = function(tuning_info, callback) {
+        const parameters = Object.keys(tuning_info).map((field) => {
+            return field + ": " + JSON.stringify(tuning_info[field]).replaceAll('"', "");
+        }).join(',');
+
+        console.log(parameters);
+        send("POST", `http://localhost:3001/graphql?query=mutation {
+            addTuning(${parameters}) {
+                _id
+                acousticness {
+                    min
+                    max
+                    target
+                  }
+                  danceability {
+                    min
+                    max
+                    target
+                  }
+                  duration_ms {
+                    min
+                    max
+                    target
+                  }
+                  energy {
+                    min
+                    max
+                    target
+                  }
+                  instrumentalness {
+                    min
+                    max
+                    target
+                  }
+                  key {
+                    min
+                    max
+                    target
+                  }
+                  liveness {
+                    min
+                    max
+                    target
+                  }
+                  loudness {
+                    min
+                    max
+                    target
+                  }
+                  mode {
+                    min
+                    max
+                    target
+                  }
+                  popularity {
+                    min
+                    max
+                    target
+                  }
+                  speechiness {
+                    min
+                    max
+                    target
+                  }
+                  tempo {
+                    min
+                    max
+                    target
+                  }
+                  time_signature {
+                    min
+                    max
+                    target
+                  }
+                  valence {
+                    min
+                    max
+                    target
+                  }
+            }
+        }`, null, callback);
+    }
+
     // Update Record Next
     module.updateRecordNextMongo = function(id, next, callback) {
         send("POST", `http://localhost:3001/graphql?query=mutation {
@@ -146,6 +230,17 @@ let api = (function () {
                 previous
                 tuning
                 recommendations
+            }
+        }`, null, callback);
+    }
+
+    // Update User Initial Records
+    module.updateUserRecordsMongo = function(username, new_record, callback) {
+        send("POST", `http://localhost:3001/graphql?query=mutation {
+            updateUserRecords(username:"${username}" ,new_record: "${new_record}") {
+                _id
+                username
+                initial_records
             }
         }`, null, callback);
     }
