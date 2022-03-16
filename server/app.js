@@ -21,15 +21,16 @@ var cors = require("cors");
 require("dotenv").config();
 
 const cookie = require('cookie');
-var cors = require("cors");
+const { User, Playlist, Track, Record, Tuning } = require("./models");
 
 var app = express();
 
-app.use('/graphql', graphqlHTTP({
+app.use(cors())
+    .use('/graphql', graphqlHTTP({
     schema: schema,
     graphiql: true,
 }))
-    .use(cors())
+    .use(express.json())
     .use(cookieParser())
     .use(session({
     secret: process.env.SESSION_SECRET,
@@ -67,6 +68,7 @@ function make_query_without_access_token(json) {
     }).join('&');
 }
 
+// Spotify API Calls
 // Get Recommendations 
 app.get('/api/recommendations', (req, res) => {
     axios.get('https://api.spotify.com/v1/recommendations?' + make_query_without_access_token(req.query).substring(1), {
