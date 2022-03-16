@@ -34,7 +34,7 @@ const UserType = new GraphQLObjectType({
     fields: () => ({
         _id: { type: GraphQLID },
         username: { type: GraphQLString },
-        initial_records: { type: new GraphQLList(RecordType) }
+        initial_records: { type: new GraphQLList(GraphQLID) }
     })
 });
 
@@ -278,6 +278,25 @@ const Mutation = new GraphQLObjectType({
                 return result;
             }
         },
+        updateUserRecords: {
+            type: UserType,
+            args: {
+                username: {type: GraphQLString},
+                new_record: {type: GraphQLID}
+            },
+            resolve(parent, args) {
+                const result = User.findOneAndUpdate({username: args.username}, {"$push": {"initial_records": args.new_record}}, {lean: true})
+                    .then((doc) => {
+                        console.log(doc);
+                        return doc;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+
+                return result;
+            }
+        }
 
         
     }
