@@ -13,8 +13,6 @@ import CreateRecordPath from './components/CreateRecordPath';
 
 function App() { 
   const TOKEN = "https://accounts.spotify.com/api/token";
-  const [top_tracks, setTopTrack] = useState(0);
-  const [top_artists, setTopArtists] = useState(0);
   const [recordPaths, setRecordPaths] = useState([]);
   const [auth, setAuth] = useState(isAuthorized());
   let client_id = '';
@@ -35,8 +33,9 @@ function App() {
       console.log('hi');
     }
     isAuthorized();
-
+    updateRoutes();
   }, []);
+
   function handleRedirect() {
     let code = getCode();
     getAccessToken(code);
@@ -159,6 +158,22 @@ function App() {
     });
   }
 
+  function updateRoutes() {
+    api.getUserInfo((error, user) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+      api.getRecordPathsMongo(user.id, (error, paths) => {
+        if (error) {
+          console.log(error);
+          return;
+        }
+        console.log(paths.data.recordPaths);
+        setRecordPaths(paths.data.recordPaths);
+      });
+    });
+  }
 
   return (
     <div className="App">
@@ -166,8 +181,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Auth auth={auth}/>}/>
         <Route path="/create" element={<CreateRecordPath/>}/>
+        <Route path="/recordpath/:id" element={<Discover/>}/>
         {recordPaths.map((data) => (
-          <Route key={data.name} path={data.name} element={<Discover title={data.name}/>}/>
+          <Route key={data.name} path={"/recordpath/" + data.name} element={<Discover title={data.name}/>}/>
         ))}
       </Routes>
       {/* <button onClick={getInfo}>Get User Info</button>

@@ -33,6 +33,7 @@ const RecordPathType = new GraphQLObjectType({
     fields: () => ({
         _id: { type: GraphQLID },
         name: { type: GraphQLString },
+        user: { type: GraphQLString },
         starting_record: { type: GraphQLID},
         likes: { type: new GraphQLList(GraphQLID) },
         dislikes: { type: new GraphQLList(GraphQLID) }
@@ -308,28 +309,21 @@ const RootQuery = new GraphQLObjectType({
                 return result;
             }
         },
-        recordPath: {
+        recordPaths: {
             type: new GraphQLList(RecordPathType),
             args: {
-                starting_records: {type: new GraphQLList(GraphQLID)}
+                user: {type: GraphQLString}
             },
             resolve(parent, args) {
-                const result = RecordPath.find({starting_record: {$in: args.starting_records}})
+                const result = RecordPath.find({user: args.user})
                     .then((arr) => {
                         console.log(arr);
-                        return arr
+                        return arr;
                     })
                     .catch((err) => {
                         console.log(err);
                     })
                 return result;
-            }
-        },
-        recordPaths: {
-            type: new GraphQLList(RecordPathType),
-            args: {},
-            resolve(parent, args) {
-
             }
         }
     }

@@ -41,13 +41,12 @@ let api = (function () {
     }
 
     // Get record path by starting record ids
-    module.getRecordPathMongo = function(ids, callback) {
-        ids = ids.map((id) => {
-            return `"${id}"`
-        }).join(',');
+    module.getRecordPathsMongo = function(user_id, callback) {
         send("POST", `http://localhost:3001/graphql?query={
-            recordPath(starting_records: [${ids}]) {
+            recordPaths(user: "${user_id}") {
                 _id
+                name
+                user
                 starting_record
                 likes
                 dislikes

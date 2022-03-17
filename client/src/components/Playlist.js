@@ -11,7 +11,7 @@ const Playlist = ({title, tracks}) => {
         <Container fluid>
             <h1>{title}</h1>
             {fake_tracks.map((track) => (
-                <Track data={track} />
+                <Track key={track.title} data={track} />
             ))}
         </Container>
     );

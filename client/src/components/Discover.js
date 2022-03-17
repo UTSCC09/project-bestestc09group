@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col';
 
 const fake_records = [];
 
-const Discover = ({title}) => {
+const Discover = () => {
     const [active, setActive] = useState(1);
     
     function getNumRecords(){

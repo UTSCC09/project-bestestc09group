@@ -1,14 +1,16 @@
 import { React, useState, useEffect } from 'react';
 import {api} from '../api';
-import { useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 /* ----- Styling ----- */
 import Container from 'react-bootstrap/esm/Container';
 import Card from 'react-bootstrap/Card';
+import Discover from './Discover';
 
 const CreateRecordPath = () => {
     const {state} = useLocation();
     const [playlists, setPlaylists] = useState([]);
+    const navigate = useNavigate();
 
     function renderPlaylists() {
         api.getUserPlaylists((error, data) => {
@@ -56,7 +58,7 @@ const CreateRecordPath = () => {
                                 console.log(error);
                                 return;
                             }
-            
+                            navigate("/recordpath/" + state.name);
                         });
                     });
                 });
