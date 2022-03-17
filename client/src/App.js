@@ -14,7 +14,7 @@ import TopTracksArtists from './components/TopTracksArtists';
 
 function App() { 
   const TOKEN = "https://accounts.spotify.com/api/token";
-  const [auth, setAuth] = useState(isAuthorized());
+  const [auth, setAuth] = useState(false);
   let client_id = '';
   let client_secret = '';
   let access_token = null;
