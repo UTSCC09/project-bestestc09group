@@ -34,6 +34,7 @@ const RecordPathType = new GraphQLObjectType({
     name: 'RecordPath',
     fields: () => ({
         _id: { type: GraphQLID },
+        name: { type: GraphQLString },
         starting_record: { type: GraphQLID},
         likes: { type: new GraphQLList(GraphQLID) },
         dislikes: { type: new GraphQLList(GraphQLID) }
@@ -226,11 +227,13 @@ const Mutation = new GraphQLObjectType({
         addRecordPath: {
             type: RecordPathType,
             args: {
-                starting_record: { type: GraphQLID }
+                starting_record: { type: GraphQLID },
+                name: { type: GraphQLString }
             },
             resolve(parent, args) {
                 let recordPath = new RecordPath({
                     starting_record: args.starting_record,
+                    name: args.name,
                     likes: [],
                     dislikes: []
                 })

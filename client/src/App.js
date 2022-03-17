@@ -9,11 +9,13 @@ import { Route, Routes } from 'react-router-dom'
 import Header from './components/Header';
 import Auth from './components/Auth';
 import Discover from './components/Discover';
+import CreateRecordPath from './components/CreateRecordPath';
 
 function App() { 
   const TOKEN = "https://accounts.spotify.com/api/token";
   const [top_tracks, setTopTrack] = useState(0);
   const [top_artists, setTopArtists] = useState(0);
+  const [recordPaths, setRecordPaths] = useState([]);
   const [auth, setAuth] = useState(isAuthorized());
   let client_id = '';
   let client_secret = '';
@@ -164,6 +166,7 @@ function App() {
       <Header authHandler={handleAuthorization} auth={auth}/>
       <Routes>
         <Route path="/" element={<Auth auth={auth}/>}/>
+        <Route path="/create" element={<CreateRecordPath/>}/>
         {fake_records.map((data) => (
           <Route key={data.name} path={data.name} element={<Discover title={data.name}/>}/>
         ))}

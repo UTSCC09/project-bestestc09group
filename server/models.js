@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const recordSchema = new Schema({
     next: [{type: Schema.Types.ObjectId, ref: 'Record'}],
     previous: { type: Schema.Types.ObjectId },
-    tuning: { type: Schema.Types.ObjectId, ref: 'Tuning' },
+    tuning: { type: Schema.Types.ObjectId, ref: 'Tuning'},
     recommendations: { type: Schema.Types.ObjectId, ref: 'Playlist'}
 })
 
