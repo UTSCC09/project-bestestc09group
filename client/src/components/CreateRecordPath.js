@@ -5,7 +5,6 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 /* ----- Styling ----- */
 import Container from 'react-bootstrap/esm/Container';
 import Card from 'react-bootstrap/Card';
-import Discover from './Discover';
 
 const CreateRecordPath = () => {
     const {state} = useLocation();
@@ -58,7 +57,8 @@ const CreateRecordPath = () => {
                                 console.log(error);
                                 return;
                             }
-                            navigate("/recordpath/" + state.name);
+                            let rp_id = path.data.addRecordPath._id;
+                            navigate("/recordpath/" + rp_id, {state: {rp_id: rp_id}});
                         });
                     });
                 });
