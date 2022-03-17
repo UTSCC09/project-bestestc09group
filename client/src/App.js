@@ -13,7 +13,6 @@ import RecordPath from './components/RecordPath';
 
 function App() { 
   const TOKEN = "https://accounts.spotify.com/api/token";
-  const [recordPaths, setRecordPaths] = useState([]);
   const [auth, setAuth] = useState(isAuthorized());
   let client_id = '';
   let client_secret = '';
@@ -33,7 +32,6 @@ function App() {
       console.log('hi');
     }
     isAuthorized();
-    updateRoutes();
   }, []);
 
   function handleRedirect() {
@@ -158,23 +156,6 @@ function App() {
     });
   }
 
-  function updateRoutes() {
-    api.getUserInfo((error, user) => {
-      if (error) {
-        console.log(error);
-        return;
-      }
-      api.getRecordPathsMongo(user.id, (error, paths) => {
-        if (error) {
-          console.log(error);
-          return;
-        }
-        console.log(paths.data.recordPaths);
-        setRecordPaths(paths.data.recordPaths);
-      });
-    });
-  }
-
   return (
     <div className="App">
       <Header authHandler={handleAuthorization} auth={auth}/>
@@ -182,9 +163,6 @@ function App() {
         <Route path="/" element={<Auth auth={auth}/>}/>
         <Route path="/create" element={<CreateRecordPath/>}/>
         <Route path="/recordpath/:id" element={<RecordPath/>}/>
-        {recordPaths.map((data) => (
-          <Route key={data.name} path={"/recordpath/" + data.name} element={<RecordPath/>}/>
-        ))}
       </Routes>
       {/* <button onClick={getInfo}>Get User Info</button>
         <h1>Top Tracks</h1>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../api';
 
 /* ----- Styling ----- */
 import Container from 'react-bootstrap/Container';
@@ -18,12 +19,34 @@ const Browse = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [name, setName] = useState('');
+    const [recordPaths, setRecordPaths] = useState([]);
     const navigate = useNavigate();
 
     function navigateCreatePage(e) {
         e.preventDefault();
         navigate("/create", { state: {name: name}})
     }
+
+    function updateRecordPaths() {
+        api.getUserInfo((error, user) => {
+          if (error) {
+            console.log(error);
+            return;
+          }
+          api.getRecordPathsMongo(user.id, (error, paths) => {
+            if (error) {
+              console.log(error);
+              return;
+            }
+            console.log(paths.data.recordPaths);
+            setRecordPaths(paths.data.recordPaths);
+          });
+        });
+    }
+
+    useEffect(() => {
+        updateRecordPaths();
+    }, []);
 
     return (
         <>
@@ -54,11 +77,13 @@ const Browse = () => {
                             </Card.Body>
                         </Card>
                     </Col>
-                    {fake_data.map((data) => (
-                        <Col sm="3" key={data.title}>
-                            <RecordPathCard title={data.title} date={data.date}/>
-                        </Col>
-                    ))}
+                    {recordPaths.map((data) => {
+                        return (
+                            <Col sm="3" key={data.name}>
+                                <RecordPathCard title={data.name} date={data.updatedAt}/>
+                            </Col> 
+                        );
+                    })}
                 </Row>
             </Container>
         </>

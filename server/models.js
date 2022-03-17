@@ -14,7 +14,7 @@ const recordPathSchema = new Schema({
     user: {type: Schema.Types.String},
     likes: [{type: Schema.Types.String }],
     dislikes: [{type: Schema.Types.String }]
-})
+}, {timestamps: true })
 
 function convertToFloat(val) {
     return parseFloat(val.toString());

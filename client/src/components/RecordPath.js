@@ -35,7 +35,7 @@ const RecordPath = () => {
         }
         console.log(items);
         return items;
-    } 
+    }
 
     return (
         <Container fluid>

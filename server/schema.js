@@ -8,6 +8,7 @@ const {
     GraphQLSchema, 
     GraphQLObjectType, 
     GraphQLInputObjectType,
+    GraphQLScalarType,
     GraphQLID, 
     GraphQLInt, 
     GraphQLFloat, 
@@ -28,6 +29,22 @@ const RecordType = new GraphQLObjectType({
     })
 });
 
+const DateType = new GraphQLScalarType({
+    name: 'Date',
+    parseValue(value) {
+      return new Date(value);
+    },
+    serialize(value) {
+      return value.toISOString();
+    },    
+    parseLiteral(ast) {
+        if (ast.kind === Kind.INT) {
+          return new Date(ast.value) // ast value is always in string format
+        }
+        return null;
+      },
+  })
+
 const RecordPathType = new GraphQLObjectType({
     name: 'RecordPath',
     fields: () => ({
@@ -36,7 +53,8 @@ const RecordPathType = new GraphQLObjectType({
         user: { type: GraphQLString },
         starting_record: { type: GraphQLID},
         likes: { type: new GraphQLList(GraphQLID) },
-        dislikes: { type: new GraphQLList(GraphQLID) }
+        dislikes: { type: new GraphQLList(GraphQLID) },
+        updatedAt: { type: DateType }
     })
 })
 

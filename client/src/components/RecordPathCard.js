@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const RecordPathCard = ({ title, date }) => {
     const history = useNavigate();
     function navigate() {
-        history(title);
+        history("/recordpath/" + title);
     }
     
     return (

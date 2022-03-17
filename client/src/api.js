@@ -50,6 +50,7 @@ let api = (function () {
                 starting_record
                 likes
                 dislikes
+                updatedAt
             }
         }`, null, callback);
     }
