@@ -26,19 +26,36 @@ const CreateRecordPath = () => {
 
     function addPath(playlist_id) {
         api.getPlaylistInfo(playlist_id, (error, playlist) => {
-            api.newStartingRecordMongo((error, starting_record) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            let tracks = [];
+
+            playlist.tracks.items.forEach(track => {
+                if (!track.track.is_local)
+                    tracks.push(track.track.id);
+            });
+            api.newPlaylistMongo(tracks, (error, mongo_playlist) => {
                 if (error) {
                     console.log(error);
                     return;
                 }
-                api.newRecordPathMongo(starting_record.data.addRecord._id, state.name, (error, path) => {
+                api.newStartingRecordMongo(mongo_playlist.data.addPlaylist._id, (error, starting_record) => {
                     if (error) {
                         console.log(error);
                         return;
                     }
-    
+                    api.newRecordPathMongo(starting_record.data.addRecord._id, state.name, (error, path) => {
+                        if (error) {
+                            console.log(error);
+                            return;
+                        }
+        
+                    });
                 });
             });
+
         });
 
     }

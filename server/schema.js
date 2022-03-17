@@ -3,7 +3,6 @@ const models = require('./models');
 const Playlist = models.Playlist;
 const Record = models.Record;
 const Tuning = models.Tuning;
-const User = models.User;
 const RecordPath = models.RecordPath;
 const { 
     GraphQLSchema, 
@@ -39,15 +38,6 @@ const RecordPathType = new GraphQLObjectType({
         dislikes: { type: new GraphQLList(GraphQLID) }
     })
 })
-
-const UserType = new GraphQLObjectType({
-    name: 'User',
-    fields: () => ({
-        _id: { type: GraphQLID },
-        username: { type: GraphQLString },
-        initial_records: { type: new GraphQLList(GraphQLID) }
-    })
-});
 
 const PlaylistType = new GraphQLObjectType({
     name: 'Playlist',
@@ -119,28 +109,6 @@ const TuningType = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
-        addUser: {
-            type: UserType,
-            args: {
-                username: { type: GraphQLString },
-            },
-            resolve(parent, args) {
-                let user = new User({
-                    username: args.username,
-                    initial_records: []
-                })
-                const result = user.save()
-                    .then(doc => {
-                        console.log(doc);
-                        return doc;
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    })
-                
-                return result;
-            }
-        },
         addPlaylist: {
             type: PlaylistType,
             args: {
@@ -279,26 +247,6 @@ const Mutation = new GraphQLObjectType({
                 return result;
             }
         },
-        updateUserRecords: {
-            type: UserType,
-            args: {
-                username: {type: GraphQLString},
-                new_record_path: {type: GraphQLID}
-            },
-            resolve(parent, args) {
-                const result = User.findOneAndUpdate({username: args.username}, {"$push": {"initial_records": args.new_record_path}}, {lean: true, returnDocument:"after"})
-                    .then((doc) => {
-                        console.log(doc);
-                        return doc;
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    })
-
-                return result;
-            }
-        },
-
     }
 });
 
@@ -307,40 +255,6 @@ const Mutation = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-        allUsers: {
-            type: new GraphQLList(UserType),
-            args: {},
-            resolve(parent, args) {
-                const result = User.find({})
-                    .then((arr) => {
-                        console.log(arr);
-                        return arr
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    })
-                
-                return result;
-            }
-        },
-        users: {
-            type: UserType,
-            args: {
-                username: { type: GraphQLString }
-            },
-            resolve(parent, args) {
-                const result = User.findOne({username: args.username})
-                    .then((arr) => {
-                        console.log(arr);
-                        return arr
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    })
-                
-                return result;
-            }
-        },
         playlists: {
             type: PlaylistType,
             args: {
@@ -391,7 +305,7 @@ const RootQuery = new GraphQLObjectType({
                 return result;
             }
         },
-        recordPaths: {
+        recordPath: {
             type: new GraphQLList(RecordPathType),
             args: {
                 starting_records: {type: new GraphQLList(GraphQLID)}
@@ -406,6 +320,13 @@ const RootQuery = new GraphQLObjectType({
                         console.log(err);
                     })
                 return result;
+            }
+        },
+        recordPaths: {
+            type: new GraphQLList(RecordPathType),
+            args: {},
+            resolve(parent, args) {
+
             }
         }
     }

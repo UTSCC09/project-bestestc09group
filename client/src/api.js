@@ -14,29 +14,6 @@ let api = (function () {
     }
 
     let module = {}
-    
-    // Mongo Routes
-    // Get All Users in DB
-    module.getAllUsersMongo = function(callback) {
-        send("POST", `http://localhost:3001/graphql?query={
-            allUsers {
-                _id 
-                username
-                initial_records
-            }
-        }`, null, callback);
-    }
-
-    // Get User by Username
-    module.getUserMongo = function(username, callback) {
-        send("POST", `http://localhost:3001/graphql?query={
-            users(username: "${username}") {
-                _id 
-                username
-                initial_records
-            }
-        }`, null, callback);
-    }
 
     // Get Playlist by ID
     module.getPlaylistMongo = function(id, callback) {
@@ -64,27 +41,16 @@ let api = (function () {
     }
 
     // Get record path by starting record ids
-    module.getRecordPathsMongo = function(ids, callback) {
+    module.getRecordPathMongo = function(ids, callback) {
         ids = ids.map((id) => {
             return `"${id}"`
         }).join(',');
         send("POST", `http://localhost:3001/graphql?query={
-            recordPaths(starting_records: [${ids}]) {
+            recordPath(starting_records: [${ids}]) {
                 _id
                 starting_record
                 likes
                 dislikes
-            }
-        }`, null, callback);
-    }
-
-    // Add User
-    module.newUserMongo = function(username, callback) {
-        send("POST", `http://localhost:3001/graphql?query=mutation {
-            addUser(username: "${username}") {
-                _id
-                username
-                initial_records
             }
         }`, null, callback);
     }
@@ -115,9 +81,9 @@ let api = (function () {
         }`, null, callback);
     }
 
-    module.newStartingRecordMongo = function(callback) {
+    module.newStartingRecordMongo = function(playlist, callback) {
         send("POST", `http://localhost:3001/graphql?query=mutation {
-            addRecord {
+            addRecord (recommendations: "${playlist}") {
                 _id
             }
         }`, null, callback);
@@ -232,18 +198,6 @@ let api = (function () {
             }
         }`, null, callback);
     }
-
-    // Update User Initial Record Paths
-    module.updateUserRecordsMongo = function(username, new_record_path, callback) {
-        send("POST", `http://localhost:3001/graphql?query=mutation {
-            updateUserRecords(username:"${username}" ,new_record_path: "${new_record_path}") {
-                _id
-                username
-                initial_records
-            }
-        }`, null, callback);
-    }
-
 
     module.getClientInfo = function(callback) {
         send("GET", "http://localhost:3001/api/client_info", null, callback);

@@ -35,8 +35,8 @@ function App() {
       console.log('hi');
     }
     isAuthorized();
-  }, []);
 
+  }, []);
   function handleRedirect() {
     let code = getCode();
     getAccessToken(code);
@@ -148,7 +148,7 @@ function App() {
     })
   }
 
-  function isAuthorized(){
+  function isAuthorized() {
     api.getUserInfo((error, data) => {
       if (error) {
         setAuth(false);
@@ -159,7 +159,6 @@ function App() {
     });
   }
 
-  const fake_records = [{name:'test1'},{name:'test2'},{name:'test3'},{name:'test4'}]
 
   return (
     <div className="App">
@@ -167,7 +166,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Auth auth={auth}/>}/>
         <Route path="/create" element={<CreateRecordPath/>}/>
-        {fake_records.map((data) => (
+        {recordPaths.map((data) => (
           <Route key={data.name} path={data.name} element={<Discover title={data.name}/>}/>
         ))}
       </Routes>

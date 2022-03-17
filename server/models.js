@@ -10,6 +10,8 @@ const recordSchema = new Schema({
 
 const recordPathSchema = new Schema({
     starting_record: {type: Schema.Types.ObjectId, ref: 'Record'},
+    name: {type: Schema.Types.String},
+    user: {type: Schema.Types.String},
     likes: [{type: Schema.Types.String }],
     dislikes: [{type: Schema.Types.String }]
 })
@@ -51,14 +53,7 @@ const playlistSchema = new Schema({
     tracks: [{ type: Schema.Types.String }]
 });
 
-const userSchema = new Schema({
-    username: String,
-    initial_records: [{type: Schema.Types.ObjectId, ref: 'RecordPath'}]
-});
-
-
 exports.Tuning = mongoose.models.Tuning || mongoose.model("Tuning", tuningSchema);
 exports.Record = mongoose.models.Record || mongoose.model('Record', recordSchema);
 exports.RecordPath = mongoose.models.RecordPath || mongoose.model('RecordPath', recordPathSchema);
-exports.Playlist = mongoose.models.Playlist || mongoose.model('Playlist', playlistSchema); 
-exports.User = mongoose.models.User || mongoose.model('User', userSchema);
+exports.Playlist = mongoose.models.Playlist || mongoose.model('Playlist', playlistSchema);
