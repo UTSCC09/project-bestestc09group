@@ -10,6 +10,7 @@ import Header from './components/Header';
 import Auth from './components/Auth';
 import CreateRecordPath from './components/CreateRecordPath';
 import RecordPath from './components/RecordPath';
+import TopTracksArtists from './components/TopTracksArtists';
 
 function App() { 
   const TOKEN = "https://accounts.spotify.com/api/token";
@@ -163,6 +164,7 @@ function App() {
         <Route path="/" element={<Auth auth={auth}/>}/>
         <Route path="/create" element={<CreateRecordPath/>}/>
         <Route path="/recordpath/:id" element={<RecordPath/>}/>
+        <Route path="/top" element={<TopTracksArtists/>}/>
       </Routes>
       {/* <button onClick={getInfo}>Get User Info</button>
         <h1>Top Tracks</h1>
