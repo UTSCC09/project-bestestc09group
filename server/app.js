@@ -110,7 +110,7 @@ app.get('/api/playlists', (req, res) => {
         res.status(200).json(response.data.items)
     }).catch((error) => {
         console.log(error);
-        res.status(500).end(error)
+        res.status(500).end(error.statusText)
     })
 })
 

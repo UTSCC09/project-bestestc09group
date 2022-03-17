@@ -1,6 +1,5 @@
 const graphql = require('graphql');
 const models = require('./models');
-const Track = models.Track;
 const Playlist = models.Playlist;
 const Record = models.Record;
 const Tuning = models.Tuning;
@@ -50,21 +49,11 @@ const UserType = new GraphQLObjectType({
     })
 });
 
-const TrackType = new GraphQLObjectType({
-    name: 'Track',
-    fields: () => ({
-        _id: { type: GraphQLID },
-        url: { type: GraphQLString },
-        name: { type: GraphQLString },
-        artist: { type: GraphQLString }
-    })
-});
-
 const PlaylistType = new GraphQLObjectType({
     name: 'Playlist',
     fields: () => ({
         _id: { type: GraphQLID },
-        tracks: { type: new GraphQLList(GraphQLID) }
+        tracks: { type: new GraphQLList(GraphQLString) }
     })
 });
 
@@ -155,7 +144,7 @@ const Mutation = new GraphQLObjectType({
         addPlaylist: {
             type: PlaylistType,
             args: {
-                tracks: {type: new GraphQLList(GraphQLID)}
+                tracks: {type: new GraphQLList(GraphQLString)}
             },
             resolve(parent, args) {
                 let playlist = new Playlist({
@@ -170,31 +159,6 @@ const Mutation = new GraphQLObjectType({
                     })
                 
                     return result
-            }
-        },
-        addTrack: {
-            type: TrackType,
-            args: {
-                url: { type: GraphQLString },
-                name: { type: GraphQLString },
-                artist: { type: GraphQLString }
-            },
-            resolve(parent, args) {
-                let track = new Track({
-                    url: args.url,
-                    name: args.name,
-                    artist: args.artist
-                })
-
-                const result = track.save()
-                    .then(doc => {
-                        return doc
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    })
-
-                return result
             }
         },
         addRecord: {
@@ -434,48 +398,6 @@ const RootQuery = new GraphQLObjectType({
             },
             resolve(parent, args) {
                 const result = RecordPath.find({starting_record: {$in: args.starting_records}})
-                    .then((arr) => {
-                        console.log(arr);
-                        return arr
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    })
-                return result;
-            }
-        },
-        allTracksInPlaylist: {
-            type: new GraphQLList(TrackType),
-            args: {
-                _id: {type: GraphQLID}
-            },
-            resolve(parent, args) {
-                const result = Playlist.findOne({_id: args._id})
-                    .then((playlist) => {
-                        const track_list = Track.find({_id: {$in: playlist.tracks}})
-                            .then((tracks) => {
-                                console.log(tracks);
-                                return tracks
-                            })
-                            .catch((err) => {
-                                console.log(err);
-                            })
-
-                        return track_list;
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    })
-                return result;
-            }
-        },
-        tracks: {
-            type: TrackType,
-            args: {
-                _id: {type: GraphQLID}
-            },
-            resolve(parent, args) {
-                const result = Track.findOne({_id: args._id})
                     .then((arr) => {
                         console.log(arr);
                         return arr

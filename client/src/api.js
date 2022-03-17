@@ -48,30 +48,6 @@ let api = (function () {
         }`, null, callback);
     }
 
-    // Get tracks in playlist with id
-    module.getPlaylistTracksMongo = function(id, callback) {
-        send("POST", `http://localhost:3001/graphql?query={
-            allTracksInPlaylist(_id: "${id}") {
-              _id
-              url
-              name
-              artist
-            }
-        }`, null, callback);
-    }
-
-    // Get track by id
-    module.getTrackMongo = function(id, callback) {
-        send("POST", `http://localhost:3001/graphql?query={
-            tracks(_id: "${id}") {
-              _id
-              url
-              name
-              artist
-            }
-        }`, null, callback);
-    }
-
     // Get records by ids
     module.getRecordsMongo = function(ids, callback) {
         ids = ids.map((id) => {
@@ -124,19 +100,6 @@ let api = (function () {
                 tracks
             }
         }`, null, callback);
-    }
-
-    // Add Track
-    module.newTrackMongo = function(url, name, artist, callback) {
-        const url_query = encodeURIComponent(`mutation {
-            addTrack(url: "${url}", name: "${name}", artist: "${artist}") {
-                _id
-                url
-                name
-                artist
-            }
-        }`)
-        send("POST", "http://localhost:3001/graphql?query=" + url_query, null, callback);
     }
 
     // Add Record

@@ -24,27 +24,30 @@ const CreateRecordPath = () => {
         renderPlaylists();
     }, []);
 
-    function addPath() {
-        api.newStartingRecordMongo((error, starting_record) => {
-            if (error) {
-                console.log(error);
-                return;
-            }
-            api.newRecordPathMongo(starting_record.data.addRecord._id, state.name, (error, path) => {
+    function addPath(playlist_id) {
+        api.getPlaylistInfo(playlist_id, (error, playlist) => {
+            api.newStartingRecordMongo((error, starting_record) => {
                 if (error) {
                     console.log(error);
                     return;
                 }
-
+                api.newRecordPathMongo(starting_record.data.addRecord._id, state.name, (error, path) => {
+                    if (error) {
+                        console.log(error);
+                        return;
+                    }
+    
+                });
             });
         });
+
     }
 
     return (
         <Container fluid>
             {playlists.map((data) => {
                 return (
-                    <Card key={data.name} onClick={() => addPath()}>
+                    <Card key={data.name} onClick={() => addPath(data.id)}>
                         <Card.Body>
                             <Card.Title>{data.name}</Card.Title>
                         </Card.Body>

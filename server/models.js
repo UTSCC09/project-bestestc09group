@@ -10,8 +10,8 @@ const recordSchema = new Schema({
 
 const recordPathSchema = new Schema({
     starting_record: {type: Schema.Types.ObjectId, ref: 'Record'},
-    likes: [{type: Schema.Types.ObjectId, ref: 'Track'}],
-    dislikes: [{type: Schema.Types.ObjectId, ref: 'Track'}]
+    likes: [{type: Schema.Types.String }],
+    dislikes: [{type: Schema.Types.String }]
 })
 
 function convertToFloat(val) {
@@ -47,14 +47,8 @@ const tuningSchema = new Schema({
     valence: tuningFloatSchema,
 })
 
-const trackSchema = new Schema({
-    url: { type: String, required: true},
-    name: { type: String, required: true },
-    artist: { type: String, required: true }
-});
-
 const playlistSchema = new Schema({
-    tracks: [{ type: Schema.Types.ObjectId, ref: 'Track'}]
+    tracks: [{ type: Schema.Types.String }]
 });
 
 const userSchema = new Schema({
@@ -66,6 +60,5 @@ const userSchema = new Schema({
 exports.Tuning = mongoose.models.Tuning || mongoose.model("Tuning", tuningSchema);
 exports.Record = mongoose.models.Record || mongoose.model('Record', recordSchema);
 exports.RecordPath = mongoose.models.RecordPath || mongoose.model('RecordPath', recordPathSchema);
-exports.Track = mongoose.models.Track || mongoose.model('Track', trackSchema);
 exports.Playlist = mongoose.models.Playlist || mongoose.model('Playlist', playlistSchema); 
 exports.User = mongoose.models.User || mongoose.model('User', userSchema);
