@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 
 
-const Tuning = ({tuning}) => {
+const TuningEdit = ({tuning}) => {
     return (
         <Form>
             <Row>
@@ -223,4 +223,4 @@ const Tuning = ({tuning}) => {
     );
 }
 
-export default Tuning;
+export default TuningEdit;

@@ -4,7 +4,7 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import { useNavigate } from 'react-router-dom';
 
-const RecommendCard = ({ title, date }) => {
+const RecordPathCard = ({ title, date }) => {
     const history = useNavigate();
     function navigate() {
         history(title);
@@ -20,4 +20,4 @@ const RecommendCard = ({ title, date }) => {
     );
 }
 
-export default RecommendCard;
+export default RecordPathCard;

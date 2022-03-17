@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col';
 
 const fake_records = [];
 
-const Discover = () => {
+const RecordPath = () => {
     const [active, setActive] = useState(1);
     
     function getNumRecords(){
@@ -55,4 +55,4 @@ const Discover = () => {
     );
 }
 
-export default Discover;
+export default RecordPath;

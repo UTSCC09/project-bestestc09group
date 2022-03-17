@@ -3,8 +3,7 @@ import React from 'react';
 /* ----- Styling ----- */
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Tuning from './Tuning';
+import TuningEdit from './TuningEdit';
 import Playlist from './Playlist';
 
 const Record = ({tuning}) => {
@@ -14,7 +13,7 @@ const Record = ({tuning}) => {
                 <Playlist/>
             </Row>
             <Row>
-                <Tuning tuning={tuning}/>
+                <TuningEdit tuning={tuning}/>
             </Row>
         </Container>
     );

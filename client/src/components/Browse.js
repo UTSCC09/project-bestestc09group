@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import RecommendCard from './RecommendCard';
+import RecordPathCard from './RecordPathCard';
 import Form from 'react-bootstrap/Form';
 
 const fake_data = [{title: "test1", date:"2022-03-04"}, {title: "test2", date:"2021-07-26"},{title: "test3", date:"2022-05-01"}, {title: "test4", date:"2021-08-05"}]
@@ -56,7 +56,7 @@ const Browse = () => {
                     </Col>
                     {fake_data.map((data) => (
                         <Col sm="3" key={data.title}>
-                            <RecommendCard title={data.title} date={data.date}/>
+                            <RecordPathCard title={data.title} date={data.date}/>
                         </Col>
                     ))}
                 </Row>

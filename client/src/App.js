@@ -8,8 +8,8 @@ import { Route, Routes } from 'react-router-dom'
 /* ----- Components ----- */
 import Header from './components/Header';
 import Auth from './components/Auth';
-import Discover from './components/Discover';
 import CreateRecordPath from './components/CreateRecordPath';
+import RecordPath from './components/RecordPath';
 
 function App() { 
   const TOKEN = "https://accounts.spotify.com/api/token";
@@ -181,9 +181,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Auth auth={auth}/>}/>
         <Route path="/create" element={<CreateRecordPath/>}/>
-        <Route path="/recordpath/:id" element={<Discover/>}/>
+        <Route path="/recordpath/:id" element={<RecordPath/>}/>
         {recordPaths.map((data) => (
-          <Route key={data.name} path={"/recordpath/" + data.name} element={<Discover title={data.name}/>}/>
+          <Route key={data.name} path={"/recordpath/" + data.name} element={<RecordPath/>}/>
         ))}
       </Routes>
       {/* <button onClick={getInfo}>Get User Info</button>
