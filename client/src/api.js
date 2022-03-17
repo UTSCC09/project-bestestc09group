@@ -153,7 +153,7 @@ let api = (function () {
     }
 
     // Add Record Path
-    module.newRecordMongo = function(starting_record, callback) {
+    module.newRecordPathMongo = function(starting_record, callback) {
         send("POST", `http://localhost:3001/graphql?query=mutation {
             addRecordPath(starting_record: "${starting_record}") {
                 _id
