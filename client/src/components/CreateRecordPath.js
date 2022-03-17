@@ -46,12 +46,18 @@ const CreateRecordPath = () => {
                         console.log(error);
                         return;
                     }
-                    api.newRecordPathMongo(starting_record.data.addRecord._id, state.name, (error, path) => {
+                    api.getUserInfo((error, user) => {
                         if (error) {
                             console.log(error);
                             return;
                         }
-        
+                        api.newRecordPathMongo(starting_record.data.addRecord._id, state.name, user.id, (error, path) => {
+                            if (error) {
+                                console.log(error);
+                                return;
+                            }
+            
+                        });
                     });
                 });
             });

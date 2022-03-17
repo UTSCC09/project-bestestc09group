@@ -160,15 +160,17 @@ const Mutation = new GraphQLObjectType({
             type: RecordPathType,
             args: {
                 starting_record: { type: GraphQLID },
-                name: { type: GraphQLString }
+                name: { type: GraphQLString },
+                user: { type: GraphQLString }
             },
             resolve(parent, args) {
                 let recordPath = new RecordPath({
                     starting_record: args.starting_record,
                     name: args.name,
+                    user: args.user,
                     likes: [],
                     dislikes: []
-                })
+                });
 
                 const result = recordPath.save()
                     .then(doc => {
@@ -180,6 +182,7 @@ const Mutation = new GraphQLObjectType({
 
                 return result
             }
+
         },
         addTuning: {
             type: TuningType,
