@@ -5,6 +5,7 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 /* ----- Styling ----- */
 import Container from 'react-bootstrap/esm/Container';
 import Card from 'react-bootstrap/Card';
+import defaultTuning from '../defaultTuning';
 
 const CreateRecordPath = () => {
     const {state} = useLocation();

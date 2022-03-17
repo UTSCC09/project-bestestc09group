@@ -40,7 +40,7 @@ let api = (function () {
         }`, null, callback);
     }
 
-    // Get record path by starting record ids
+    // Get record paths by user ids
     module.getRecordPathsMongo = function(user_id, callback) {
         send("POST", `http://localhost:3001/graphql?query={
             recordPaths(user: "${user_id}") {
@@ -54,6 +54,22 @@ let api = (function () {
             }
         }`, null, callback);
     }
+
+    // Get record path by id
+    module.getRecordPathMongo = function(rp_id, callback) {
+        send("POST", `http://localhost:3001/graphql?query={
+            recordPath(rp_id: "${rp_id}") {
+                _id
+                name
+                user
+                starting_record
+                likes
+                dislikes
+                updatedAt
+            }
+        }`, null, callback);
+    }
+
 
     // Add Playlist
     module.newPlaylistMongo = function(ids, callback) {

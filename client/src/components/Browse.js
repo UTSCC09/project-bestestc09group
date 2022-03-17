@@ -80,7 +80,7 @@ const Browse = () => {
                     {recordPaths.map((data) => {
                         return (
                             <Col sm="3" key={data.name}>
-                                <RecordPathCard title={data.name} date={data.updatedAt}/>
+                                <RecordPathCard title={data.name} date={data.updatedAt} rp_id={data._id}/>
                             </Col> 
                         );
                     })}

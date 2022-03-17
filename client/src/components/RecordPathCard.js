@@ -4,10 +4,10 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import { useNavigate } from 'react-router-dom';
 
-const RecordPathCard = ({ title, date }) => {
+const RecordPathCard = ({ title, date, rp_id }) => {
     const history = useNavigate();
     function navigate() {
-        history("/recordpath/" + title);
+        history("/recordpath/" + rp_id, {state: {rp_id: rp_id}});
     }
     
     return (

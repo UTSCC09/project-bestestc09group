@@ -1,19 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Record from './Record';
+import { api } from '../api';
+import { useLocation } from 'react-router-dom';
 
 /* ----- Styling ----- */
 import Container from 'react-bootstrap/Container';
 import Pagination from 'react-bootstrap/Pagination';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-
-const fake_records = [];
 
 const RecordPath = () => {
     const [active, setActive] = useState(1);
+    const {state} = useLocation();
     
     function getNumRecords(){
-        return 5;
+        api.getUserInfo((error, user) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            api.getRecordPathMongo(state.rp_id, (error, path) => {
+                if (error) {
+                    console.log(error);
+                    return;
+                }
+                console.log(path);
+                return 5;
+            });
+        });
     }
 
     function changePageNumber(number) {

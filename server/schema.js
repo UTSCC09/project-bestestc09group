@@ -343,6 +343,23 @@ const RootQuery = new GraphQLObjectType({
                     })
                 return result;
             }
+        },
+        recordPath: {
+            type: RecordPathType,
+            args: {
+                rp_id: { type: GraphQLID }
+            },
+            resolve(parent, args) {
+                const result = RecordPath.findOne({_id: args.rp_id})
+                    .then((doc) => {
+                        console.log(doc);
+                        return doc;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+                return result;
+            }
         }
     }
 });
