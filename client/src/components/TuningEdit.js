@@ -33,7 +33,7 @@ const TuningEdit = ({tuning}) => {
     }, [])
 
     return (
-        <Form>
+        <Form className='d-flex justify-content-center flex-column'>
             <Row>
                 <Col>
                     {forms}

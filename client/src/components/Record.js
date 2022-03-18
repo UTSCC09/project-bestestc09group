@@ -8,23 +8,24 @@ import Playlist from './Playlist';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/esm/Collapse';
 
-const Record = ({tuning, tracks}) => {
+const Record = ({tuning, tracks, starting}) => {
     const [show, setShow] = useState(false);
 
     return (
         <Container fluid>
+            <div className='d-flex justify-content-center mt-3'>
+                <Button className="mb-3 w-25" onClick={() => setShow(!show)}>Edit Tuning</Button>
+            </div>
             <Row>
-                <Playlist title="Recommendations" tracks={tracks}/>
-            </Row>
-            
-            <Button className="mb-3" onClick={() => setShow(!show)}>Edit Tuning</Button>
-            <Row>
-                <Collapse in={show}>
+                <Collapse in={show} className="w-50">
                     <Container fluid>
                         <TuningEdit tuning={tuning}/>
                     </Container>
                 </Collapse>
             </Row>
+            <Row>
+                <Playlist title={starting ? "Starting Playlist" : "Recommendations"} tracks={tracks}/>
+            </Row>        
         </Container>
     );
 }

@@ -49,7 +49,7 @@ const RecordPath = () => {
 
                         api.getTracks(playlist.data.playlists.tracks.slice(0, 50), (err, tracks_data) => {
                             console.log(tracks_data);
-                            setCurrentRecord(<Record tuning={record.data.records[0].tuning} tracks={tracks_data}/>)
+                            setCurrentRecord(<Record starting={true} tuning={record.data.records[0].tuning} tracks={tracks_data}/>)
                         })
                     })
                 })
