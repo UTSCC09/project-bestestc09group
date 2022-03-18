@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 /* ----- Styling ----- */
 import Form from 'react-bootstrap/Form';
@@ -8,214 +8,35 @@ import Button from 'react-bootstrap/Button';
 
 
 const TuningEdit = ({tuning}) => {
+    const [forms, setForms] = useState(<p>Hi</p>);
+
+    useEffect(() => {
+        const formElements = Object.keys(tuning).map((key) => {
+            return <Form.Group className="mb-3" controlId={"form" + key}>
+                <Form.Label>{key.toUpperCase()}</Form.Label>
+                <Row>
+                    <Col> 
+                        <Form.Control type="text" value={tuning[key].min} placeholder="Min" />
+                    </Col>
+                    <Col>
+                        <Form.Control type="text" value={tuning[key].target} placeholder="Tgt" />
+                    </Col>
+                    <Col>  
+                        <Form.Control type="text" value={tuning[key].max} placeholder="Max" />
+                    </Col>
+                </Row>
+            </Form.Group>
+        })
+
+        console.log(formElements)
+        setForms(formElements);
+    }, [])
+
     return (
         <Form>
             <Row>
                 <Col>
-                    <Form.Group className="mb-3" controlId="formAcousticness">
-                        <Form.Label>Acousticness</Form.Label>
-                        <Row>
-                            <Col> 
-                                <Form.Control type="text" placeholder="Min" />
-                            </Col>
-                            <Col>
-                                <Form.Control type="text" placeholder="Tgt" />
-                            </Col>
-                            <Col>  
-                                <Form.Control type="text" placeholder="Max" />
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formDanceability">
-                        <Form.Label>Danceability</Form.Label>
-                        <Row>
-                            <Col > 
-                                <Form.Control type="text" placeholder="Min" />
-                            </Col>
-                            <Col >
-                                <Form.Control type="text" placeholder="Tgt" />
-                            </Col>
-                            <Col >  
-                                <Form.Control type="text" placeholder="Max" />
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formDuration">
-                        <Form.Label>Duration</Form.Label>
-                        <Row>
-                            <Col > 
-                                <Form.Control type="text" placeholder="Min" />
-                            </Col>
-                            <Col >
-                                <Form.Control type="text" placeholder="Tgt" />
-                            </Col>
-                            <Col >  
-                                <Form.Control type="text" placeholder="Max" />
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                </Col>
-                <Col>
-                    <Form.Group className="mb-3" controlId="formInstramentalness">
-                        <Form.Label>Instrumentalness</Form.Label>
-                        <Row>
-                            <Col > 
-                                <Form.Control type="text" placeholder="Min" />
-                            </Col>
-                            <Col >
-                                <Form.Control type="text" placeholder="Tgt" />
-                            </Col>
-                            <Col >  
-                                <Form.Control type="text" placeholder="Max" />
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formKey">
-                        <Form.Label>Key</Form.Label>
-                        <Row>
-                            <Col > 
-                                <Form.Control type="text" placeholder="Min" />
-                            </Col>
-                            <Col >
-                                <Form.Control type="text" placeholder="Tgt" />
-                            </Col>
-                            <Col >  
-                                <Form.Control type="text" placeholder="Max" />
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formLiveness">
-                        <Form.Label>Liveness</Form.Label>
-                        <Row>
-                            <Col > 
-                                <Form.Control type="text" placeholder="Min" />
-                            </Col>
-                            <Col >
-                                <Form.Control type="text" placeholder="Tgt" />
-                            </Col>
-                            <Col >  
-                                <Form.Control type="text" placeholder="Max" />
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                </Col>
-                <Col>
-                    <Form.Group className="mb-3" controlId="formPopularity">
-                        <Form.Label>Popularity</Form.Label>
-                        <Row>
-                            <Col > 
-                                <Form.Control type="text" placeholder="Min" />
-                            </Col>
-                            <Col >
-                                <Form.Control type="text" placeholder="Tgt" />
-                            </Col>
-                            <Col >  
-                                <Form.Control type="text" placeholder="Max" />
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formSpeechiness">
-                        <Form.Label>Speechiness</Form.Label>
-                        <Row>
-                            <Col > 
-                                <Form.Control type="text" placeholder="Min" />
-                            </Col>
-                            <Col >
-                                <Form.Control type="text" placeholder="Tgt" />
-                            </Col>
-                            <Col >  
-                                <Form.Control type="text" placeholder="Max" />
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formTempo">
-                        <Form.Label>Tempo</Form.Label>
-                        <Row>
-                            <Col > 
-                                <Form.Control type="text" placeholder="Min" />
-                            </Col>
-                            <Col >
-                                <Form.Control type="text" placeholder="Tgt" />
-                            </Col>
-                            <Col >  
-                                <Form.Control type="text" placeholder="Max" />
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                </Col>
-                <Col>
-                    <Form.Group className="mb-3" controlId="formLoudness">
-                        <Form.Label>Loudness</Form.Label>
-                        <Row>
-                            <Col > 
-                                <Form.Control type="text" placeholder="Min" />
-                            </Col>
-                            <Col >
-                                <Form.Control type="text" placeholder="Tgt" />
-                            </Col>
-                            <Col >  
-                                <Form.Control type="text" placeholder="Max" />
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formTimeSignature">
-                        <Form.Label>Time Signature</Form.Label>
-                        <Row>
-                            <Col > 
-                                <Form.Control type="text" placeholder="Min" />
-                            </Col>
-                            <Col >
-                                <Form.Control type="text" placeholder="Tgt" />
-                            </Col>
-                            <Col >  
-                                <Form.Control type="text" placeholder="Max" />
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formValence">
-                        <Form.Label>Valence</Form.Label>
-                        <Row>
-                            <Col > 
-                                <Form.Control type="text" placeholder="Min" />
-                            </Col>
-                            <Col >
-                                <Form.Control type="text" placeholder="Tgt" />
-                            </Col>
-                            <Col >  
-                                <Form.Control type="text" placeholder="Max" />
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                </Col>
-                <Col>
-                    <Form.Group className="mb-3" controlId="formMode">
-                        <Form.Label>Mode</Form.Label>
-                        <Row>
-                            <Col > 
-                                <Form.Control type="text" placeholder="Min" />
-                            </Col>
-                            <Col >
-                                <Form.Control type="text" placeholder="Tgt" />
-                            </Col>
-                            <Col >  
-                                <Form.Control type="text" placeholder="Max" />
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formEnergy">
-                        <Form.Label>Energy</Form.Label>
-                        <Row>
-                            <Col > 
-                                <Form.Control type="text" placeholder="Min" />
-                            </Col>
-                            <Col >
-                                <Form.Control type="text" placeholder="Tgt" />
-                            </Col>
-                            <Col >  
-                                <Form.Control type="text" placeholder="Max" />
-                            </Col>
-                        </Row>
-                    </Form.Group>
+                    {forms}
                 </Col>
             </Row>
             <Button variant="primary" type="submit">Save Changes</Button>      

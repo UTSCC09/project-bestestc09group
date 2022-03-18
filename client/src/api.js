@@ -18,7 +18,7 @@ let api = (function () {
     // Get Playlist by ID
     module.getPlaylistMongo = function(id, callback) {
         send("POST", `http://localhost:3001/graphql?query={
-            playlist(_id: "${id}") {
+            playlists (_id: "${id}") {
                 _id 
                 tracks
             }
@@ -34,7 +34,78 @@ let api = (function () {
             records(ids: [${ids}]) {
                 _id
                 previous
-                tuning
+                tuning {
+                    acousticness {
+                        min
+                        max
+                        target
+                    }
+                    danceability {
+                        min
+                        max
+                        target
+                    }
+                    duration_ms {
+                        min
+                        max
+                        target
+                    }
+                    energy {
+                        min
+                        max
+                        target
+                    }
+                    instrumentalness {
+                        min
+                        max
+                        target
+                    }
+                    key {
+                        min
+                        max
+                        target
+                    }
+                    liveness {
+                        min
+                        max
+                        target
+                    }
+                    loudness {
+                        min
+                        max
+                        target
+                    }
+                    mode {
+                        min
+                        max
+                        target
+                    }
+                    popularity {
+                        min
+                        max
+                        target
+                    }
+                    speechiness {
+                        min
+                        max
+                        target
+                    }
+                    tempo {
+                        min
+                        max
+                        target
+                    }
+                    time_signature {
+                        min
+                        max
+                        target
+                    }
+                    valence {
+                        min
+                        max
+                        target
+                    }
+                }
                 recommendations
             }
         }`, null, callback);
@@ -47,6 +118,7 @@ let api = (function () {
                 _id
                 name
                 user
+                count
                 starting_record
                 likes
                 dislikes
@@ -62,6 +134,7 @@ let api = (function () {
                 _id
                 name
                 user
+                count
                 starting_record
                 likes
                 dislikes
@@ -111,6 +184,7 @@ let api = (function () {
             addRecordPath(starting_record: "${starting_record}", name: "${name}", user:"${user_id}") {
                 _id
                 name
+                count
                 starting_record
                 likes
                 dislikes
@@ -147,6 +221,10 @@ let api = (function () {
 
     module.getPlaylistInfo = function(playlist_id, callback) {
         send("GET", "http://localhost:3001/api/playlists/" + playlist_id + "?access_token=" + sessionStorage.getItem('access_token'), null, callback);
+    }
+
+    module.getTracks = function(track_ids, callback) {
+        send("GET", "http://localhost:3001/api/tracks/" + "?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + track_ids.join(","), null, callback);
     }
 
     module.getUserPlaylists = function(callback) {

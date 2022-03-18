@@ -10,8 +10,10 @@ const Track = ({data}) => {
         <Container>
             <Card>
                 <Card.Body>
-                    <Card.Title>{data.title}</Card.Title>
-                    <Card.Text>{data.artist}</Card.Text>
+                    <Card.Title>{data.name}</Card.Title>
+                    <Card.Text>{data.artists.map((artist) => {
+                        return artist.name;
+                    }).join(',')}</Card.Text>
                     <Button className='me-2'>Like</Button>
                     <Button>Dislike</Button>
                 </Card.Body>

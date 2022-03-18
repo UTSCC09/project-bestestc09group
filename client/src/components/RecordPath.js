@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Record from './Record';
 import { api } from '../api';
 import { useLocation } from 'react-router-dom';
@@ -11,6 +11,14 @@ import Row from 'react-bootstrap/Row';
 const RecordPath = () => {
     const [active, setActive] = useState(1);
     const {state} = useLocation();
+    const [numRecords, setNumRecords] = useState(0);
+    const [recordPath, setRecordPath] = useState({});
+    const [currentRecordData, setCurrentRecordData] = useState(null);
+    const [currentRecord, setCurrentRecord] = useState(null);
+
+    useEffect( () => {
+        getNumRecords();
+    }, []);
     
     function getNumRecords(){
         api.getUserInfo((error, user) => {
@@ -23,8 +31,28 @@ const RecordPath = () => {
                     console.log(error);
                     return;
                 }
-                console.log(path);
-                return 5;
+                console.log(path.data.recordPath);
+                setNumRecords(5);
+                setRecordPath(path.data.recordPath);
+
+                api.getRecordsMongo([path.data.recordPath.starting_record], (err, record) => {
+                    if (err) {
+                        return;
+                    }
+        
+                    console.log(record.data.records[0]);
+                    setCurrentRecordData(record.data.records[0]);
+                    api.getPlaylistMongo(record.data.records[0].recommendations, (err, playlist) => {
+                        if (err) {
+                            return
+                        }
+
+                        api.getTracks(playlist.data.playlists.tracks.slice(0, 50), (err, tracks_data) => {
+                            console.log(tracks_data);
+                            setCurrentRecord(<Record tuning={record.data.records[0].tuning} tracks={tracks_data}/>)
+                        })
+                    })
+                })
             });
         });
     }
@@ -33,13 +61,9 @@ const RecordPath = () => {
         setActive(number);
     }
 
-    function getRecord() {
-        return (<Record />);
-    }
-
     function getPages() {
         let items = [];
-        for (let number = 0; number < getNumRecords(); number++) {
+        for (let number = 0; number < numRecords; number++) {
             items.push(
                 <Pagination.Item key={number} active={number === active} onClick={() => changePageNumber(number)}>
                     {number + 1}
@@ -53,15 +77,15 @@ const RecordPath = () => {
     return (
         <Container fluid>
             <Row>
-                {getRecord()}
+                {currentRecord}
             </Row>
             <Row>
                 <Pagination className="justify-content-center">
                     <Pagination.First onClick={() => setActive(0)}/>
-                    <Pagination.Prev onClick={() => setActive((active - 1 + getNumRecords()) % getNumRecords())}/>
+                    <Pagination.Prev onClick={() => setActive((active - 1 + numRecords) % numRecords)}/>
                     {getPages()}
-                    <Pagination.Next onClick={() => setActive((active + 1) % getNumRecords())}/>
-                    <Pagination.Last onClick={() => setActive(getNumRecords() - 1)}/>
+                    <Pagination.Next onClick={() => setActive((active + 1) % numRecords)}/>
+                    <Pagination.Last onClick={() => setActive(numRecords - 1)}/>
                 </Pagination>
             </Row>
         </Container>

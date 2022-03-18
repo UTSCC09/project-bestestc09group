@@ -5,6 +5,7 @@ const recordPathSchema = new Schema({
     starting_record: {type: Schema.Types.ObjectId, ref: 'Record'},
     name: {type: Schema.Types.String},
     user: {type: Schema.Types.String},
+    count: {type: Number},
     likes: [{type: Schema.Types.String }],
     dislikes: [{type: Schema.Types.String }]
 }, {timestamps: true })

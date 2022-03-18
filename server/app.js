@@ -129,6 +129,20 @@ app.get('/api/top_tracks', (req, res) => {
     })
 })
 
+app.get('/api/tracks', (req, res) => {
+    axios.get('https://api.spotify.com/v1/tracks?ids=' + req.query.ids, {
+        headers: {
+            Authorization: ('Bearer ' + req.query.access_token)
+        }
+    }).then((response) => {
+        console.log(response);
+        res.status(200).json(response.data.tracks)
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).end(error)
+    })
+})
+
 // Get users top artists
 app.get('/api/top_artists', (req, res) => {
     axios.get('https://api.spotify.com/v1/me/top/artists?limit=20', {

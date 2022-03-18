@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 /* ----- Styling ----- */
 import Container from 'react-bootstrap/Container';
@@ -8,9 +8,9 @@ const Playlist = ({title, tracks}) => {
     return (
         <Container fluid>
             <h1>{title}</h1>
-            {/* {tracks.map((track) => (
-                <Track key={track.title} data={track} />
-            ))} */}
+            {tracks.map((track) => (
+                <Track key={track.name} data={track} />
+            ))}
         </Container>
     );
 }

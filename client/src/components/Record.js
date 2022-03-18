@@ -8,13 +8,13 @@ import Playlist from './Playlist';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/esm/Collapse';
 
-const Record = ({tuning}) => {
+const Record = ({tuning, tracks}) => {
     const [show, setShow] = useState(false);
 
     return (
         <Container fluid>
             <Row>
-                <Playlist/>
+                <Playlist title="Recommendations" tracks={tracks}/>
             </Row>
             
             <Button className="mb-3" onClick={() => setShow(!show)}>Edit Tuning</Button>
