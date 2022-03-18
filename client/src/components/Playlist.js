@@ -8,9 +8,9 @@ const Playlist = ({title, tracks}) => {
     return (
         <Container fluid>
             <h1>{title}</h1>
-            {tracks.map((track) => (
+            {/* {tracks.map((track) => (
                 <Track key={track.title} data={track} />
-            ))}
+            ))} */}
         </Container>
     );
 }

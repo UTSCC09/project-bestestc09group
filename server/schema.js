@@ -2,8 +2,8 @@ const graphql = require('graphql');
 const models = require('./models');
 const Playlist = models.Playlist;
 const Record = models.Record;
-const Tuning = models.Tuning;
 const RecordPath = models.RecordPath;
+const Tuning = models.Tuning;
 const { 
     GraphQLSchema, 
     GraphQLObjectType, 
@@ -18,13 +18,31 @@ const {
 
 /* ----- Types --------- */
 
+const defaultTuning = {
+    acousticness: {min: 0.0, max: 1.0, target: 0.5},
+    danceability: {min: 0.0, max: 1.0, target: 0.5},
+    duration_ms: {min: 0, max: 600000, target: 300000},
+    energy: {min: 0.0, max: 1.0, target: 0.5},
+    instrumentalness: {min: 0.0, max: 1.0, target: 0.5},
+    key: {min: 0, max: 11, target: 6},
+    liveness: {min: 0.0, max: 1.0, target: 0.5},
+    loudness: {min: 0, max: 11, target: 6},
+    mode: {min: 0, max: 1, target: 1},
+    popularity: {min: 0, max: 100, target: 50},
+    speechiness: {min: 0.0, max: 1.0, target: 0.5},
+    tempo: {min: 0, max: 300, target: 150},
+    time_signature: {min: 0, max: 11, target: 6},
+    valence: {min: 0.0, max: 1.0, target: 0.5}
+}
+
+
 const RecordType = new GraphQLObjectType({
     name: 'Record',
     fields: () => ({
         _id: { type: GraphQLID },
         next: { type: new GraphQLList(GraphQLID) },
         previous: { type: GraphQLID },
-        tuning: { type: GraphQLID },
+        tuning: { type: TuningType },
         recommendations: { type: GraphQLID }
     })
 });
@@ -105,7 +123,6 @@ const TuningIntTypeInput = new GraphQLInputObjectType({
 const TuningType = new GraphQLObjectType({
     name: 'Tuning',
     fields: () => ({
-        _id: { type: GraphQLID },
         acousticness: { type: TuningFloatType },
         danceability: { type: TuningFloatType },
         duration_ms: { type: TuningIntType },
@@ -120,6 +137,26 @@ const TuningType = new GraphQLObjectType({
         tempo: { type: TuningFloatType },
         time_signature: { type: TuningIntType },
         valence: { type: TuningFloatType },
+    })
+});
+
+const TuningInputType = new GraphQLInputObjectType({
+    name: 'TuningInput',
+    fields: () => ({
+        acousticness: { type: TuningFloatTypeInput },
+        danceability: { type: TuningFloatTypeInput },
+        duration_ms: { type: TuningIntTypeInput },
+        energy: { type: TuningFloatTypeInput },
+        instrumentalness: { type: TuningFloatTypeInput },
+        key: { type: TuningIntTypeInput },
+        liveness: { type: TuningFloatTypeInput },
+        loudness: { type: TuningFloatTypeInput },
+        mode: { type: TuningIntTypeInput },
+        popularity: { type: TuningIntTypeInput },
+        speechiness: { type: TuningFloatTypeInput },
+        tempo: { type: TuningFloatTypeInput },
+        time_signature: { type: TuningIntTypeInput },
+        valence: { type: TuningFloatTypeInput },
     })
 });
 
@@ -153,14 +190,15 @@ const Mutation = new GraphQLObjectType({
             args: {
                 next: { type: new GraphQLList(GraphQLID) },
                 previous: { type: GraphQLID },
-                tuning: { type: GraphQLID },
+                tuning: { type: TuningInputType },
                 recommendations: { type: GraphQLID }
             },
             resolve(parent, args) {
+                let tuning = args.tuning === undefined? defaultTuning : args.tuning;
                 let record = new Record({
                     next: args.next,
                     previous: args.previous,
-                    tuning: args.tuning,
+                    tuning: tuning,
                     recommendations: args.recommendations
                 })
 
@@ -203,53 +241,6 @@ const Mutation = new GraphQLObjectType({
             }
 
         },
-        addTuning: {
-            type: TuningType,
-            args: {
-                acousticness: { type: TuningFloatTypeInput },
-                danceability: { type: TuningFloatTypeInput },
-                duration_ms: { type: TuningIntTypeInput },
-                energy: { type: TuningFloatTypeInput },
-                instrumentalness: { type: TuningFloatTypeInput },
-                key: { type: TuningIntTypeInput },
-                liveness: { type: TuningFloatTypeInput },
-                loudness: { type: TuningFloatTypeInput },
-                mode: { type: TuningIntTypeInput },
-                popularity: { type: TuningIntTypeInput },
-                speechiness: { type: TuningFloatTypeInput },
-                tempo: { type: TuningFloatTypeInput },
-                time_signature: { type: TuningIntTypeInput },
-                valence: { type: TuningFloatTypeInput }
-            },
-            resolve(parent, args) {
-                let tuning = new Tuning({
-                    acousticness: args.acousticness,
-                    danceability: args.danceability,
-                    duration_ms: args.duration_ms,
-                    energy: args.energy,
-                    instrumentalness: args.instrumentalness,
-                    key: args.key,
-                    liveness: args.liveness,
-                    loudness: args.loudness,
-                    mode: args.mode,
-                    popularity: args.popularity,
-                    speechiness: args.speechiness,
-                    tempo: args.tempo,
-                    time_signature: args.time_signature,
-                    valence: args.valence,
-                })
-
-                const result = tuning.save()
-                    .then(doc => {
-                        return doc
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    })
-
-                return result
-            }
-        },
         updateRecordNext: {
             type: RecordType,
             args: {
@@ -259,7 +250,6 @@ const Mutation = new GraphQLObjectType({
             resolve(parent, args) {
                 const result = Record.findByIdAndUpdate(args._id, {"$push": {"next": args.next}}, {lean: true, returnDocument:"after"})
                     .then((doc) => {
-                        console.log(doc);
                         return doc;
                     })
                     .catch((err) => {
@@ -285,27 +275,10 @@ const RootQuery = new GraphQLObjectType({
             resolve(parent, args) {
                 const result = Playlist.findOne({_id: args._id})
                     .then((arr) => {
-                        console.log(arr);
-                        return arr
+                        return arr;
                     })
                     .catch((err) => {
                         // console.log(err);
-                    })
-                return result;
-            }
-        },
-        tunings: {
-            type: TuningType,
-            args: {
-                _id: {type: GraphQLID}
-            },
-            resolve(parent, args) {
-                const result = Tuning.findOne({_id: args._id})
-                    .then((arr) => {
-                        return arr
-                    })
-                    .catch((err) => {
-                        console.log(err);
                     })
                 return result;
             }
@@ -318,7 +291,6 @@ const RootQuery = new GraphQLObjectType({
             resolve(parent, args) {
                 const result = Record.find({_id: {$in: args.ids}})
                     .then((arr) => {
-                        console.log(arr);
                         return arr;
                     })
                     .catch((err) => {
@@ -335,7 +307,6 @@ const RootQuery = new GraphQLObjectType({
             resolve(parent, args) {
                 const result = RecordPath.find({user: args.user})
                     .then((arr) => {
-                        console.log(arr);
                         return arr;
                     })
                     .catch((err) => {
@@ -352,7 +323,6 @@ const RootQuery = new GraphQLObjectType({
             resolve(parent, args) {
                 const result = RecordPath.findOne({_id: args.rp_id})
                     .then((doc) => {
-                        console.log(doc);
                         return doc;
                     })
                     .catch((err) => {
