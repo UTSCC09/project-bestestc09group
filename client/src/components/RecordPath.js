@@ -11,7 +11,7 @@ import Row from 'react-bootstrap/Row';
 export const RecordContext = React.createContext();
 
 const RecordPath = () => {
-    const [active, setActive] = useState(1);
+    const [active, setActive] = useState(0);
     const {state} = useLocation();
     const [numRecords, setNumRecords] = useState(0);
     const [recordPath, setRecordPath] = useState({});

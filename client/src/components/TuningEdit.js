@@ -46,6 +46,17 @@ const TuningEdit = ({tuning}) => {
         console.log(new_tuning_data)
     }
 
+    function convertTuningToQuery(tuning_json) {
+        const tuning_query = Object.keys(tuning_json).map((attribute) => {
+            return Object.keys(tuning_json[attribute]).map((level) => {
+                return level + "_" + attribute + "=" + tuning_json[attribute][level];
+            }).join('&');
+        }).join("&");
+
+        console.log(tuning_query)
+        return tuning_query;
+    }
+
     function handleSubmission(event) {
         event.preventDefault();
         
@@ -63,16 +74,46 @@ const TuningEdit = ({tuning}) => {
 
         let query = {
             seed_artists: [],//seed_artists.slice(0, 5),
-            seed_tracks: seed_tracks.slice(0, 5),
+            seed_tracks: seed_tracks,
             seed_genre: []//seed_genre.slice(0, 5)
         }
 
-        api.getRecommendations("seed_artists=" + query.seed_artists.join(',') + "&seed_tracks=" + query.seed_tracks.join(',') + "&seed_genres=" + query.seed_genre.join(','), (err, recommendations) => {
+        api.getRecommendations("seed_artists=" + query.seed_artists.join(',') + "&seed_tracks=" + query.seed_tracks.join(',') + "&seed_genres=" + query.seed_genre.join(',') + "&" + convertTuningToQuery(tuning_data), (err, recommendations) => {
             if (err) {
                 return;
             }
 
+            // const recommendation_ids = recommendations.tracks.map((track) => {
+            //     return track.id;
+            // })
+
             console.log(recommendations);
+
+            // // using recommendations create mongo playlist object
+            // api.newPlaylistMongo(recommendation_ids, (err, created_playlist) => {
+            //     if (err) {
+            //         return;
+            //     }
+
+            //     console.log(created_playlist);
+
+            //     // make a new record with the created playlist and tuning data
+            //     api.newRecordMongo(record._id, tuning_data, created_playlist._id, (err, created_record) => {
+            //         if (err) { 
+            //             return
+            //         }
+
+            //         console.log(created_record);
+            //         // add new record id to previous records next array
+            //         api.updateRecordNextMongo(record._id, created_record._id, (err, updated_record) => {
+            //             if (err) {
+            //                 return;
+            //             }
+
+            //             console.log(updated_record);
+            //         })
+            //     })
+            // })
         })
 
         // api.getArtists(seed_artists, (err, artists) => {
