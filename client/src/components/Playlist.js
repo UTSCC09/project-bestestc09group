@@ -1,9 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
+import { RecordContext } from "./RecordPath";
 
 /* ----- Styling ----- */
 import Track from './Track';
 
-const Playlist = ({title, tracks}) => {
+const Playlist = ({title}) => {
+    const tracks = useContext(RecordContext).tracks;
+
     return (
         <div className='container-fluid mb-3'>
             <div className='d-flex flex-column text-center'>

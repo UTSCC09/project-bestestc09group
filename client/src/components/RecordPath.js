@@ -8,6 +8,8 @@ import Container from 'react-bootstrap/Container';
 import Pagination from 'react-bootstrap/Pagination';
 import Row from 'react-bootstrap/Row';
 
+export const RecordContext = React.createContext();
+
 const RecordPath = () => {
     const [active, setActive] = useState(1);
     const {state} = useLocation();
@@ -17,6 +19,7 @@ const RecordPath = () => {
     const [currentRecord, setCurrentRecord] = useState(null);
 
     useEffect( () => {
+        console.log("RECORDPATH")
         getNumRecords();
     }, []);
     
@@ -48,8 +51,13 @@ const RecordPath = () => {
                         }
 
                         api.getTracks(playlist.data.playlists.tracks.slice(0, 50), (err, tracks_data) => {
+                            if (err) {
+                                return;
+                            }
                             console.log(tracks_data);
-                            setCurrentRecord(<Record starting={true} tuning={record.data.records[0].tuning} tracks={tracks_data}/>)
+                            setCurrentRecord(<RecordContext.Provider value={{records: record.data.records[0], tracks: tracks_data}}>
+                                <Record starting={true}/>
+                            </RecordContext.Provider>)
                         })
                     })
                 })

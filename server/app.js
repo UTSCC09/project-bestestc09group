@@ -63,7 +63,7 @@ function make_query_without_access_token(json) {
         if (key === 'access_token') {
             return null;
         } else {
-            return key + "=" + json[key];
+            return key + "=" + encodeURIComponent(json[key]);
         }
     }).join('&');
 }
@@ -137,6 +137,20 @@ app.get('/api/tracks', (req, res) => {
     }).then((response) => {
         console.log(response);
         res.status(200).json(response.data.tracks)
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).end(error)
+    })
+})
+
+app.get('/api/artists', (req, res) => {
+    axios.get('https://api.spotify.com/v1/artists?ids=' + req.query.ids, {
+        headers: {
+            Authorization: ('Bearer ' + req.query.access_token)
+        }
+    }).then((response) => {
+        console.log(response);
+        res.status(200).json(response.data.artists)
     }).catch((error) => {
         console.log(error);
         res.status(500).end(error)

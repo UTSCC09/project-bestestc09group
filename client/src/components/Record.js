@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useState, useContext } from 'react';
 
 /* ----- Styling ----- */
 import Container from 'react-bootstrap/Container';
@@ -7,9 +7,11 @@ import TuningEdit from './TuningEdit';
 import Playlist from './Playlist';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/esm/Collapse';
+import { RecordContext } from './RecordPath';
 
-const Record = ({tuning, tracks, starting}) => {
+const Record = ({starting}) => {
     const [show, setShow] = useState(false);
+    const record = useContext(RecordContext).records;
 
     return (
         <Container fluid>
@@ -19,12 +21,12 @@ const Record = ({tuning, tracks, starting}) => {
             <Row>
                 <Collapse in={show} className="w-50">
                     <Container fluid>
-                        <TuningEdit tuning={tuning}/>
+                        <TuningEdit tuning={record.tuning}/>
                     </Container>
                 </Collapse>
             </Row>
             <Row>
-                <Playlist title={starting ? "Starting Playlist" : "Recommendations"} tracks={tracks}/>
+                <Playlist title={starting ? "Starting Playlist" : "Recommendations"}/>
             </Row>        
         </Container>
     );

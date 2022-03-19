@@ -210,6 +210,9 @@ let api = (function () {
     }
 
     // Spotify Routes
+    module.getArtists = function(artist_ids, callback) {
+        send("GET", "http://localhost:3001/api/artists/" + "?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + artist_ids.join(','), null, callback);
+    }
 
     module.getUserInfo = function(callback) {
         send("GET", "http://localhost:3001/api/user" + "?access_token=" + sessionStorage.getItem('access_token'), null, callback);
