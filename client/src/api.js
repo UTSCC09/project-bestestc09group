@@ -159,12 +159,87 @@ let api = (function () {
 
     // Add Record
     module.newRecordMongo = function(previous, tuning, recommendations, callback) {
+        const tuning_params = Object.keys(tuning).map((field) => {
+            return field + ": " + JSON.stringify(tuning[field]).replaceAll('"', "");
+        }).join(',');
+
         send("POST", `http://localhost:3001/graphql?query=mutation {
-            addRecord(previous: "${previous}", tuning: "${tuning}", recommendations: "${recommendations}") {
+            addRecord(previous: "${previous}", tuning: {${tuning_params}}, recommendations: "${recommendations}") {
                 _id
                 next
                 previous
-                tuning
+                tuning {
+                    acousticness {
+                        min
+                        max
+                        target
+                    }
+                    danceability {
+                        min
+                        max
+                        target
+                    }
+                    duration_ms {
+                        min
+                        max
+                        target
+                    }
+                    energy {
+                        min
+                        max
+                        target
+                    }
+                    instrumentalness {
+                        min
+                        max
+                        target
+                    }
+                    key {
+                        min
+                        max
+                        target
+                    }
+                    liveness {
+                        min
+                        max
+                        target
+                    }
+                    loudness {
+                        min
+                        max
+                        target
+                    }
+                    mode {
+                        min
+                        max
+                        target
+                    }
+                    popularity {
+                        min
+                        max
+                        target
+                    }
+                    speechiness {
+                        min
+                        max
+                        target
+                    }
+                    tempo {
+                        min
+                        max
+                        target
+                    }
+                    time_signature {
+                        min
+                        max
+                        target
+                    }
+                    valence {
+                        min
+                        max
+                        target
+                    }
+                }
                 recommendations
             }
         }`, null, callback);
@@ -199,7 +274,78 @@ let api = (function () {
                 _id
                 next
                 previous
-                tuning
+                tuning {
+                    acousticness {
+                        min
+                        max
+                        target
+                    }
+                    danceability {
+                        min
+                        max
+                        target
+                    }
+                    duration_ms {
+                        min
+                        max
+                        target
+                    }
+                    energy {
+                        min
+                        max
+                        target
+                    }
+                    instrumentalness {
+                        min
+                        max
+                        target
+                    }
+                    key {
+                        min
+                        max
+                        target
+                    }
+                    liveness {
+                        min
+                        max
+                        target
+                    }
+                    loudness {
+                        min
+                        max
+                        target
+                    }
+                    mode {
+                        min
+                        max
+                        target
+                    }
+                    popularity {
+                        min
+                        max
+                        target
+                    }
+                    speechiness {
+                        min
+                        max
+                        target
+                    }
+                    tempo {
+                        min
+                        max
+                        target
+                    }
+                    time_signature {
+                        min
+                        max
+                        target
+                    }
+                    valence {
+                        min
+                        max
+                        target
+                    }
+                }
                 recommendations
             }
         }`, null, callback);

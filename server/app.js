@@ -122,7 +122,7 @@ app.get('/api/recommendations', (req, res) => {
         }))
         .catch((error) => {
             console.log(error);
-            res.status(500).end(error);
+            res.status(500).end("uh oh");
         })
 })
     // axios.get('https://api.spotify.com/v1/recommendations?' + make_query_without_access_token(req.query).substring(1), {

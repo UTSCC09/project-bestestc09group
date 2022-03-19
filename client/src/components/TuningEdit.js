@@ -17,7 +17,7 @@ const TuningEdit = ({tuning}) => {
     console.log("HI RECORD")
     const [tuning_data, setTuningData] = useState(tuning);
     let forms = Object.keys(tuning_data).map((key) => {
-        return <Form.Group className="mb-3" controlId={"form" + key}>
+        return <Form.Group key={key} className="mb-3" controlId={"form" + key}>
             <Form.Label>{key.toUpperCase()}</Form.Label>
             <Row>
                 <Col> 
@@ -53,7 +53,6 @@ const TuningEdit = ({tuning}) => {
             }).join('&');
         }).join("&");
 
-        console.log(tuning_query)
         return tuning_query;
     }
 
@@ -83,37 +82,43 @@ const TuningEdit = ({tuning}) => {
                 return;
             }
 
-            // const recommendation_ids = recommendations.tracks.map((track) => {
-            //     return track.id;
-            // })
-
             console.log(recommendations);
 
-            // // using recommendations create mongo playlist object
-            // api.newPlaylistMongo(recommendation_ids, (err, created_playlist) => {
-            //     if (err) {
-            //         return;
-            //     }
+            let new_tracks = []
 
-            //     console.log(created_playlist);
+            recommendations.forEach((recommendation) => {
+                recommendation.tracks.forEach((track) => {
+                    new_tracks.push(track.id);
+                })
+            })
 
-            //     // make a new record with the created playlist and tuning data
-            //     api.newRecordMongo(record._id, tuning_data, created_playlist._id, (err, created_record) => {
-            //         if (err) { 
-            //             return
-            //         }
+            console.log(new_tracks)
 
-            //         console.log(created_record);
-            //         // add new record id to previous records next array
-            //         api.updateRecordNextMongo(record._id, created_record._id, (err, updated_record) => {
-            //             if (err) {
-            //                 return;
-            //             }
+            // using recommendations create mongo playlist object
+            api.newPlaylistMongo(new_tracks, (err, created_playlist) => {
+                if (err) {
+                    return;
+                }
 
-            //             console.log(updated_record);
-            //         })
-            //     })
-            // })
+                console.log(created_playlist.data.addPlaylist);
+
+                // make a new record with the created playlist and tuning data
+                api.newRecordMongo(record._id, tuning_data, created_playlist.data.addPlaylist._id, (err, created_record) => {
+                    if (err) { 
+                        return
+                    }
+
+                    console.log(created_record);
+                    // add new record id to previous records next array
+                    api.updateRecordNextMongo(record._id, created_record.data.addRecord._id, (err, updated_record) => {
+                        if (err) {
+                            return;
+                        }
+
+                        console.log(updated_record);
+                    })
+                })
+            })
         })
 
         // api.getArtists(seed_artists, (err, artists) => {
