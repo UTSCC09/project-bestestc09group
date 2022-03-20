@@ -1,18 +1,14 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const recordSchema = new Schema({
-    next: [{type: Schema.Types.ObjectId, ref: 'Record'}],
-    previous: { type: Schema.Types.ObjectId },
-    tuning: { type: Schema.Types.ObjectId, ref: 'Tuning' },
-    recommendations: { type: Schema.Types.ObjectId, ref: 'Playlist'}
-})
-
 const recordPathSchema = new Schema({
     starting_record: {type: Schema.Types.ObjectId, ref: 'Record'},
-    likes: [{type: Schema.Types.ObjectId, ref: 'Track'}],
-    dislikes: [{type: Schema.Types.ObjectId, ref: 'Track'}]
-})
+    name: {type: Schema.Types.String},
+    user: {type: Schema.Types.String},
+    count: {type: Number},
+    likes: [{type: Schema.Types.String }],
+    dislikes: [{type: Schema.Types.String }]
+}, {timestamps: true })
 
 function convertToFloat(val) {
     return parseFloat(val.toString());
@@ -47,25 +43,18 @@ const tuningSchema = new Schema({
     valence: tuningFloatSchema,
 })
 
-const trackSchema = new Schema({
-    url: { type: String, required: true},
-    name: { type: String, required: true },
-    artist: { type: String, required: true }
-});
+const recordSchema = new Schema({
+    next: [{type: Schema.Types.ObjectId, ref: 'Record'}],
+    previous: { type: Schema.Types.ObjectId },
+    tuning: tuningSchema,
+    recommendations: { type: Schema.Types.ObjectId, ref: 'Playlist'},
+    rp_id: { type: Schema.Types.ObjectId, ref: 'RecordPath'}
+})
 
 const playlistSchema = new Schema({
-    tracks: [{ type: Schema.Types.ObjectId, ref: 'Track'}]
+    tracks: [{ type: Schema.Types.String }]
 });
 
-const userSchema = new Schema({
-    username: String,
-    initial_records: [{type: Schema.Types.ObjectId, ref: 'RecordPath'}]
-});
-
-
-exports.Tuning = mongoose.models.Tuning || mongoose.model("Tuning", tuningSchema);
 exports.Record = mongoose.models.Record || mongoose.model('Record', recordSchema);
 exports.RecordPath = mongoose.models.RecordPath || mongoose.model('RecordPath', recordPathSchema);
-exports.Track = mongoose.models.Track || mongoose.model('Track', trackSchema);
-exports.Playlist = mongoose.models.Playlist || mongoose.model('Playlist', playlistSchema); 
-exports.User = mongoose.models.User || mongoose.model('User', userSchema);
+exports.Playlist = mongoose.models.Playlist || mongoose.model('Playlist', playlistSchema);

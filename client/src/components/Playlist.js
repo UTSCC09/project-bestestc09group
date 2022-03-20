@@ -1,18 +1,22 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
+import { RecordContext } from "./RecordPath";
 
 /* ----- Styling ----- */
-import Container from 'react-bootstrap/Container';
 import Track from './Track';
 
-const tracks = [{title: "test1", artist:"test1", url:"http:test"},{title: "test2", artist:"test2", url:"http:test"}]
+const Playlist = ({title}) => {
+    const tracks = useContext(RecordContext).tracks;
 
-const Playlist = () => {
     return (
-        <Container fluid>
+        <div className='container-fluid mb-3'>
+            <div className='d-flex flex-column text-center'>
+                <h1>{title}</h1>
+            </div>
+            {/* <h3>Like up to 5 songs below and edit the tuning to generate recommendations.</h3> */}
             {tracks.map((track) => (
-                <Track data={track} />
+                <Track key={track.name} data={track} />
             ))}
-        </Container>
+        </div>
     );
 }
 

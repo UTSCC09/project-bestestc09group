@@ -8,13 +8,13 @@ import { Route, Routes } from 'react-router-dom'
 /* ----- Components ----- */
 import Header from './components/Header';
 import Auth from './components/Auth';
-import Discover from './components/Discover';
+import CreateRecordPath from './components/CreateRecordPath';
+import RecordPath from './components/RecordPath';
+import TopTracksArtists from './components/TopTracksArtists';
 
 function App() { 
   const TOKEN = "https://accounts.spotify.com/api/token";
-  const [top_tracks, setTopTrack] = useState(0);
-  const [top_artists, setTopArtists] = useState(0);
-  const [auth, setAuth] = useState(isAuthorized());
+  const [auth, setAuth] = useState(false);
   let client_id = '';
   let client_secret = '';
   let access_token = null;
@@ -126,27 +126,7 @@ function App() {
     })
   }
 
-  function getInfo() {
-    api.getUserTopTracks((error, tracks) => {
-      let track_list = document.querySelector('#top_tracks');
-      tracks.map((track) => {
-        let list_item = document.createElement('li');
-        list_item.innerText = track.name;
-        track_list.appendChild(list_item);
-      })
-
-      api.getUserTopArtists((error, artists) => {
-        let artist_list = document.querySelector('#top_artists');
-        artists.map((artist) => {
-          let list_item = document.createElement('li');
-          list_item.innerText = artist.name;
-          artist_list.appendChild(list_item);
-        })
-      });
-    })
-  }
-
-  function isAuthorized(){
+  function isAuthorized() {
     api.getUserInfo((error, data) => {
       if (error) {
         setAuth(false);
@@ -157,24 +137,21 @@ function App() {
     });
   }
 
-  const fake_records = [{name:'test1'},{name:'test2'},{name:'test3'},{name:'test4'}]
+  function logout() {
+    sessionStorage.clear();
+    setAuth(false);
+    window.location.replace('http://localhost:3000/')
+  }
 
   return (
     <div className="App">
-      <Header authHandler={handleAuthorization} auth={auth}/>
+      <Header authHandler={handleAuthorization} auth={auth} logout={logout}/>
       <Routes>
         <Route path="/" element={<Auth auth={auth}/>}/>
-        {fake_records.map((data) => (
-          <Route key={data.name} path={data.name} element={<Discover title={data.name}/>}/>
-        ))}
+        <Route path="/create" element={<CreateRecordPath/>}/>
+        <Route path="/recordpath/:id" element={<RecordPath/>}/>
+        <Route path="/top" element={<TopTracksArtists/>}/>
       </Routes>
-      {/* <button onClick={getInfo}>Get User Info</button>
-        <h1>Top Tracks</h1>
-        <ul id='top_tracks'>
-        </ul>
-        <h1>Top Artists</h1>
-        <ul id='top_artists'>
-        </ul> */}
     </div>
   );
 }

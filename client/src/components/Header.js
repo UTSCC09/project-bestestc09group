@@ -4,23 +4,33 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
+import { Link } from 'react-router-dom';
 
-const Header = ({ authHandler, auth }) => {
+const Header = ({ authHandler, auth, logout }) => {
     if (!auth) {
         return (
-            <Container fluid>
+            <Container fluid className="mb-3">
                 <Navbar bg="light">
-                    <Navbar.Brand>DiscoverWeeklyU</Navbar.Brand>
-                    <Button variant="primary" onClick={authHandler}>Log in with Spotify</Button>
+                    <div className='col'>
+                        <Link to="/"><Navbar.Brand>DiscoverWeeklyU</Navbar.Brand></Link>
+                    </div>
+                    <div className='col d-flex justify-content-end'>
+                        <Button variant="primary" onClick={authHandler}>Log in with Spotify</Button>
+                    </div>
                 </Navbar>
             </Container>
         );
     } else {
         return (            
-            <Container fluid>
+            <Container fluid className="mb-3">
                 <Navbar bg="light">
-                    <Navbar.Brand>DiscoverWeeklyU</Navbar.Brand>
-                    <Button variant="primary">Log Out</Button>
+                    <div className='col'>
+                        <Link to="/" className='text-decoration-none'><Navbar.Brand className='fw-bold'>DiscoverWeeklyU</Navbar.Brand></Link>
+                        <Link to="/top" className='text-decoration-none text-body'>Top Artists/Tracks</Link>
+                    </div>
+                    <div className='col d-flex justify-content-end'>
+                        <Button variant="primary" onClick={logout}>Log Out</Button>
+                    </div>
                 </Navbar>
             </Container>
         );

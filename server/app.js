@@ -58,31 +58,84 @@ app.get('/api/client_info', (req, res) => {
     })
 })
 
+/*
+
+{
+    seed_tracks: 1,2,3,4,5,6,7,8,9,10
+}
+=>
+[
+    {
+        seed_tracks: 1,2,3,4,5
+    },
+    {
+        seed_tracks: 6,7,8,9,10
+    }
+]
+*/
+
 function make_query_without_access_token(json) {
-    return Object.keys(json).map((key) => {
-        if (key === 'access_token') {
-            return null;
-        } else {
-            return key + "=" + json[key];
-        }
-    }).join('&');
+    console.log(json.seed_tracks);
+    const seed_track_split = json.seed_tracks.split(',');
+    let new_seed_tracks = []
+    for (let i = 0; i < seed_track_split.length; i = i + 5) {
+        new_seed_tracks.push(seed_track_split.slice(i,5+i).join(','));
+    }
+
+    // console.log(new_seed_tracks);
+
+    let rec_reqs = new_seed_tracks.map((seed_track) => {
+        return Object.keys(json).map((key) => {
+            if (key === 'access_token') {
+                return null;
+            } else if (key == "seed_tracks") {
+                return key + "=" + encodeURIComponent(seed_track);
+            } else {
+                return key + "=" + encodeURIComponent(json[key]);
+            }
+        }).join('&');
+    })
+
+    console.log(rec_reqs);
+    return rec_reqs;
 }
 
 // Spotify API Calls
 // Get Recommendations 
 app.get('/api/recommendations', (req, res) => {
-    axios.get('https://api.spotify.com/v1/recommendations?' + make_query_without_access_token(req.query).substring(1), {
-        headers: {
-            Authorization: ('Bearer ' + req.query.access_token)
-        }
-    }).then((response) => {
-        console.log(response.data);
-        res.status(200).json(response.data)
-    }).catch((error) => {
-        console.log(error);
-        res.status(500).end(error)
+    let queries = make_query_without_access_token(req.query);
+    let recommendation_requests = queries.map((query) => {
+        return axios.get('https://api.spotify.com/v1/recommendations?' + query.substring(1), {
+            headers: {
+                Authorization: ('Bearer ' + req.query.access_token)
+            }
+        });
     })
+
+    axios.all(recommendation_requests)
+        .then(axios.spread((...responses) => {
+            console.log(responses);
+            const recommendation_data = responses.map((response) => {
+                return response.data;
+            })
+            res.status(200).json(recommendation_data);
+        }))
+        .catch((error) => {
+            console.log(error);
+            res.status(500).end("uh oh");
+        })
 })
+    // axios.get('https://api.spotify.com/v1/recommendations?' + make_query_without_access_token(req.query).substring(1), {
+    //     headers: {
+    //         Authorization: ('Bearer ' + req.query.access_token)
+    //     }
+    // }).then((response) => {
+    //     // console.log(response.data);
+    //     res.status(200).json(response.data)
+    // }).catch((error) => {
+    //     // console.log(error);
+    //     res.status(500).end(error)
+    // })
 
 // Get Playlist Info
 app.get('/api/playlists/:id', (req, res) => {
@@ -110,13 +163,13 @@ app.get('/api/playlists', (req, res) => {
         res.status(200).json(response.data.items)
     }).catch((error) => {
         console.log(error);
-        res.status(500).end(error)
+        res.status(500).end(error.statusText)
     })
 })
 
 // Get users top tracks
 app.get('/api/top_tracks', (req, res) => {
-    axios.get('https://api.spotify.com/v1/me/top/tracks?limit=50', {
+    axios.get('https://api.spotify.com/v1/me/top/tracks?limit=20', {
         headers: {
             Authorization: ('Bearer ' + req.query.access_token)
         }
@@ -129,9 +182,37 @@ app.get('/api/top_tracks', (req, res) => {
     })
 })
 
+app.get('/api/tracks', (req, res) => {
+    axios.get('https://api.spotify.com/v1/tracks?ids=' + req.query.ids, {
+        headers: {
+            Authorization: ('Bearer ' + req.query.access_token)
+        }
+    }).then((response) => {
+        console.log(response);
+        res.status(200).json(response.data.tracks)
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).end(error)
+    })
+})
+
+app.get('/api/artists', (req, res) => {
+    axios.get('https://api.spotify.com/v1/artists?ids=' + req.query.ids, {
+        headers: {
+            Authorization: ('Bearer ' + req.query.access_token)
+        }
+    }).then((response) => {
+        console.log(response);
+        res.status(200).json(response.data.artists)
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).end(error)
+    })
+})
+
 // Get users top artists
 app.get('/api/top_artists', (req, res) => {
-    axios.get('https://api.spotify.com/v1/me/top/artists?limit=50', {
+    axios.get('https://api.spotify.com/v1/me/top/artists?limit=20', {
         headers: {
             Authorization: ('Bearer ' + req.query.access_token)
         }

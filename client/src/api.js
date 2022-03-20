@@ -14,60 +14,13 @@ let api = (function () {
     }
 
     let module = {}
-    
-    // Mongo Routes
-    // Get All Users in DB
-    module.getAllUsersMongo = function(callback) {
-        send("POST", `http://localhost:3001/graphql?query={
-            allUsers {
-                _id 
-                username
-                initial_records
-            }
-        }`, null, callback);
-    }
-
-    // Get User by Username
-    module.getUserMongo = function(username, callback) {
-        send("POST", `http://localhost:3001/graphql?query={
-            users(username: "${username}") {
-                _id 
-                username
-                initial_records
-            }
-        }`, null, callback);
-    }
 
     // Get Playlist by ID
     module.getPlaylistMongo = function(id, callback) {
         send("POST", `http://localhost:3001/graphql?query={
-            playlist(_id: "${id}") {
+            playlists (_id: "${id}") {
                 _id 
                 tracks
-            }
-        }`, null, callback);
-    }
-
-    // Get tracks in playlist with id
-    module.getPlaylistTracksMongo = function(id, callback) {
-        send("POST", `http://localhost:3001/graphql?query={
-            allTracksInPlaylist(_id: "${id}") {
-              _id
-              url
-              name
-              artist
-            }
-        }`, null, callback);
-    }
-
-    // Get track by id
-    module.getTrackMongo = function(id, callback) {
-        send("POST", `http://localhost:3001/graphql?query={
-            tracks(_id: "${id}") {
-              _id
-              url
-              name
-              artist
             }
         }`, null, callback);
     }
@@ -81,37 +34,117 @@ let api = (function () {
             records(ids: [${ids}]) {
                 _id
                 previous
-                tuning
+                next
+                tuning {
+                    acousticness {
+                        min
+                        max
+                        target
+                    }
+                    danceability {
+                        min
+                        max
+                        target
+                    }
+                    duration_ms {
+                        min
+                        max
+                        target
+                    }
+                    energy {
+                        min
+                        max
+                        target
+                    }
+                    instrumentalness {
+                        min
+                        max
+                        target
+                    }
+                    key {
+                        min
+                        max
+                        target
+                    }
+                    liveness {
+                        min
+                        max
+                        target
+                    }
+                    loudness {
+                        min
+                        max
+                        target
+                    }
+                    mode {
+                        min
+                        max
+                        target
+                    }
+                    popularity {
+                        min
+                        max
+                        target
+                    }
+                    speechiness {
+                        min
+                        max
+                        target
+                    }
+                    tempo {
+                        min
+                        max
+                        target
+                    }
+                    time_signature {
+                        min
+                        max
+                        target
+                    }
+                    valence {
+                        min
+                        max
+                        target
+                    }
+                }
                 recommendations
+                rp_id
             }
         }`, null, callback);
     }
 
-    // Get record path by starting record ids
-    module.getRecordPathsMongo = function(ids, callback) {
-        ids = ids.map((id) => {
-            return `"${id}"`
-        }).join(',');
+    // Get record paths by user ids
+    module.getRecordPathsMongo = function(user_id, callback) {
         send("POST", `http://localhost:3001/graphql?query={
-            recordPaths(starting_records: [${ids}]) {
+            recordPaths(user: "${user_id}") {
                 _id
+                name
+                user
+                count
                 starting_record
                 likes
                 dislikes
+                updatedAt
             }
         }`, null, callback);
     }
 
-    // Add User
-    module.newUserMongo = function(username, callback) {
-        send("POST", `http://localhost:3001/graphql?query=mutation {
-            addUser(username: "${username}") {
+    // Get record path by id
+    module.getRecordPathMongo = function(rp_id, callback) {
+        send("POST", `http://localhost:3001/graphql?query={
+            recordPath(rp_id: "${rp_id}") {
                 _id
-                username
-                initial_records
+                name
+                user
+                count
+                starting_record
+                likes
+                dislikes
+                updatedAt
             }
         }`, null, callback);
     }
+
 
     // Add Playlist
     module.newPlaylistMongo = function(ids, callback) {
@@ -126,37 +159,110 @@ let api = (function () {
         }`, null, callback);
     }
 
-    // Add Track
-    module.newTrackMongo = function(url, name, artist, callback) {
-        const url_query = encodeURIComponent(`mutation {
-            addTrack(url: "${url}", name: "${name}", artist: "${artist}") {
-                _id
-                url
-                name
-                artist
-            }
-        }`)
-        send("POST", "http://localhost:3001/graphql?query=" + url_query, null, callback);
-    }
-
     // Add Record
-    module.newRecordMongo = function(previous, tuning, recommendations, callback) {
+    module.newRecordMongo = function(previous, tuning, recommendations, rp_id, callback) {
+        const tuning_params = Object.keys(tuning).map((field) => {
+            return field + ": " + JSON.stringify(tuning[field]).replaceAll('"', "");
+        }).join(',');
+
         send("POST", `http://localhost:3001/graphql?query=mutation {
-            addRecord(previous: "${previous}", tuning: "${tuning}", recommendations: "${recommendations}") {
+            addRecord(previous: "${previous}", tuning: {${tuning_params}}, recommendations: "${recommendations}", rp_id: "${rp_id}") {
                 _id
                 next
                 previous
-                tuning
+                tuning {
+                    acousticness {
+                        min
+                        max
+                        target
+                    }
+                    danceability {
+                        min
+                        max
+                        target
+                    }
+                    duration_ms {
+                        min
+                        max
+                        target
+                    }
+                    energy {
+                        min
+                        max
+                        target
+                    }
+                    instrumentalness {
+                        min
+                        max
+                        target
+                    }
+                    key {
+                        min
+                        max
+                        target
+                    }
+                    liveness {
+                        min
+                        max
+                        target
+                    }
+                    loudness {
+                        min
+                        max
+                        target
+                    }
+                    mode {
+                        min
+                        max
+                        target
+                    }
+                    popularity {
+                        min
+                        max
+                        target
+                    }
+                    speechiness {
+                        min
+                        max
+                        target
+                    }
+                    tempo {
+                        min
+                        max
+                        target
+                    }
+                    time_signature {
+                        min
+                        max
+                        target
+                    }
+                    valence {
+                        min
+                        max
+                        target
+                    }
+                }
                 recommendations
+                rp_id
+            }
+        }`, null, callback);
+    }
+
+    module.newStartingRecordMongo = function(playlist, callback) {
+        send("POST", `http://localhost:3001/graphql?query=mutation {
+            addRecord (recommendations: "${playlist}") {
+                _id
             }
         }`, null, callback);
     }
 
     // Add Record Path
-    module.newRecordPathMongo = function(starting_record, callback) {
+    module.newRecordPathMongo = function(starting_record, name, user_id, callback) {
         send("POST", `http://localhost:3001/graphql?query=mutation {
-            addRecordPath(starting_record: "${starting_record}") {
+            addRecordPath(starting_record: "${starting_record}", name: "${name}", user:"${user_id}") {
                 _id
+                name
+                count
                 starting_record
                 likes
                 dislikes
@@ -164,86 +270,10 @@ let api = (function () {
         }`, null, callback);
     }
 
-    // Add Tuning
-    module.newTuningMongo = function(tuning_info, callback) {
-        const parameters = Object.keys(tuning_info).map((field) => {
-            return field + ": " + JSON.stringify(tuning_info[field]).replaceAll('"', "");
-        }).join(',');
-
-        console.log(parameters);
+    module.deleteRecordPath = function(id, callback) {
         send("POST", `http://localhost:3001/graphql?query=mutation {
-            addTuning(${parameters}) {
+            deleteRecordPath(_id: "${id}") {
                 _id
-                acousticness {
-                    min
-                    max
-                    target
-                  }
-                  danceability {
-                    min
-                    max
-                    target
-                  }
-                  duration_ms {
-                    min
-                    max
-                    target
-                  }
-                  energy {
-                    min
-                    max
-                    target
-                  }
-                  instrumentalness {
-                    min
-                    max
-                    target
-                  }
-                  key {
-                    min
-                    max
-                    target
-                  }
-                  liveness {
-                    min
-                    max
-                    target
-                  }
-                  loudness {
-                    min
-                    max
-                    target
-                  }
-                  mode {
-                    min
-                    max
-                    target
-                  }
-                  popularity {
-                    min
-                    max
-                    target
-                  }
-                  speechiness {
-                    min
-                    max
-                    target
-                  }
-                  tempo {
-                    min
-                    max
-                    target
-                  }
-                  time_signature {
-                    min
-                    max
-                    target
-                  }
-                  valence {
-                    min
-                    max
-                    target
-                  }
             }
         }`, null, callback);
     }
@@ -255,29 +285,190 @@ let api = (function () {
                 _id
                 next
                 previous
-                tuning
+                tuning {
+                    acousticness {
+                        min
+                        max
+                        target
+                    }
+                    danceability {
+                        min
+                        max
+                        target
+                    }
+                    duration_ms {
+                        min
+                        max
+                        target
+                    }
+                    energy {
+                        min
+                        max
+                        target
+                    }
+                    instrumentalness {
+                        min
+                        max
+                        target
+                    }
+                    key {
+                        min
+                        max
+                        target
+                    }
+                    liveness {
+                        min
+                        max
+                        target
+                    }
+                    loudness {
+                        min
+                        max
+                        target
+                    }
+                    mode {
+                        min
+                        max
+                        target
+                    }
+                    popularity {
+                        min
+                        max
+                        target
+                    }
+                    speechiness {
+                        min
+                        max
+                        target
+                    }
+                    tempo {
+                        min
+                        max
+                        target
+                    }
+                    time_signature {
+                        min
+                        max
+                        target
+                    }
+                    valence {
+                        min
+                        max
+                        target
+                    }
+                }
                 recommendations
+                rp_id
             }
         }`, null, callback);
     }
 
-    // Update User Initial Record Paths
-    module.updateUserRecordsMongo = function(username, new_record_path, callback) {
+    // Update Record Next
+    module.updateRecordParentMongo = function(id, parent_id, callback) {
         send("POST", `http://localhost:3001/graphql?query=mutation {
-            updateUserRecords(username:"${username}" ,new_record_path: "${new_record_path}") {
+            updateRecordParent(_id:"${id}" ,parent_id: "${parent_id}") {
                 _id
-                username
-                initial_records
+                next
+                previous
+                tuning {
+                    acousticness {
+                        min
+                        max
+                        target
+                    }
+                    danceability {
+                        min
+                        max
+                        target
+                    }
+                    duration_ms {
+                        min
+                        max
+                        target
+                    }
+                    energy {
+                        min
+                        max
+                        target
+                    }
+                    instrumentalness {
+                        min
+                        max
+                        target
+                    }
+                    key {
+                        min
+                        max
+                        target
+                    }
+                    liveness {
+                        min
+                        max
+                        target
+                    }
+                    loudness {
+                        min
+                        max
+                        target
+                    }
+                    mode {
+                        min
+                        max
+                        target
+                    }
+                    popularity {
+                        min
+                        max
+                        target
+                    }
+                    speechiness {
+                        min
+                        max
+                        target
+                    }
+                    tempo {
+                        min
+                        max
+                        target
+                    }
+                    time_signature {
+                        min
+                        max
+                        target
+                    }
+                    valence {
+                        min
+                        max
+                        target
+                    }
+                }
+                recommendations
+                rp_id
             }
         }`, null, callback);
     }
 
+    module.incrementRPCount = function(id, increment_by, callback) {
+        send("POST", `http://localhost:3001/graphql?query=mutation {
+            updateRecordPathCount(_id: "${id}", incrementBy: ${increment_by}) {
+                _id
+                name
+                count
+                starting_record
+                likes
+                dislikes
+            }
+        }`, null, callback);
+    }
 
     module.getClientInfo = function(callback) {
         send("GET", "http://localhost:3001/api/client_info", null, callback);
     }
 
     // Spotify Routes
+    module.getArtists = function(artist_ids, callback) {
+        send("GET", "http://localhost:3001/api/artists/" + "?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + artist_ids.join(','), null, callback);
+    }
 
     module.getUserInfo = function(callback) {
         send("GET", "http://localhost:3001/api/user" + "?access_token=" + sessionStorage.getItem('access_token'), null, callback);
@@ -289,6 +480,10 @@ let api = (function () {
 
     module.getPlaylistInfo = function(playlist_id, callback) {
         send("GET", "http://localhost:3001/api/playlists/" + playlist_id + "?access_token=" + sessionStorage.getItem('access_token'), null, callback);
+    }
+
+    module.getTracks = function(track_ids, callback) {
+        send("GET", "http://localhost:3001/api/tracks/" + "?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + track_ids.join(","), null, callback);
     }
 
     module.getUserPlaylists = function(callback) {
