@@ -35,7 +35,7 @@ const RecordPath = () => {
                     return;
                 }
                 console.log(path.data.recordPath);
-                setNumRecords(5);
+                setNumRecords(path.data.recordPath.count);
                 setRecordPath(path.data.recordPath);
 
                 api.getRecordsMongo([path.data.recordPath.starting_record], (err, record) => {
@@ -69,6 +69,62 @@ const RecordPath = () => {
         setActive(number);
     }
 
+    function previousRecord() {
+        setActive((active - 1 + numRecords) % numRecords)
+        api.getRecordsMongo([currentRecordData.previous], (err, record) => {
+            if (err) {
+                return;
+            }
+
+            console.log(record.data.records[0]);
+            setCurrentRecordData(record.data.records[0]);
+            api.getPlaylistMongo(record.data.records[0].recommendations, (err, playlist) => {
+                if (err) {
+                    return
+                }
+
+                api.getTracks(playlist.data.playlists.tracks.slice(0, 50), (err, tracks_data) => {
+                    if (err) {
+                        return;
+                    }
+                    console.log(tracks_data);
+                    setCurrentRecord(<RecordContext.Provider value={{records: record.data.records[0], tracks: tracks_data}}>
+                        <Record starting={true}/>
+                    </RecordContext.Provider>)
+                    
+                })
+            })
+        })
+    }
+
+    function nextRecord() {
+        setActive((active + 1) % numRecords)
+        api.getRecordsMongo([currentRecordData.next[0]], (err, record) => {
+            if (err) {
+                return;
+            }
+
+            console.log(record.data.records[0]);
+            setCurrentRecordData(record.data.records[0]);
+            api.getPlaylistMongo(record.data.records[0].recommendations, (err, playlist) => {
+                if (err) {
+                    return
+                }
+
+                api.getTracks(playlist.data.playlists.tracks.slice(0, 50), (err, tracks_data) => {
+                    if (err) {
+                        return;
+                    }
+                    console.log(tracks_data);
+                    setCurrentRecord(<RecordContext.Provider value={{records: record.data.records[0], tracks: tracks_data}}>
+                        <Record starting={true}/>
+                    </RecordContext.Provider>)
+                    
+                })
+            })
+        })
+    }
+
     function getPages() {
         let items = [];
         for (let number = 0; number < numRecords; number++) {
@@ -90,9 +146,9 @@ const RecordPath = () => {
             <Row>
                 <Pagination className="justify-content-center">
                     <Pagination.First onClick={() => setActive(0)}/>
-                    <Pagination.Prev onClick={() => setActive((active - 1 + numRecords) % numRecords)}/>
+                    <Pagination.Prev onClick={() => previousRecord()}/>
                     {getPages()}
-                    <Pagination.Next onClick={() => setActive((active + 1) % numRecords)}/>
+                    <Pagination.Next onClick={() => nextRecord()}/>
                     <Pagination.Last onClick={() => setActive(numRecords - 1)}/>
                 </Pagination>
             </Row>

@@ -34,6 +34,7 @@ let api = (function () {
             records(ids: [${ids}]) {
                 _id
                 previous
+                next
                 tuning {
                     acousticness {
                         min
@@ -107,6 +108,7 @@ let api = (function () {
                     }
                 }
                 recommendations
+                rp_id
             }
         }`, null, callback);
     }
@@ -158,13 +160,13 @@ let api = (function () {
     }
 
     // Add Record
-    module.newRecordMongo = function(previous, tuning, recommendations, callback) {
+    module.newRecordMongo = function(previous, tuning, recommendations, rp_id, callback) {
         const tuning_params = Object.keys(tuning).map((field) => {
             return field + ": " + JSON.stringify(tuning[field]).replaceAll('"', "");
         }).join(',');
 
         send("POST", `http://localhost:3001/graphql?query=mutation {
-            addRecord(previous: "${previous}", tuning: {${tuning_params}}, recommendations: "${recommendations}") {
+            addRecord(previous: "${previous}", tuning: {${tuning_params}}, recommendations: "${recommendations}", rp_id: "${rp_id}") {
                 _id
                 next
                 previous
@@ -241,6 +243,7 @@ let api = (function () {
                     }
                 }
                 recommendations
+                rp_id
             }
         }`, null, callback);
     }
@@ -347,6 +350,105 @@ let api = (function () {
                     }
                 }
                 recommendations
+                rp_id
+            }
+        }`, null, callback);
+    }
+
+    // Update Record Next
+    module.updateRecordParentMongo = function(id, parent_id, callback) {
+        send("POST", `http://localhost:3001/graphql?query=mutation {
+            updateRecordParent(_id:"${id}" ,parent_id: "${parent_id}") {
+                _id
+                next
+                previous
+                tuning {
+                    acousticness {
+                        min
+                        max
+                        target
+                    }
+                    danceability {
+                        min
+                        max
+                        target
+                    }
+                    duration_ms {
+                        min
+                        max
+                        target
+                    }
+                    energy {
+                        min
+                        max
+                        target
+                    }
+                    instrumentalness {
+                        min
+                        max
+                        target
+                    }
+                    key {
+                        min
+                        max
+                        target
+                    }
+                    liveness {
+                        min
+                        max
+                        target
+                    }
+                    loudness {
+                        min
+                        max
+                        target
+                    }
+                    mode {
+                        min
+                        max
+                        target
+                    }
+                    popularity {
+                        min
+                        max
+                        target
+                    }
+                    speechiness {
+                        min
+                        max
+                        target
+                    }
+                    tempo {
+                        min
+                        max
+                        target
+                    }
+                    time_signature {
+                        min
+                        max
+                        target
+                    }
+                    valence {
+                        min
+                        max
+                        target
+                    }
+                }
+                recommendations
+                rp_id
+            }
+        }`, null, callback);
+    }
+
+    module.incrementRPCount = function(id, increment_by, callback) {
+        send("POST", `http://localhost:3001/graphql?query=mutation {
+            updateRecordPathCount(_id: "${id}", incrementBy: ${increment_by}) {
+                _id
+                name
+                count
+                starting_record
+                likes
+                dislikes
             }
         }`, null, callback);
     }

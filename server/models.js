@@ -47,7 +47,8 @@ const recordSchema = new Schema({
     next: [{type: Schema.Types.ObjectId, ref: 'Record'}],
     previous: { type: Schema.Types.ObjectId },
     tuning: tuningSchema,
-    recommendations: { type: Schema.Types.ObjectId, ref: 'Playlist'}
+    recommendations: { type: Schema.Types.ObjectId, ref: 'Playlist'},
+    rp_id: { type: Schema.Types.ObjectId, ref: 'RecordPath'}
 })
 
 const playlistSchema = new Schema({

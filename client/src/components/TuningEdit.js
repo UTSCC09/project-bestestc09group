@@ -14,6 +14,7 @@ const TuningEdit = ({tuning}) => {
     // const [forms, setForms] = useState();
     const tracks = React.useContext(RecordContext).tracks;
     const record = React.useContext(RecordContext).records;
+    console.log(record);
     console.log("HI RECORD")
     const [tuning_data, setTuningData] = useState(tuning);
     let forms = Object.keys(tuning_data).map((key) => {
@@ -79,6 +80,7 @@ const TuningEdit = ({tuning}) => {
 
         api.getRecommendations("seed_artists=" + query.seed_artists.join(',') + "&seed_tracks=" + query.seed_tracks.join(',') + "&seed_genres=" + query.seed_genre.join(',') + "&" + convertTuningToQuery(tuning_data), (err, recommendations) => {
             if (err) {
+                console.log(err);
                 return;
             }
 
@@ -92,18 +94,21 @@ const TuningEdit = ({tuning}) => {
                 })
             })
 
+            new_tracks = [...new Set(new_tracks)]
+
             console.log(new_tracks)
 
             // using recommendations create mongo playlist object
             api.newPlaylistMongo(new_tracks, (err, created_playlist) => {
                 if (err) {
+                    console.log(err);
                     return;
                 }
 
                 console.log(created_playlist.data.addPlaylist);
 
                 // make a new record with the created playlist and tuning data
-                api.newRecordMongo(record._id, tuning_data, created_playlist.data.addPlaylist._id, (err, created_record) => {
+                api.newRecordMongo(record._id, tuning_data, created_playlist.data.addPlaylist._id, record.rp_id, (err, created_record) => {
                     if (err) { 
                         return
                     }
@@ -112,10 +117,19 @@ const TuningEdit = ({tuning}) => {
                     // add new record id to previous records next array
                     api.updateRecordNextMongo(record._id, created_record.data.addRecord._id, (err, updated_record) => {
                         if (err) {
+                            console.log(err);
                             return;
                         }
 
-                        console.log(updated_record);
+                        // console.log(updated_record);
+                        api.incrementRPCount(record.rp_id, 1, (err, new_parent_RP) => {
+                            if (err) {
+                                console.log(err);
+                                return;
+                            }
+
+                            console.log(new_parent_RP);
+                        })
                     })
                 })
             })

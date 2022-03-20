@@ -43,7 +43,8 @@ const RecordType = new GraphQLObjectType({
         next: { type: new GraphQLList(GraphQLID) },
         previous: { type: GraphQLID },
         tuning: { type: TuningType },
-        recommendations: { type: GraphQLID }
+        recommendations: { type: GraphQLID },
+        rp_id: { type: GraphQLID }
     })
 });
 
@@ -192,7 +193,8 @@ const Mutation = new GraphQLObjectType({
                 next: { type: new GraphQLList(GraphQLID) },
                 previous: { type: GraphQLID },
                 tuning: { type: TuningInputType },
-                recommendations: { type: GraphQLID }
+                recommendations: { type: GraphQLID },
+                rp_id: { type: GraphQLID}
             },
             resolve(parent, args) {
                 let tuning = args.tuning === undefined? defaultTuning : args.tuning;
@@ -200,11 +202,13 @@ const Mutation = new GraphQLObjectType({
                     next: args.next,
                     previous: args.previous,
                     tuning: tuning,
+                    rp_id: args.rp_id,
                     recommendations: args.recommendations
                 })
 
                 const result = record.save()
                     .then(doc => {
+                        console.log(doc);
                         return doc
                     })
                     .catch(err => {
@@ -226,7 +230,7 @@ const Mutation = new GraphQLObjectType({
                     starting_record: args.starting_record,
                     name: args.name,
                     user: args.user,
-                    count: 0,
+                    count: 1,
                     likes: [],
                     dislikes: []
                 });
@@ -261,6 +265,42 @@ const Mutation = new GraphQLObjectType({
                 return result;
             }
         },
+        updateRecordParent: {
+            type: RecordType,
+            args: {
+                _id: {type: GraphQLID},
+                parent_id: {type: GraphQLID}
+            },
+            resolve(parent, args) {
+                const result = Record.findByIdAndUpdate(args._id, {rp_id: args.parent_id}, {lean: true, returnDocument:"after"})
+                    .then((doc) => {
+                        return doc;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+
+                return result;
+            }
+        },
+        updateRecordPathCount: {
+            type: RecordPathType,
+            args: {
+                _id: {type: GraphQLID},
+                incrementBy: {type: GraphQLInt}
+            },
+            resolve(parent, args) {
+                const result = RecordPath.findByIdAndUpdate(args._id, {$inc: {count: args.incrementBy}}, {lean: true, returnDocument:"after"})
+                    .then((doc) => {
+                        return doc;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+
+                return result;
+            }
+        }
     }
 });
 

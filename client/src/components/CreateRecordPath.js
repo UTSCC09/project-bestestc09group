@@ -58,7 +58,15 @@ const CreateRecordPath = () => {
                                 return;
                             }
                             let rp_id = path.data.addRecordPath._id;
-                            navigate("/recordpath/" + rp_id, {state: {rp_id: rp_id}});
+
+                            api.updateRecordParentMongo(starting_record.data.addRecord._id, rp_id, (error, updated_record) => {
+                                if (error) {
+                                    console.log(error);
+                                    return;
+                                }
+
+                                navigate("/recordpath/" + rp_id, {state: {rp_id: rp_id}});
+                            })
                         });
                     });
                 });
