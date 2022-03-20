@@ -25,7 +25,7 @@ const TuningEdit = ({tuning}) => {
                     <Form.Control name={key + ":min"} onChange={handleChange} type="text" value={tuning_data[key].min} placeholder="Min" />
                 </Col>
                 <Col>
-                    <Form.Control name={key + ":target"} onChange={handleChange} type="text" value={tuning_data[key].target} placeholder="Tgt" />
+                    <Form.Control name={key + ":target"} onChange={handleChange} type="text" value={tuning_data[key].target} min={tuning_data[key].min} max={tuning_data[key].max} placeholder="Tgt" />
                 </Col>
                 <Col>  
                     <Form.Control name={key + ":max"} onChange={handleChange} type="text" value={tuning_data[key].max} placeholder="Max" />
@@ -114,6 +114,7 @@ const TuningEdit = ({tuning}) => {
                     }
 
                     console.log(created_record);
+                    const next_record_length = record.next.length
                     // add new record id to previous records next array
                     api.updateRecordNextMongo(record._id, created_record.data.addRecord._id, (err, updated_record) => {
                         if (err) {
@@ -122,15 +123,18 @@ const TuningEdit = ({tuning}) => {
                         }
 
                         // console.log(updated_record);
-                        api.incrementRPCount(record.rp_id, 1, (err, new_parent_RP) => {
-                            if (err) {
-                                console.log(err);
-                                return;
-                            }
-
-                            console.log(new_parent_RP);
-                            window.location.reload();
-                        })
+                        if (next_record_length == 0) {
+                            api.incrementRPCount(record.rp_id, 1, (err, new_parent_RP) => {
+                                if (err) {
+                                    console.log(err);
+                                    return;
+                                }
+    
+                                console.log(new_parent_RP);
+                                window.location.reload();
+                            })
+                        }
+                        window.location.reload();
                     })
                 })
             })
