@@ -115,6 +115,7 @@ const TuningEdit = ({tuning}) => {
 
                     console.log(created_record);
                     const next_record_length = record.next.length
+                    console.log(next_record_length);
                     // add new record id to previous records next array
                     api.updateRecordNextMongo(record._id, created_record.data.addRecord._id, (err, updated_record) => {
                         if (err) {
@@ -134,7 +135,6 @@ const TuningEdit = ({tuning}) => {
                                 window.location.reload();
                             })
                         }
-                        window.location.reload();
                     })
                 })
             })
