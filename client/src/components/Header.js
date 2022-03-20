@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 const Header = ({ authHandler, auth, logout }) => {
     if (!auth) {
         return (
-            <Container fluid>
+            <Container fluid className="mb-3">
                 <Navbar bg="light">
                     <Link to="/"><Navbar.Brand>DiscoverWeeklyU</Navbar.Brand></Link>
                     <Button variant="primary" onClick={authHandler}>Log in with Spotify</Button>
@@ -18,7 +18,7 @@ const Header = ({ authHandler, auth, logout }) => {
         );
     } else {
         return (            
-            <Container fluid>
+            <Container fluid className="mb-3">
                 <Navbar bg="light">
                     <Link to="/"><Navbar.Brand>DiscoverWeeklyU</Navbar.Brand></Link>
                     <Button variant="primary" onClick={logout}>Log Out</Button>

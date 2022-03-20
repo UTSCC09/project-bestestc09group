@@ -14,7 +14,6 @@ const RecordPath = () => {
     const [active, setActive] = useState(0);
     const {state} = useLocation();
     const [numRecords, setNumRecords] = useState(0);
-    const [recordPath, setRecordPath] = useState({});
     const [currentRecordData, setCurrentRecordData] = useState(null);
     const [currentRecord, setCurrentRecord] = useState(null);
 
@@ -36,8 +35,6 @@ const RecordPath = () => {
                 }
                 console.log(path.data.recordPath);
                 setNumRecords(path.data.recordPath.count);
-                setRecordPath(path.data.recordPath);
-
                 api.getRecordsMongo([path.data.recordPath.starting_record], (err, record) => {
                     if (err) {
                         return;
@@ -148,16 +145,16 @@ const RecordPath = () => {
     return (
         <Container fluid>
             <Row>
-                {currentRecord}
-            </Row>
-            <Row>
                 <Pagination className="justify-content-center">
-                    <Pagination.First onClick={() => setActive(0)}/>
+                    {/* <Pagination.First onClick={() => setActive(0)}/> */}
                     <Pagination.Prev onClick={() => previousRecord()}/>
                     {getPages()}
                     <Pagination.Next onClick={() => nextRecord()}/>
-                    <Pagination.Last onClick={() => setActive(numRecords - 1)}/>
+                    {/* <Pagination.Last onClick={() => setActive(numRecords - 1)}/> */}
                 </Pagination>
+            </Row>
+            <Row>
+                {currentRecord}
             </Row>
         </Container>
     );
