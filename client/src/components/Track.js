@@ -17,7 +17,7 @@ const Track = ({data}) => {
                         }).join(',')}</Card.Text>
                     </div>
                     <div className='col d-flex justify-content-end'>
-                        <a href={data.external_urls.spotify} className='btn btn-primary d-flex align-items-center'>Play on Spotify</a>
+                        <a href={data.external_urls.spotify} className='btn btn-primary d-flex align-items-center' target="_blank" rel="noopener noreferrer">Play on Spotify</a>
                     </div>
                     {/* <Button className='me-2'>Like</Button> */}
                     {/* <Button>Dislike</Button> */}
