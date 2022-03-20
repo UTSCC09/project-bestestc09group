@@ -129,6 +129,7 @@ const TuningEdit = ({tuning}) => {
                             }
 
                             console.log(new_parent_RP);
+                            window.location.reload();
                         })
                     })
                 })
