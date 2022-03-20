@@ -309,9 +309,23 @@ const Mutation = new GraphQLObjectType({
             resolve(parent, args) {
                 const result = RecordPath.findByIdAndDelete({_id: args._id})
                     .then((path) => {
-                        Record.deleteMany({rp_id: path._id})
-                            .then((ok, deletedCount, n) => {
-                                return deletedCount;
+                        Record.find({rp_id: path._id})
+                            .then((doc) => {
+                                console.log(doc);
+
+                                const playlists_to_delete = doc.map((record) => {
+                                    return record.recommendations;
+                                })
+
+                                Playlist.deleteMany({_id: {$in: playlists_to_delete}})
+                                    .then((ok, deletedCount, n) => {
+                                        console.log(deletedCount);
+                                        
+                                        Record.deleteMany({rp_id: path._id})
+                                            .then((ok, deletedCount, n) => {
+                                                return deletedCount;
+                                            })
+                                    })
                             })
                         return path
                     })
