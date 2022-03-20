@@ -10,7 +10,7 @@ const TopTrackCard = ({data}) => {
                         <h5>{data.artist}</h5>
                     </div>
                     <div className='col d-flex justify-content-end'>
-                        <a href={data.url} className='btn btn-primary d-flex align-items-center'>Play on Spotify</a>
+                        <a href={data.url} className='btn btn-primary d-flex align-items-center' target="_blank" rel="noopener noreferrer">Play on Spotify</a>
                     </div>
                 </div>
             </div>
