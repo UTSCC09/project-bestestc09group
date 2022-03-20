@@ -140,6 +140,7 @@ function App() {
   function logout() {
     sessionStorage.clear();
     setAuth(false);
+    window.location.replace('http://localhost:3000/')
   }
 
   return (
