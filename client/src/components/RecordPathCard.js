@@ -11,7 +11,7 @@ const RecordPathCard = ({ title, date, rp_id }) => {
     }
     
     return (
-        <Card onClick={navigate}>
+        <Card className="mb-4" onClick={navigate}>
             <Card.Body>
                 <Card.Title>{title}</Card.Title>
                 <Card.Text>{date}</Card.Text>

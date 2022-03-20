@@ -69,7 +69,7 @@ const Browse = () => {
             </Modal>
             <Container fluid>
                 <Row>
-                    <Col className="mb-4" sm="3">
+                    <Col sm="3">
                         <Card onClick={handleShow}>
                             <Card.Body>
                                 <Card.Title>Create New</Card.Title>
