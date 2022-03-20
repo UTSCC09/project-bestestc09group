@@ -11,8 +11,12 @@ const Header = ({ authHandler, auth, logout }) => {
         return (
             <Container fluid className="mb-3">
                 <Navbar bg="light">
-                    <Link to="/"><Navbar.Brand>DiscoverWeeklyU</Navbar.Brand></Link>
-                    <Button variant="primary" onClick={authHandler}>Log in with Spotify</Button>
+                    <div className='col'>
+                        <Link to="/"><Navbar.Brand>DiscoverWeeklyU</Navbar.Brand></Link>
+                    </div>
+                    <div className='col d-flex justify-content-end'>
+                        <Button variant="primary" onClick={authHandler}>Log in with Spotify</Button>
+                    </div>
                 </Navbar>
             </Container>
         );
@@ -20,8 +24,13 @@ const Header = ({ authHandler, auth, logout }) => {
         return (            
             <Container fluid className="mb-3">
                 <Navbar bg="light">
-                    <Link to="/"><Navbar.Brand>DiscoverWeeklyU</Navbar.Brand></Link>
-                    <Button variant="primary" onClick={logout}>Log Out</Button>
+                    <div className='col'>
+                        <Link to="/" className='text-decoration-none'><Navbar.Brand className='fw-bold'>DiscoverWeeklyU</Navbar.Brand></Link>
+                        <Link to="/top" className='text-decoration-none text-body'>Top Artists/Tracks</Link>
+                    </div>
+                    <div className='col d-flex justify-content-end'>
+                        <Button variant="primary" onClick={logout}>Log Out</Button>
+                    </div>
                 </Navbar>
             </Container>
         );
