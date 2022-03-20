@@ -12,7 +12,7 @@ const Header = ({ authHandler, auth, logout }) => {
             <Container fluid className="mb-3">
                 <Navbar bg="light">
                     <div className='col'>
-                        <Link to="/"><Navbar.Brand>DiscoverWeeklyU</Navbar.Brand></Link>
+                        <Link to="/" className='text-decoration-none'><Navbar.Brand className='fw-bold'>DiscoverWeeklyU</Navbar.Brand></Link>
                     </div>
                     <div className='col d-flex justify-content-end'>
                         <Button variant="primary" onClick={authHandler}>Log in with Spotify</Button>
