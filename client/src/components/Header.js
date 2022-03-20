@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
 import { Link } from 'react-router-dom';
 
-const Header = ({ authHandler, auth }) => {
+const Header = ({ authHandler, auth, logout }) => {
     if (!auth) {
         return (
             <Container fluid>
@@ -21,7 +21,7 @@ const Header = ({ authHandler, auth }) => {
             <Container fluid>
                 <Navbar bg="light">
                     <Link to="/"><Navbar.Brand>DiscoverWeeklyU</Navbar.Brand></Link>
-                    <Button variant="primary">Log Out</Button>
+                    <Button variant="primary" onClick={logout}>Log Out</Button>
                 </Navbar>
             </Container>
         );

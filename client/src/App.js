@@ -126,26 +126,6 @@ function App() {
     })
   }
 
-  function getInfo() {
-    api.getUserTopTracks((error, tracks) => {
-      let track_list = document.querySelector('#top_tracks');
-      tracks.map((track) => {
-        let list_item = document.createElement('li');
-        list_item.innerText = track.name;
-        track_list.appendChild(list_item);
-      })
-
-      api.getUserTopArtists((error, artists) => {
-        let artist_list = document.querySelector('#top_artists');
-        artists.map((artist) => {
-          let list_item = document.createElement('li');
-          list_item.innerText = artist.name;
-          artist_list.appendChild(list_item);
-        })
-      });
-    })
-  }
-
   function isAuthorized() {
     api.getUserInfo((error, data) => {
       if (error) {
@@ -157,22 +137,20 @@ function App() {
     });
   }
 
+  function logout() {
+    sessionStorage.clear();
+    setAuth(false);
+  }
+
   return (
     <div className="App">
-      <Header authHandler={handleAuthorization} auth={auth}/>
+      <Header authHandler={handleAuthorization} auth={auth} logout={logout}/>
       <Routes>
         <Route path="/" element={<Auth auth={auth}/>}/>
         <Route path="/create" element={<CreateRecordPath/>}/>
         <Route path="/recordpath/:id" element={<RecordPath/>}/>
         <Route path="/top" element={<TopTracksArtists/>}/>
       </Routes>
-      {/* <button onClick={getInfo}>Get User Info</button>
-        <h1>Top Tracks</h1>
-        <ul id='top_tracks'>
-        </ul>
-        <h1>Top Artists</h1>
-        <ul id='top_artists'>
-        </ul> */}
     </div>
   );
 }

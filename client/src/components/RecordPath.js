@@ -71,6 +71,9 @@ const RecordPath = () => {
 
     function previousRecord() {
         setActive((active - 1 + numRecords) % numRecords)
+        if (!currentRecordData.previous) {
+            return;
+        }
         api.getRecordsMongo([currentRecordData.previous], (err, record) => {
             if (err) {
                 return;
@@ -99,6 +102,10 @@ const RecordPath = () => {
 
     function nextRecord() {
         setActive((active + 1) % numRecords)
+        console.log(currentRecordData.next);
+        if (!currentRecordData.next || currentRecordData.next.length == 0) {
+            return;
+        }
         api.getRecordsMongo([currentRecordData.next[0]], (err, record) => {
             if (err) {
                 return;
@@ -129,7 +136,7 @@ const RecordPath = () => {
         let items = [];
         for (let number = 0; number < numRecords; number++) {
             items.push(
-                <Pagination.Item key={number} active={number === active} onClick={() => changePageNumber(number)}>
+                <Pagination.Item className="disabled" key={number} active={number === active} onClick={() => changePageNumber(number)}>
                     {number + 1}
                 </Pagination.Item>
             )
