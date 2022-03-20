@@ -12,8 +12,6 @@ import Button from 'react-bootstrap/Button';
 import RecordPathCard from './RecordPathCard';
 import Form from 'react-bootstrap/Form';
 
-const fake_data = [{title: "test1", date:"2022-03-04"}, {title: "test2", date:"2021-07-26"},{title: "test3", date:"2022-05-01"}, {title: "test4", date:"2021-08-05"}]
-
 const Browse = () => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -42,6 +40,18 @@ const Browse = () => {
             setRecordPaths(paths.data.recordPaths);
           });
         });
+    }
+
+    function deleteRP(rp_id) {
+        return function (event) {            
+            event.stopPropagation();
+            api.deleteRecordPath(rp_id, (error, data) => {
+                if (error) {
+                    console.log(error);
+                }
+                updateRecordPaths();
+            })
+        }
     }
 
     useEffect(() => {
@@ -80,7 +90,7 @@ const Browse = () => {
                     {recordPaths.map((data) => {
                         return (
                             <Col sm="3" key={data.name}>
-                                <RecordPathCard title={data.name} date={data.updatedAt} rp_id={data._id}/>
+                                <RecordPathCard title={data.name} date={data.updatedAt} rp_id={data._id} handleDelete={deleteRP(data._id)}/>
                             </Col> 
                         );
                     })}

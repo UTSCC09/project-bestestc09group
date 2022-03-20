@@ -300,6 +300,27 @@ const Mutation = new GraphQLObjectType({
 
                 return result;
             }
+        },
+        deleteRecordPath: {
+            type: RecordPathType,
+            args: {
+                _id: {type: GraphQLID}
+            },
+            resolve(parent, args) {
+                const result = RecordPath.findByIdAndDelete({_id: args._id})
+                    .then((path) => {
+                        Record.deleteMany({rp_id: path._id})
+                            .then((ok, deletedCount, n) => {
+                                return deletedCount;
+                            })
+                        return path
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+                return result;
+                
+            }
         }
     }
 });

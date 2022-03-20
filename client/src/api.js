@@ -270,6 +270,14 @@ let api = (function () {
         }`, null, callback);
     }
 
+    module.deleteRecordPath = function(id, callback) {
+        send("POST", `http://localhost:3001/graphql?query=mutation {
+            deleteRecordPath(_id: "${id}") {
+                _id
+            }
+        }`, null, callback);
+    }
+
     // Update Record Next
     module.updateRecordNextMongo = function(id, next, callback) {
         send("POST", `http://localhost:3001/graphql?query=mutation {
