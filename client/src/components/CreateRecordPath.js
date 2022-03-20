@@ -80,7 +80,7 @@ const CreateRecordPath = () => {
         <Container fluid>
             {playlists.map((data) => {
                 return (
-                    <Card key={data.name} onClick={() => addPath(data.id)}>
+                    <Card className="mb-3" key={data.name} onClick={() => addPath(data.id)}>
                         <Card.Body>
                             <Card.Title>{data.name}</Card.Title>
                         </Card.Body>
