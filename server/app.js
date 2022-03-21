@@ -183,6 +183,8 @@ app.get('/api/top_tracks', (req, res) => {
 })
 
 app.get('/api/tracks', (req, res) => {
+    if (req.query.ids === undefined || req.query.ids == 0)
+        res.status(400).end();
     axios.get('https://api.spotify.com/v1/tracks?ids=' + req.query.ids, {
         headers: {
             Authorization: ('Bearer ' + req.query.access_token)
