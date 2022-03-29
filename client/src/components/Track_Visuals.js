@@ -1,6 +1,6 @@
 import {React, useEffect} from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import TrackPie from './PieContainer';
+import PieContainer from './PieContainer';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -84,8 +84,8 @@ const Track_Visuals = ({tracks}) => {
 
     return (
         <div className='d-flex justify-content-center'>
-          <TrackPie title="Countries" data={year_data}></TrackPie>
-          <TrackPie title="Popularity" data={popularity_data}></TrackPie>
+          <PieContainer title="Years" data={year_data}></PieContainer>
+          <PieContainer title="Popularity" data={popularity_data}></PieContainer>
         </div>
     );
 }
