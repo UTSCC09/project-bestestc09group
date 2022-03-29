@@ -169,7 +169,7 @@ app.get('/api/playlists', (req, res) => {
 
 // Get users top tracks
 app.get('/api/top_tracks', (req, res) => {
-    axios.get('https://api.spotify.com/v1/me/top/tracks?limit=20', {
+    axios.get('https://api.spotify.com/v1/me/top/tracks?limit=20&time_range=long_term', {
         headers: {
             Authorization: ('Bearer ' + req.query.access_token)
         }

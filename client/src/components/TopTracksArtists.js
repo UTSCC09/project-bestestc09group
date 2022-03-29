@@ -23,7 +23,8 @@ const TopTracksArtists = () => {
                 return {
                     name: artist.name,
                     url: artist.external_urls.spotify,
-                    image: artist.images[1].url
+                    image: artist.images[1].url,
+                    genres: artist.genres
                 }
             })
 
@@ -38,13 +39,17 @@ const TopTracksArtists = () => {
                 return
             }
 
+            console.log(data);
+
             const track_data = data.map((track) => {
                 return {
                     title: track.name,
                     url: track.external_urls.spotify,
                     artist: track.artists.map((artist) => {
                         return artist.name;
-                    }).join(', ')
+                    }).join(', '),
+                    release_year: track.album.release_date.substring(0,3) + '0',
+                    popularity: track.popularity
                 }
             })
 
