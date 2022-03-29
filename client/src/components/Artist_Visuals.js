@@ -17,10 +17,10 @@ const Artist_Visuals = ({artists}) => {
 
     artists.forEach((artist) => {
         artist.genres.forEach((genre) => {
-            if (genres[genre] != null) {
-                genres[genre] += 1
+            if (genres[genre.toUpperCase()] != null) {
+                genres[genre.toUpperCase()] += 1
             } else {
-                genres[genre] = 1
+                genres[genre.toUpperCase()] = 1
             }
         })
 
@@ -86,35 +86,8 @@ const Artist_Visuals = ({artists}) => {
         ] 
     }
 
-    // const year_data = {
-    //   labels: Object.keys(tracks_per_year),
-    //   datasets: [
-    //     {
-    //       label: '# of Tracks',
-    //       data: Object.values(tracks_per_year),
-    //       backgroundColor: [
-    //         'rgba(38, 84, 124, 0.6)',
-    //         'rgba(239, 71, 111, 0.6)',
-    //         'rgba(255, 209, 102, 0.6)',
-    //         'rgba(6, 214, 160, 0.6)',
-    //         'rgba(106, 1, 54, 0.6)',
-    //         'rgba(247, 5, 49, 0.6)',
-    //       ],
-    //       borderColor: [
-    //         'rgba(38, 84, 124, 1)',
-    //         'rgba(239, 71, 111, 1)',
-    //         'rgba(255, 209, 102, 1)',
-    //         'rgba(6, 214, 160, 1)',
-    //         'rgba(106, 1, 54, 1)',
-    //         'rgba(247, 5, 49, 1)',
-    //       ],
-    //       borderWidth: 1
-    //     }
-    //   ] 
-    // }
-
     return (
-        <div className='d-flex justify-content-center'>
+        <div className='d-flex flex-row flex-wrap justify-content-center'>
             <PieContainer title="Genres" data={genre_data}></PieContainer>
             <PieContainer title="Popularity (Artists)" data={popularity_data}></PieContainer>
         </div>

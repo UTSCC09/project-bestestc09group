@@ -212,7 +212,7 @@ app.get('/api/artists', (req, res) => {
 
 // Get users top artists
 app.get('/api/top_artists', (req, res) => {
-    axios.get('https://api.spotify.com/v1/me/top/artists?limit=20', {
+    axios.get('https://api.spotify.com/v1/me/top/artists?limit=20&time_range=long_term', {
         headers: {
             Authorization: ('Bearer ' + req.query.access_token)
         }
