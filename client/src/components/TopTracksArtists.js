@@ -24,7 +24,8 @@ const TopTracksArtists = () => {
                     name: artist.name,
                     url: artist.external_urls.spotify,
                     image: artist.images[1].url,
-                    genres: artist.genres
+                    genres: artist.genres,
+                    popularity: artist.popularity
                 }
             })
 

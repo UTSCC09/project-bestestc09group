@@ -83,9 +83,9 @@ const Track_Visuals = ({tracks}) => {
     }
 
     return (
-        <div className='d-flex justify-content-center'>
+        <div className='d-flex flex-row flex-wrap justify-content-center'>
           <PieContainer title="Years" data={year_data}></PieContainer>
-          <PieContainer title="Popularity" data={popularity_data}></PieContainer>
+          <PieContainer title="Popularity (Tracks)" data={popularity_data}></PieContainer>
         </div>
     );
 }
