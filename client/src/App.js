@@ -19,7 +19,7 @@ function App() {
   let client_secret = '';
   let access_token = null;
   let refresh_token = null;
-
+  let client_url = process.env.REACT_APP_CLIENT;
 
   useEffect( () => {
     if (window.location.search.length > 0) {
@@ -38,13 +38,13 @@ function App() {
   function handleRedirect() {
     let code = getCode();
     getAccessToken(code);
-    window.history.pushState("", "", "http://localhost:3000/");
+    window.history.pushState("", "", client_url);
   }
 
   function getAccessToken(code) {
     let body = "grant_type=authorization_code";
-    body += "&code=" + code; 
-    body += "&redirect_uri=" + encodeURI("http://localhost:3000/");
+    body += "&code=" + code;
+    body += "&redirect_uri=" + encodeURI(client_url);
     body += "&client_id=" + client_id;
     body += "&client_secret=" + client_secret;
     callAuthorizationApi(body);
@@ -116,7 +116,7 @@ function App() {
       const authorization_options = {
         client_id: client_id,
         response_type: 'code',
-        redirect_uri: 'http://localhost:3000/',
+        redirect_uri: client_url,
         state: generateRandomState(16),
         scope: scope,
       }
@@ -140,7 +140,7 @@ function App() {
   function logout() {
     sessionStorage.clear();
     setAuth(false);
-    window.location.replace('http://localhost:3000/')
+    window.location.replace(client_url)
   }
 
   return (

@@ -39,8 +39,8 @@ app.use(cors())
     cookie: {httpOnly: true, secure: true, sameSite: true}
 }));
 
-app.listen(3001, () => {
-    console.log("server running at 3001");
+app.listen(process.env.PORT, () => {
+    console.log("server running at " + process.env.PORT);
 });
 
 // Hide credentials from public repository
@@ -169,7 +169,7 @@ app.get('/api/playlists', (req, res) => {
 
 // Get users top tracks
 app.get('/api/top_tracks', (req, res) => {
-    axios.get('https://api.spotify.com/v1/me/top/tracks?limit=20&time_range=long_term', {
+    axios.get('https://api.spotify.com/v1/me/top/tracks?limit=20', {
         headers: {
             Authorization: ('Bearer ' + req.query.access_token)
         }
@@ -214,7 +214,7 @@ app.get('/api/artists', (req, res) => {
 
 // Get users top artists
 app.get('/api/top_artists', (req, res) => {
-    axios.get('https://api.spotify.com/v1/me/top/artists?limit=20&time_range=long_term', {
+    axios.get('https://api.spotify.com/v1/me/top/artists?limit=20', {
         headers: {
             Authorization: ('Bearer ' + req.query.access_token)
         }
