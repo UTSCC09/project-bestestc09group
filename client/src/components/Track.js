@@ -10,14 +10,14 @@ const Track = ({data}) => {
         <Container className='mb-3'>
             <Card>
                 <Card.Body className='row'>
+                    <div className='col-auto'>
+                        <iframe src={"https://open.spotify.com/embed/track/" + data.id} width="80" height="80" frameBorder="0"></iframe>
+                    </div>
                     <div className='col'>
                         <Card.Title>{data.name}</Card.Title>
                         <Card.Text>{data.artists.map((artist) => {
                             return artist.name;
                         }).join(',')}</Card.Text>
-                    </div>
-                    <div className='col d-flex justify-content-end'>
-                        <a href={data.external_urls.spotify} className='btn btn-primary d-flex align-items-center' target="_blank" rel="noopener noreferrer">Play on Spotify</a>
                     </div>
                     {/* <Button className='me-2'>Like</Button> */}
                     {/* <Button>Dislike</Button> */}
