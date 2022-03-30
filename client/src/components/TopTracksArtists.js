@@ -25,6 +25,7 @@ const TopTracksArtists = () => {
                     url: artist.external_urls.spotify,
                     image: artist.images[1].url,
                     genres: artist.genres,
+                    id: artist.id,
                     popularity: artist.popularity
                 }
             })
@@ -49,6 +50,7 @@ const TopTracksArtists = () => {
                     artist: track.artists.map((artist) => {
                         return artist.name;
                     }).join(', '),
+                    id: track.id,
                     release_year: track.album.release_date.substring(0,3) + '0',
                     popularity: track.popularity
                 }
