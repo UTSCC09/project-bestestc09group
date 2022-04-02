@@ -1,3 +1,5 @@
+let server_url = process.env.REACT_APP_SERVER 
+
 let api = (function () { 
     function send(method, url, data, callback){
         let xhr = new XMLHttpRequest();
@@ -17,7 +19,7 @@ let api = (function () {
 
     // Get Playlist by ID
     module.getPlaylistMongo = function(id, callback) {
-        send("POST", `http://localhost:3001/graphql?query={
+        send("POST", server_url + `/graphql?query={
             playlists (_id: "${id}") {
                 _id 
                 tracks
@@ -30,7 +32,7 @@ let api = (function () {
         ids = ids.map((id) => {
             return `"${id}"`
         }).join(',');
-        send("POST", `http://localhost:3001/graphql?query={
+        send("POST", server_url + `/graphql?query={
             records(ids: [${ids}]) {
                 _id
                 previous
@@ -115,7 +117,7 @@ let api = (function () {
 
     // Get record paths by user ids
     module.getRecordPathsMongo = function(user_id, callback) {
-        send("POST", `http://localhost:3001/graphql?query={
+        send("POST", server_url + `/graphql?query={
             recordPaths(user: "${user_id}") {
                 _id
                 name
@@ -131,7 +133,7 @@ let api = (function () {
 
     // Get record path by id
     module.getRecordPathMongo = function(rp_id, callback) {
-        send("POST", `http://localhost:3001/graphql?query={
+        send("POST", server_url + `/graphql?query={
             recordPath(rp_id: "${rp_id}") {
                 _id
                 name
@@ -151,7 +153,7 @@ let api = (function () {
         ids = ids.map((id) => {
             return `"${id}"`
         }).join(',');
-        send("POST", `http://localhost:3001/graphql?query=mutation {
+        send("POST", server_url + `/graphql?query=mutation {
             addPlaylist(tracks: [${ids}]) {
                 _id
                 tracks
@@ -165,7 +167,7 @@ let api = (function () {
             return field + ": " + JSON.stringify(tuning[field]).replaceAll('"', "");
         }).join(',');
 
-        send("POST", `http://localhost:3001/graphql?query=mutation {
+        send("POST", server_url + `/graphql?query=mutation {
             addRecord(previous: "${previous}", tuning: {${tuning_params}}, recommendations: "${recommendations}", rp_id: "${rp_id}") {
                 _id
                 next
@@ -249,7 +251,7 @@ let api = (function () {
     }
 
     module.newStartingRecordMongo = function(playlist, callback) {
-        send("POST", `http://localhost:3001/graphql?query=mutation {
+        send("POST", server_url + `/graphql?query=mutation {
             addRecord (recommendations: "${playlist}") {
                 _id
             }
@@ -258,7 +260,7 @@ let api = (function () {
 
     // Add Record Path
     module.newRecordPathMongo = function(starting_record, name, user_id, callback) {
-        send("POST", `http://localhost:3001/graphql?query=mutation {
+        send("POST", server_url + `/graphql?query=mutation {
             addRecordPath(starting_record: "${starting_record}", name: "${name}", user:"${user_id}") {
                 _id
                 name
@@ -271,7 +273,7 @@ let api = (function () {
     }
 
     module.deleteRecordPath = function(id, callback) {
-        send("POST", `http://localhost:3001/graphql?query=mutation {
+        send("POST", server_url + `/graphql?query=mutation {
             deleteRecordPath(_id: "${id}") {
                 _id
             }
@@ -280,7 +282,7 @@ let api = (function () {
 
     // Update Record Next
     module.updateRecordNextMongo = function(id, next, callback) {
-        send("POST", `http://localhost:3001/graphql?query=mutation {
+        send("POST", server_url + `/graphql?query=mutation {
             updateRecordNext(_id:"${id}" ,next: "${next}") {
                 _id
                 next
@@ -365,7 +367,7 @@ let api = (function () {
 
     // Update Record Next
     module.updateRecordParentMongo = function(id, parent_id, callback) {
-        send("POST", `http://localhost:3001/graphql?query=mutation {
+        send("POST", server_url + `/graphql?query=mutation {
             updateRecordParent(_id:"${id}" ,parent_id: "${parent_id}") {
                 _id
                 next
@@ -449,7 +451,7 @@ let api = (function () {
     }
 
     module.incrementRPCount = function(id, increment_by, callback) {
-        send("POST", `http://localhost:3001/graphql?query=mutation {
+        send("POST", server_url + `/graphql?query=mutation {
             updateRecordPathCount(_id: "${id}", incrementBy: ${increment_by}) {
                 _id
                 name
@@ -462,40 +464,40 @@ let api = (function () {
     }
 
     module.getClientInfo = function(callback) {
-        send("GET", "http://localhost:3001/api/client_info", null, callback);
+        send("GET", server_url + "/api/client_info", null, callback);
     }
 
     // Spotify Routes
     module.getArtists = function(artist_ids, callback) {
-        send("GET", "http://localhost:3001/api/artists/" + "?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + artist_ids.join(','), null, callback);
+        send("GET", server_url + "/api/artists/" + "?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + artist_ids.join(','), null, callback);
     }
 
     module.getUserInfo = function(callback) {
-        send("GET", "http://localhost:3001/api/user" + "?access_token=" + sessionStorage.getItem('access_token'), null, callback);
+        send("GET", server_url + "/api/user" + "?access_token=" + sessionStorage.getItem('access_token'), null, callback);
     }
 
     module.getRecommendations = function(queryString, callback) {
-        send("GET", "http://localhost:3001/api/recommendations" + "?access_token=" + sessionStorage.getItem('access_token') + "&" + queryString, null, callback);
+        send("GET", server_url + "/api/recommendations" + "?access_token=" + sessionStorage.getItem('access_token') + "&" + queryString, null, callback);
     }
 
     module.getPlaylistInfo = function(playlist_id, callback) {
-        send("GET", "http://localhost:3001/api/playlists/" + playlist_id + "?access_token=" + sessionStorage.getItem('access_token'), null, callback);
+        send("GET", server_url + "/api/playlists/" + playlist_id + "?access_token=" + sessionStorage.getItem('access_token'), null, callback);
     }
 
     module.getTracks = function(track_ids, callback) {
-        send("GET", "http://localhost:3001/api/tracks/" + "?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + track_ids.join(","), null, callback);
+        send("GET", server_url + "/api/tracks/" + "?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + track_ids.join(","), null, callback);
     }
 
     module.getUserPlaylists = function(callback) {
-        send("GET", "http://localhost:3001/api/playlists?access_token=" + sessionStorage.getItem('access_token'), null, callback);
+        send("GET", server_url + "/api/playlists?access_token=" + sessionStorage.getItem('access_token'), null, callback);
     }
 
     module.getUserTopTracks = function(callback) {
-        send("GET", "http://localhost:3001/api/top_tracks?access_token=" + sessionStorage.getItem('access_token'), null, callback);
+        send("GET", server_url + "/api/top_tracks?access_token=" + sessionStorage.getItem('access_token'), null, callback);
     }
 
     module.getUserTopArtists = function(callback) {
-        send("GET", "http://localhost:3001/api/top_artists?access_token=" + sessionStorage.getItem('access_token'), null, callback);
+        send("GET", server_url + "/api/top_artists?access_token=" + sessionStorage.getItem('access_token'), null, callback);
     }
 
     return module;
