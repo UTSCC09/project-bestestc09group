@@ -37,7 +37,7 @@ const Track = ({data}) => {
                             <Card.Text>
                                 {data.artists.map((artist) => {
                                     return artist.name  
-                                }).join(',')}
+                                }).join(', ')}
                             </Card.Text>
                         </div>
                         <div className='col d-flex align-items-center justify-content-end'>
