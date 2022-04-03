@@ -19,6 +19,7 @@ const Track = ({data}) => {
                 iframe.src = "https://open.spotify.com/embed/track/" + data.id;
                 iframe.width = '100%';
                 iframe.height = 80;
+                iframe.className = 'd-block'
 
                 body.prepend(iframe)
             }
