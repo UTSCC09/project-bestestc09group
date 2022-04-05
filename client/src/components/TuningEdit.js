@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState } from 'react';
 
 import { api } from '../api';
 
@@ -7,19 +7,39 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import { RecordContext } from './RecordPath';
 
+const tooltips = {
+    "acousticness": <>How acoustic a track is. Decimal &ge;0, &le;1</>,
+    "danceability": <>How suitable a track is for dancing. Decimal &ge; 0, &le; 1</>,
+    "duration_ms": <>Duration of a track in milliseconds. Number > 0</>,
+    "energy": <>How intense and active a track is (fast, loud, noisy). Decimal &ge; 0, &le; 1</>,
+    "instrumentalness": <>How much of a track is instrumental. Decimal &ge; 0, &le; 1</>,
+    "key": <>The track's key, -1 = no key, 0 = C, 1 = C♯/D♭, 2 = D, etc. Number &ge; -1, &le; 11</>,
+    "liveness": <>Detects whether an audience is present in a track. Decimal &ge; 0, &le; 1</>,
+    "loudness": <>How loud a track is on average, measured in decibels (dB). Number typically &ge; -60, &le; 0</>,
+    "mode": <>Whether the track's modality is minor or major. 0 (minor) or 1 (major)</>,
+    "popularity": <>How popular a track is. Number &ge; 0, &le; 100</>,
+    "speechiness": <>How much of a track is spoken words. Decimal &ge; 0, &le; 1</>,
+    "tempo": <>Estimated tempo of a track in beats per minute (BPM). Decimal > 0</>,
+    "time_signature": <>Estimated number of beats (quarter notes in this case) in a bar. Number &ge; 3, &le; 7</>,
+    "valence": <>How positive (cheerful, happy) a track is. Decimal &ge; 0, &le; 1</>
+}
 
 const TuningEdit = ({tuning}) => {
     // const [forms, setForms] = useState();
     const tracks = React.useContext(RecordContext).tracks;
     const record = React.useContext(RecordContext).records;
-    console.log(record);
-    console.log("HI RECORD")
+
+
     const [tuning_data, setTuningData] = useState(tuning);
     let forms = Object.keys(tuning_data).map((key) => {
         return <Form.Group key={key} className="mb-3" controlId={"form" + key}>
-            <Form.Label>{key.toUpperCase()}</Form.Label>
+            <OverlayTrigger placement="right" delay={{show: 250, hide: 400}} overlay={<Tooltip>{tooltips[key]}</Tooltip>}> 
+                <Form.Label>{key.toUpperCase()} &#9432;</Form.Label>
+            </OverlayTrigger>
             <Row>
                 <Col> 
                     <Form.Control name={key + ":min"} onChange={handleChange} type="text" value={tuning_data[key].min} placeholder="Min" />
