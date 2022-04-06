@@ -585,7 +585,7 @@ let api = (function () {
                 likes
                 dislikes
             }
-        }`);
+        }`, null, callback);
     }
 
     module.getClientInfo = function(callback) {

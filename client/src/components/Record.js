@@ -7,13 +7,10 @@ import TuningEdit from './TuningEdit';
 import Playlist from './Playlist';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/esm/Collapse';
-import { RecordContext } from './RecordPath';
 import 'react-tree-graph/dist/style.css'
 import '../css/Record.css';
-import { api } from '../api';
 
 const Record = ({record, tracks}) => {
-    console.log(record);
     const [show, setShow] = useState(false);
 
     return (
@@ -29,7 +26,7 @@ const Record = ({record, tracks}) => {
                 </Collapse>
             </Row>
             <Row>
-                <Playlist tracks={tracks}/>
+                <Playlist tracks={tracks} rp_id={record.rp_id}/>
             </Row>           
         </div> 
     );
