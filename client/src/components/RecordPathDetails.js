@@ -58,6 +58,7 @@ const RecordPathDetails = () => {
         setPreviousClicked(event.target);
 
         console.log(event.target.style);
+        setSelectedRecord(null)
         api.getRecordsMongo([node], (err, doc) => {
             if (err) {
                 console.log(err);
