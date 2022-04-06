@@ -9,7 +9,6 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-import { RecordContext } from './RecordPath';
 
 const tooltips = {
     "acousticness": <>How acoustic a track is. Decimal &ge;0, &le;1</>,
@@ -28,11 +27,10 @@ const tooltips = {
     "valence": <>How positive (cheerful, happy) a track is. Decimal &ge; 0, &le; 1</>
 }
 
-const TuningEdit = ({tuning}) => {
+const TuningEdit = ({tuning, record, tracks}) => {
     // const [forms, setForms] = useState();
-    const tracks = React.useContext(RecordContext).tracks;
-    const record = React.useContext(RecordContext).records;
-
+    console.log(record);
+    console.log("HI RECORD")
 
     const [tuning_data, setTuningData] = useState(tuning);
     let forms = Object.keys(tuning_data).map((key) => {

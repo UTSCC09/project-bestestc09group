@@ -451,6 +451,22 @@ const RootQuery = new GraphQLObjectType({
                 return result;
             }
         },
+        recordsInRP: {
+            type: new GraphQLList(RecordType),
+            args: {
+                rp_id: {type: new GraphQLList(GraphQLID)}
+            },
+            resolve(parent, args) {
+                const result = Record.find({rp_id: args.rp_id})
+                    .then((arr) => {
+                        return arr;
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+                return result;
+            }
+        },
         recordPaths: {
             type: new GraphQLList(RecordPathType),
             args: {
