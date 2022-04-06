@@ -553,15 +553,15 @@ let api = (function () {
 
     // Spotify Routes
     module.getArtists = function(artist_ids, callback) {
-        send("GET", server_url + "/api/artists/" + "?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + artist_ids.join(','), null, callback);
+        send("GET", server_url + "/api/artists?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + artist_ids.join(','), null, callback);
     }
 
     module.getUserInfo = function(callback) {
-        send("GET", server_url + "/api/user" + "?access_token=" + sessionStorage.getItem('access_token'), null, callback);
+        send("GET", server_url + "/api/user?access_token=" + sessionStorage.getItem('access_token'), null, callback);
     }
 
     module.getRecommendations = function(queryString, callback) {
-        send("GET", server_url + "/api/recommendations" + "?access_token=" + sessionStorage.getItem('access_token') + "&" + queryString, null, callback);
+        send("GET", server_url + "/api/recommendations?access_token=" + sessionStorage.getItem('access_token') + "&" + queryString, null, callback);
     }
 
     module.getPlaylistInfo = function(playlist_id, callback) {
@@ -569,7 +569,7 @@ let api = (function () {
     }
 
     module.getTracks = function(track_ids, callback) {
-        send("GET", server_url + "/api/tracks/" + "?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + track_ids.join(","), null, callback);
+        send("GET", server_url + "/api/tracks?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + track_ids.join(","), null, callback);
     }
 
     module.getUserPlaylists = function(callback) {

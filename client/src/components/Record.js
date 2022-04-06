@@ -9,6 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/esm/Collapse';
 import { RecordContext } from './RecordPath';
 import { Tree } from 'react-tree-graph';
+import 'react-tree-graph/dist/style.css'
 import '../css/Record.css';
 import { api } from '../api';
 
@@ -17,23 +18,10 @@ const Record = ({starting}) => {
     const record = useContext(RecordContext).records;
     let data_tree = {};
     const [data_for_tree, setDataForTree] = useState({});
-
-    /*
-        {
-            name: currentRecord.name,
-            children: []
-        }
-    */
+    const [node_count, setNodeCount] = useState(0);
 
     useEffect(() => {
-        constructData(record);
-        // document.querySelector('#hi').addEventListener('click', () => {
-            
-        // })
-    }, [])
-
-    function constructData(currentRecord) {
-        api.getRecordsByRPID(currentRecord.rp_id, (err, rp_records) => {
+        api.getRecordsByRPID(record.rp_id, (err, rp_records) => {
             if (err) {
                 console.log(err);
                 return;
@@ -46,14 +34,15 @@ const Record = ({starting}) => {
                 }
             });
             console.log(data_tree);
-            setDataForTree(getGraph(currentRecord._id));
+            setNodeCount(Object.keys(data_tree).length);
+            setDataForTree(getGraph(record._id));
             console.log(data_for_tree);
         })
-    }
+    }, [])
 
     function getGraph(root) {
         let temp = {};
-        temp['name'] = root
+        temp['name'] = ''
         temp['children'] = [];
         data_tree[root].next.forEach((next_r_id) => {
             temp['children'].push(getGraph(next_r_id))
@@ -64,11 +53,14 @@ const Record = ({starting}) => {
 
     return (
         <Container fluid>
-            <Tree 
-                data={data_for_tree}
-                height={400}
-                width={600}
-            />
+            <div id='tree_container' className='d-flex'>
+                <Tree 
+                    svgProps={{style: {"min-width": (node_count*200), "margin-left": '20px'}}}
+                    data={data_for_tree}
+                    width={node_count*200}
+                    height={400}
+                />
+            </div>
             {/* <button id='hi'>Cool Generate</button> */}
             <div className='d-flex justify-content-center mt-3'>
                 <Button className="mb-3 w-25" onClick={() => setShow(!show)}>Edit Tuning</Button>
