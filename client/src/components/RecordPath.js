@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Record from './Record';
+import RecordPathDetails from './RecordPathDetails';
 import { api } from '../api';
 import { useLocation } from 'react-router-dom';
 
@@ -52,8 +52,8 @@ const RecordPath = () => {
                                 return;
                             }
                             console.log(tracks_data);
-                            setCurrentRecord(<RecordContext.Provider value={{records: record.data.records[0], tracks: tracks_data}}>
-                                <Record starting={true}/>
+                            setCurrentRecord(<RecordContext.Provider value={{records: record.data.records[0]}}>
+                                <RecordPathDetails/>
                             </RecordContext.Provider>)
                         })
                     })
@@ -89,7 +89,7 @@ const RecordPath = () => {
                     }
                     console.log(tracks_data);
                     setCurrentRecord(<RecordContext.Provider value={{records: record.data.records[0], tracks: tracks_data}}>
-                        <Record starting={true}/>
+                        <RecordPathDetails/>
                     </RecordContext.Provider>)
                     
                 })
@@ -121,7 +121,7 @@ const RecordPath = () => {
                     }
                     console.log(tracks_data);
                     setCurrentRecord(<RecordContext.Provider value={{records: record.data.records[0], tracks: tracks_data}}>
-                        <Record starting={true}/>
+                        <RecordPathDetails/>
                     </RecordContext.Provider>)
                     
                 })
