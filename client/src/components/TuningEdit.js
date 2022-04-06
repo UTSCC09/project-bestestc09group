@@ -11,20 +11,74 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 const tooltips = {
-    "acousticness": <>How acoustic a track is. Decimal &ge;0, &le;1</>,
-    "danceability": <>How suitable a track is for dancing. Decimal &ge; 0, &le; 1</>,
-    "duration_ms": <>Duration of a track in milliseconds. Number > 0</>,
-    "energy": <>How intense and active a track is (fast, loud, noisy). Decimal &ge; 0, &le; 1</>,
-    "instrumentalness": <>How much of a track is instrumental. Decimal &ge; 0, &le; 1</>,
-    "key": <>The track's key, -1 = no key, 0 = C, 1 = C♯/D♭, 2 = D, etc. Number &ge; -1, &le; 11</>,
-    "liveness": <>Detects whether an audience is present in a track. Decimal &ge; 0, &le; 1</>,
-    "loudness": <>How loud a track is on average, measured in decibels (dB). Number typically &ge; -60, &le; 0</>,
-    "mode": <>Whether the track's modality is minor or major. 0 (minor) or 1 (major)</>,
-    "popularity": <>How popular a track is. Number &ge; 0, &le; 100</>,
-    "speechiness": <>How much of a track is spoken words. Decimal &ge; 0, &le; 1</>,
-    "tempo": <>Estimated tempo of a track in beats per minute (BPM). Decimal > 0</>,
-    "time_signature": <>Estimated number of beats (quarter notes in this case) in a bar. Number &ge; 3, &le; 7</>,
-    "valence": <>How positive (cheerful, happy) a track is. Decimal &ge; 0, &le; 1</>
+    "acousticness": {
+        description: <>How acoustic a track is. Decimal &ge;0, &le;1</>,
+        max: 1,
+        min: 0
+    },
+    "danceability": {
+        description: <>How suitable a track is for dancing. Decimal &ge; 0, &le; 1</>,
+        max: 1,
+        min: 0
+    },
+    "duration_ms": {
+        description: <>Duration of a track in milliseconds. Number > 0</>,
+        min: 0
+    },
+    "energy": {
+        description: <>How intense and active a track is (fast, loud, noisy). Decimal &ge; 0, &le; 1</>,
+        max: 1,
+        min: 0
+    },
+    "instrumentalness": {
+        description: <>How much of a track is instrumental. Decimal &ge; 0, &le; 1</>,
+        max: 1,
+        min: 0
+    },
+    "key": {
+        description: <>The track's key, -1 = no key, 0 = C, 1 = C♯/D♭, 2 = D, etc. Number &ge; -1, &le; 11</>,
+        max: 11,
+        min: -1
+    },
+    "liveness": {
+        description: <>Detects whether an audience is present in a track. Decimal &ge; 0, &le; 1</>,
+        max: 1,
+        min: 0
+    },
+    "loudness": {
+        description: <>How loud a track is on average, measured in decibels (dB). Number typically &ge; -60, &le; 0</>,
+        max: 0,
+        min: -60
+    },
+    "mode": {
+        description: <>Whether the track's modality is minor or major. 0 (minor) or 1 (major)</>,
+        max: 1,
+        min: 0
+    },
+    "popularity": {
+        description: <>How popular a track is. Number &ge; 0, &le; 100</>,
+        max: 100,
+        min: 0
+    },
+    "speechiness": {
+        description: <>How much of a track is spoken words. Decimal &ge; 0, &le; 1</>,
+        max: 1,
+        min: 0
+    },
+    "tempo": {
+        description: <>Estimated tempo of a track in beats per minute (BPM). Decimal > 0</>,
+        min: 0
+    },
+    "time_signature": {
+        description: <>Estimated number of beats (quarter notes in this case) in a bar. Number &ge; 3, &le; 7</>,
+        max: 7,
+        min: 3
+    },
+    "valence": {
+        description: <>How positive (cheerful, happy) a track is. Decimal &ge; 0, &le; 1</>,
+        max: 1,
+        min: 0
+    }
 }
 
 const TuningEdit = ({tuning, record, tracks}) => {
@@ -35,7 +89,7 @@ const TuningEdit = ({tuning, record, tracks}) => {
     const [tuning_data, setTuningData] = useState(tuning);
     let forms = Object.keys(tuning_data).map((key) => {
         return <Form.Group key={key} className="mb-3" controlId={"form" + key}>
-            <OverlayTrigger placement="right" delay={{show: 250, hide: 400}} overlay={<Tooltip>{tooltips[key]}</Tooltip>}> 
+            <OverlayTrigger placement="right" delay={{show: 250, hide: 400}} overlay={<Tooltip>{tooltips[key]['description']}</Tooltip>}> 
                 <Form.Label>{key.toUpperCase()} &#9432;</Form.Label>
             </OverlayTrigger>
             <Row>
@@ -189,12 +243,12 @@ const TuningEdit = ({tuning, record, tracks}) => {
 
     return (
         <Form className='d-flex justify-content-center flex-column' onSubmit={handleSubmission}>
+            <Button variant="primary" type="submit">Generate New Recommendations</Button>    
             <Row>
                 <Col>
                     {forms}
                 </Col>
-            </Row>
-            <Button variant="primary" type="submit">Generate New Recommendations</Button>      
+            </Row>  
         </Form>
     );
 }
