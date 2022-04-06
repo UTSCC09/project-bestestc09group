@@ -1,10 +1,10 @@
-import {React, useEffect} from 'react';
+import { React } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import PieContainer from './PieContainer';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const Artist_Visuals = ({artists}) => {
+const ArtistVisuals = ({artists}) => {
     const genres = {};
     let popularity = {
         'Very Popular': 0,
@@ -94,4 +94,4 @@ const Artist_Visuals = ({artists}) => {
     );
 }
 
-export default Artist_Visuals;
+export default ArtistVisuals;

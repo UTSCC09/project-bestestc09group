@@ -62,7 +62,7 @@ const TopTracksArtists = () => {
     }
 
     function toggleList(e) {
-        if (e.target.innerText == "View Top Artists") {
+        if (e.target.innerText === "View Top Artists") {
             e.target.innerText = "View Top Tracks";
             setTopTracks(null)
             getArtists();

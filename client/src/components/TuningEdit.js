@@ -184,7 +184,7 @@ const TuningEdit = ({tuning, record, tracks}) => {
                         }
 
                         // console.log(updated_record);
-                        if (next_record_length == 0) {
+                        if (next_record_length === 0) {
                             api.incrementRPCount(record.rp_id, 1, (err, new_parent_RP) => {
                                 if (err) {
                                     console.log(err);

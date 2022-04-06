@@ -1,4 +1,4 @@
-import { React, useState, useContext, useEffect } from 'react';
+import { React, useState } from 'react';
 
 /* ----- Styling ----- */
 import Container from 'react-bootstrap/Container';

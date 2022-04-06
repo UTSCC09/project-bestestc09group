@@ -72,7 +72,7 @@ const Track = ({data, liked, disliked, rp_id}) => {
     let addedTrack = false;
     function showPlayer() {
         const body = document.querySelector('#body' + data.id);
-        if (body.className == 'collapse-show') {
+        if (body.className === 'collapse-show') {
             body.className = 'collapse';
         } else {
             if (!addedTrack) {

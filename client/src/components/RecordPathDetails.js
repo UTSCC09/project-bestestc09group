@@ -10,7 +10,6 @@ import '../css/Record.css';
 import { api } from '../api';
 
 const RecordPathDetails = () => {
-    const [show, setShow] = useState(false);
     const record = useContext(RecordContext).records;
     let data_tree = {};
     const [previousClicked, setPreviousClicked] = useState(null);

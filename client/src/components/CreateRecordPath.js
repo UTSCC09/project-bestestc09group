@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from 'react';
 import {api} from '../api';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 /* ----- Styling ----- */
 import Container from 'react-bootstrap/esm/Container';

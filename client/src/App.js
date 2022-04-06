@@ -1,4 +1,3 @@
-import { assertWrappingType } from 'graphql';
 import React, { useState, useEffect } from 'react';
 import {api} from './api';
 import './App.css';
@@ -60,15 +59,15 @@ function App() {
   }
 
   function handleAuthorizationResponse(){
-    if ( this.status == 200 ){
+    if ( this.status === 200 ){
         var data = JSON.parse(this.responseText);
         // console.log(data);
         var data = JSON.parse(this.responseText);
-        if ( data.access_token != undefined ){
+        if ( data.access_token !== undefined ){
             access_token = data.access_token;
             sessionStorage.setItem("access_token", access_token);
         }
-        if ( data.refresh_token  != undefined ){
+        if ( data.refresh_token  !== undefined ){
             refresh_token = data.refresh_token;
             sessionStorage.setItem("refresh_token", refresh_token);
         }

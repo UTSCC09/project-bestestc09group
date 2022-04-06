@@ -6,7 +6,7 @@ const TopArtistCard = ({data}) => {
     function showPlayer() {
         const body = document.querySelector('#body' + data.id);
         // console.log(data.id);
-        if (body.className == 'collapse-show') {
+        if (body.className === 'collapse-show') {
             body.className = 'collapse';
         } else {
             if (!addedTrack) {
