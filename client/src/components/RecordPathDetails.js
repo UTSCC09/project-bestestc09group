@@ -13,6 +13,7 @@ const RecordPathDetails = () => {
     const [show, setShow] = useState(false);
     const record = useContext(RecordContext).records;
     let data_tree = {};
+    const [previousClicked, setPreviousClicked] = useState(null);
     const [data_for_tree, setDataForTree] = useState({});
     const [node_count, setNodeCount] = useState(0);
     const [selected_record, setSelectedRecord] = useState(null);
@@ -50,6 +51,13 @@ const RecordPathDetails = () => {
     }
 
     function handleClick(event, node) {
+        if (previousClicked) {
+            previousClicked.style.stroke = '#000000'
+        }
+        event.target.style.stroke = '#0d6efd';
+        setPreviousClicked(event.target);
+
+        console.log(event.target.style);
         api.getRecordsMongo([node], (err, doc) => {
             if (err) {
                 console.log(err);
