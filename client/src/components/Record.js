@@ -24,7 +24,7 @@ const Record = ({record, tracks}) => {
             <Row>
                 <Collapse in={show} className="w-50">
                     <Container fluid>
-                        <TuningEdit tuning={record.tuning}/>
+                        <TuningEdit tuning={record.tuning} tracks={tracks} record={record}/>
                     </Container>
                 </Collapse>
             </Row>

@@ -10,10 +10,8 @@ import Button from 'react-bootstrap/Button';
 import { RecordContext } from './RecordPath';
 
 
-const TuningEdit = ({tuning}) => {
+const TuningEdit = ({tuning, record, tracks}) => {
     // const [forms, setForms] = useState();
-    const tracks = React.useContext(RecordContext).tracks;
-    const record = React.useContext(RecordContext).records;
     console.log(record);
     console.log("HI RECORD")
     const [tuning_data, setTuningData] = useState(tuning);
