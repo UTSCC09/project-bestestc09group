@@ -27,6 +27,90 @@ let api = (function () {
         }`, null, callback);
     }
 
+    module.getRecordsByRPID = function(rp_id, callback) {
+        send("POST", server_url + `/graphql?query={
+            recordsInRP(rp_id: "${rp_id}") {
+                _id
+                previous
+                next
+                tuning {
+                    acousticness {
+                        min
+                        max
+                        target
+                    }
+                    danceability {
+                        min
+                        max
+                        target
+                    }
+                    duration_ms {
+                        min
+                        max
+                        target
+                    }
+                    energy {
+                        min
+                        max
+                        target
+                    }
+                    instrumentalness {
+                        min
+                        max
+                        target
+                    }
+                    key {
+                        min
+                        max
+                        target
+                    }
+                    liveness {
+                        min
+                        max
+                        target
+                    }
+                    loudness {
+                        min
+                        max
+                        target
+                    }
+                    mode {
+                        min
+                        max
+                        target
+                    }
+                    popularity {
+                        min
+                        max
+                        target
+                    }
+                    speechiness {
+                        min
+                        max
+                        target
+                    }
+                    tempo {
+                        min
+                        max
+                        target
+                    }
+                    time_signature {
+                        min
+                        max
+                        target
+                    }
+                    valence {
+                        min
+                        max
+                        target
+                    }
+                }
+                recommendations
+                rp_id
+            }
+        }`, null, callback);
+    }
+
     // Get records by ids
     module.getRecordsMongo = function(ids, callback) {
         ids = ids.map((id) => {
