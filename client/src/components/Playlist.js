@@ -31,7 +31,7 @@ const Playlist = ({tracks, rp_id}) => {
         <div className='container-fluid mb-3 mt-3'>
             {/* <h3>Like up to 5 songs below and edit the tuning to generate recommendations.</h3> */}
             {tracks.map((track) => (
-                <Track key={track.name + "-" + track.artists[0].name} data={track} liked={isLiked(track.id)} disliked={isDisliked(track.id)} rp_id={rp_id}/>
+                <Track key={track.id} data={track} liked={isLiked(track.id)} disliked={isDisliked(track.id)} rp_id={rp_id}/>
             ))}
         </div>
     );
