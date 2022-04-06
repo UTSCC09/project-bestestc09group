@@ -35,6 +35,13 @@ const defaultTuning = {
     valence: {min: 0.0, max: 1.0, target: 0.5}
 }
 
+const TrackType = new GraphQLObjectType({
+    name: 'Track',
+    fields: () => ({
+        likes: { type: new GraphQLList(GraphQLString) },
+        dislikes: { type: new GraphQLList(GraphQLString) }
+    })
+});
 
 const RecordType = new GraphQLObjectType({
     name: 'Record',
@@ -247,6 +254,74 @@ const Mutation = new GraphQLObjectType({
             }
 
         },
+        addLikedTrack: {
+            type: RecordPathType,
+            args: {
+                record_path: {type: GraphQLID},
+                track: {type: GraphQLString }
+            },
+            resolve(parent, args) {
+                const result = RecordPath.findByIdAndUpdate(args.record_path, {"$addToSet": {"likes": args.track}, "$pull": {"dislikes":args.track}}, {lean: true, returnDocument: "after"})
+                    .then((doc) => {
+                        return doc;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+                return result;
+            }
+        },
+        addDislikedTrack: {
+            type: RecordPathType,
+            args: {
+                record_path: {type: GraphQLID},
+                track: {type: GraphQLString }
+            },
+            resolve(parent, args) {
+                const result = RecordPath.findByIdAndUpdate(args.record_path, {"$addToSet": {"dislikes": args.track}, "$pull": {"likes":args.track}}, {lean: true, returnDocument: "after"})
+                    .then((doc) => {
+                        return doc;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+                return result;
+            }
+        },
+        removeLikedTrack: {
+            type: RecordPathType,
+            args: {
+                record_path: {type: GraphQLID},
+                track: {type: GraphQLString }
+            },
+            resolve(parent, args) {
+                const result = RecordPath.findByIdAndUpdate(args.record_path, {"$pull": {"likes": args.track}}, {lean: true, returnDocument: "after"})
+                    .then((doc) => {
+                        return doc;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+                return result;
+            }
+        },
+        removeDislikedTrack: {
+            type: RecordPathType,
+            args: {
+                record_path: {type: GraphQLID},
+                track: {type: GraphQLString }
+            },
+            resolve(parent, args) {
+                const result = RecordPath.findByIdAndUpdate(args.record_path, {"$pull": {"dislikes": args.track}}, {lean: true, returnDocument: "after"})
+                    .then((doc) => {
+                        return doc;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+                return result;
+            }
+        },
         updateRecordNext: {
             type: RecordType,
             args: {
@@ -421,6 +496,24 @@ const RootQuery = new GraphQLObjectType({
                     .catch((err) => {
                         console.log(err);
                     })
+                return result;
+            }
+        },
+        tracks: {
+            type: TrackType,
+            args: {
+                record_path: { type: GraphQLID }
+            },
+            resolve(parent, args) {
+                const result = RecordPath.findOne({_id: args.record_path})
+                    .then((doc)=>{
+                        const tracks = { likes: doc.likes, dislikes: doc.dislikes};
+                        console.log(tracks);
+                        return tracks;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
                 return result;
             }
         }

@@ -5,7 +5,6 @@ import { useLocation } from 'react-router-dom';
 
 /* ----- Styling ----- */
 import Container from 'react-bootstrap/Container';
-import Pagination from 'react-bootstrap/Pagination';
 import Row from 'react-bootstrap/Row';
 
 export const RecordContext = React.createContext();
