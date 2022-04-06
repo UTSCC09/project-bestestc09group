@@ -463,6 +463,47 @@ let api = (function () {
         }`, null, callback);
     }
 
+    module.addLikedTrack = function(rp_id, track, callback) {
+        send("POST", server_url + `/graphql?query=mutation {
+            addLikedTrack(record_path: "${rp_id}", track: "${track}") {
+                _id
+            }
+        }`, null, callback);
+    }
+
+    module.addDislikedTrack = function(rp_id, track, callback) {
+        send("POST", server_url + `/graphql?query=mutation {
+            addDislikedTrack(record_path: "${rp_id}", track: "${track}") {
+                _id
+            }
+        }`, null, callback);
+    }
+
+    module.removeLikedTrack = function(rp_id, track, callback) {
+        send("POST", server_url + `/graphql?query=mutation {
+            removeLikedTrack(record_path: "${rp_id}", track: "${track}") {
+                _id
+            }
+        }`, null, callback);
+    }
+
+    module.removeDislikedTrack = function(rp_id, track, callback) {
+        send("POST", server_url + `/graphql?query=mutation {
+            removeDislikedTrack(record_path: "${rp_id}", track: "${track}") {
+                _id
+            }
+        }`, null, callback);
+    }
+
+    module.getRPTracks = function(rp_id, callback) {
+        send("POST", server_url + `/graphql?query=query {
+            tracks(record_path: "${rp_id}") {
+                likes
+                dislikes
+            }
+        }`);
+    }
+
     module.getClientInfo = function(callback) {
         send("GET", server_url + "/api/client_info", null, callback);
     }

@@ -35,6 +35,13 @@ const defaultTuning = {
     valence: {min: 0.0, max: 1.0, target: 0.5}
 }
 
+const TrackType = new GraphQLObjectType({
+    name: 'Track',
+    fields: () => ({
+        likes: { type: new GraphQLList(GraphQLString) },
+        dislikes: { type: new GraphQLList(GraphQLString) }
+    })
+});
 
 const RecordType = new GraphQLObjectType({
     name: 'Record',
@@ -473,6 +480,24 @@ const RootQuery = new GraphQLObjectType({
                     .catch((err) => {
                         console.log(err);
                     })
+                return result;
+            }
+        },
+        tracks: {
+            type: TrackType,
+            args: {
+                record_path: { type: GraphQLID }
+            },
+            resolve(parent, args) {
+                const result = RecordPath.findOne({_id: args.record_path})
+                    .then((doc)=>{
+                        const tracks = { likes: doc.likes, dislikes: doc.dislikes};
+                        console.log(tracks);
+                        return tracks;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
                 return result;
             }
         }
