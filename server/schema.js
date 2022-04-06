@@ -247,6 +247,74 @@ const Mutation = new GraphQLObjectType({
             }
 
         },
+        addLikedTrack: {
+            type: RecordPathType,
+            args: {
+                record_path: {type: GraphQLID},
+                track: {type: GraphQLString }
+            },
+            resolve(parent, args) {
+                const result = RecordPath.findByIdAndUpdate(args.record_path, {"$addToSet": {"likes": args.track}, "$pull": {"dislikes":args.track}}, {lean: true, returnDocument: "after"})
+                    .then((doc) => {
+                        return doc;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+                return result;
+            }
+        },
+        addDislikedTrack: {
+            type: RecordPathType,
+            args: {
+                record_path: {type: GraphQLID},
+                track: {type: GraphQLString }
+            },
+            resolve(parent, args) {
+                const result = RecordPath.findByIdAndUpdate(args.record_path, {"$addToSet": {"dislikes": args.track}, "$pull": {"likes":args.track}}, {lean: true, returnDocument: "after"})
+                    .then((doc) => {
+                        return doc;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+                return result;
+            }
+        },
+        removeLikedTrack: {
+            type: RecordPathType,
+            args: {
+                record_path: {type: GraphQLID},
+                track: {type: GraphQLString }
+            },
+            resolve(parent, args) {
+                const result = RecordPath.findByIdAndUpdate(args.record_path, {"$pull": {"likes": args.track}}, {lean: true, returnDocument: "after"})
+                    .then((doc) => {
+                        return doc;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+                return result;
+            }
+        },
+        removeDislikedTrack: {
+            type: RecordPathType,
+            args: {
+                record_path: {type: GraphQLID},
+                track: {type: GraphQLString }
+            },
+            resolve(parent, args) {
+                const result = RecordPath.findByIdAndUpdate(args.record_path, {"$pull": {"dislikes": args.track}}, {lean: true, returnDocument: "after"})
+                    .then((doc) => {
+                        return doc;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+                return result;
+            }
+        },
         updateRecordNext: {
             type: RecordType,
             args: {
