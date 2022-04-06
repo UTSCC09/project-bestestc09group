@@ -1,0 +1,13 @@
+#tree_container {
+    max-width: 100vw;
+    overflow-x: auto;
+}
+
+.node {
+    cursor: pointer;
+}
+
+.node circle {
+    fill: black;
+    stroke-width: 10px;
+}

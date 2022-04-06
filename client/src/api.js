@@ -27,6 +27,90 @@ let api = (function () {
         }`, null, callback);
     }
 
+    module.getRecordsByRPID = function(rp_id, callback) {
+        send("POST", server_url + `/graphql?query={
+            recordsInRP(rp_id: "${rp_id}") {
+                _id
+                previous
+                next
+                tuning {
+                    acousticness {
+                        min
+                        max
+                        target
+                    }
+                    danceability {
+                        min
+                        max
+                        target
+                    }
+                    duration_ms {
+                        min
+                        max
+                        target
+                    }
+                    energy {
+                        min
+                        max
+                        target
+                    }
+                    instrumentalness {
+                        min
+                        max
+                        target
+                    }
+                    key {
+                        min
+                        max
+                        target
+                    }
+                    liveness {
+                        min
+                        max
+                        target
+                    }
+                    loudness {
+                        min
+                        max
+                        target
+                    }
+                    mode {
+                        min
+                        max
+                        target
+                    }
+                    popularity {
+                        min
+                        max
+                        target
+                    }
+                    speechiness {
+                        min
+                        max
+                        target
+                    }
+                    tempo {
+                        min
+                        max
+                        target
+                    }
+                    time_signature {
+                        min
+                        max
+                        target
+                    }
+                    valence {
+                        min
+                        max
+                        target
+                    }
+                }
+                recommendations
+                rp_id
+            }
+        }`, null, callback);
+    }
+
     // Get records by ids
     module.getRecordsMongo = function(ids, callback) {
         ids = ids.map((id) => {
@@ -469,15 +553,15 @@ let api = (function () {
 
     // Spotify Routes
     module.getArtists = function(artist_ids, callback) {
-        send("GET", server_url + "/api/artists/" + "?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + artist_ids.join(','), null, callback);
+        send("GET", server_url + "/api/artists?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + artist_ids.join(','), null, callback);
     }
 
     module.getUserInfo = function(callback) {
-        send("GET", server_url + "/api/user" + "?access_token=" + sessionStorage.getItem('access_token'), null, callback);
+        send("GET", server_url + "/api/user?access_token=" + sessionStorage.getItem('access_token'), null, callback);
     }
 
     module.getRecommendations = function(queryString, callback) {
-        send("GET", server_url + "/api/recommendations" + "?access_token=" + sessionStorage.getItem('access_token') + "&" + queryString, null, callback);
+        send("GET", server_url + "/api/recommendations?access_token=" + sessionStorage.getItem('access_token') + "&" + queryString, null, callback);
     }
 
     module.getPlaylistInfo = function(playlist_id, callback) {
@@ -485,7 +569,7 @@ let api = (function () {
     }
 
     module.getTracks = function(track_ids, callback) {
-        send("GET", server_url + "/api/tracks/" + "?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + track_ids.join(","), null, callback);
+        send("GET", server_url + "/api/tracks?access_token=" + sessionStorage.getItem('access_token') + "&ids=" + track_ids.join(","), null, callback);
     }
 
     module.getUserPlaylists = function(callback) {
