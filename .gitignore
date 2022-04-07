@@ -30,5 +30,7 @@ client/npm-debug.log*
 client/yarn-debug.log*
 client/yarn-error.log*
 client/.env.prod
+data/certbot
+init-letsencrypt.sh
 *.dev
 .env
