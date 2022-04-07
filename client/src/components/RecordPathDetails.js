@@ -23,17 +23,15 @@ const RecordPathDetails = () => {
                 console.log(err);
                 return;
             }
-            console.log(rp_records.data.recordsInRP)
             rp_records.data.recordsInRP.forEach((rp_record) => {
                 data_tree[rp_record._id] = {
                     next: rp_record.next,
                     previous: rp_record.previous
                 }
             });
-            console.log(data_tree);
+
             setNodeCount(Object.keys(data_tree).length);
             setDataForTree(getGraph(record._id));
-            console.log(data_for_tree);
         })
     }, [])
 
@@ -58,28 +56,22 @@ const RecordPathDetails = () => {
         event.target.style.strokeWidth = '20px'
         setPreviousClicked(event.target);
 
-        console.log(event.target.style);
         setSelectedRecord(null)
         api.getRecordsMongo([node], (err, doc) => {
             if (err) {
-                console.log(err);
                 return;
             }
 
-            console.log(doc.data.records[0]);
             api.getPlaylistMongo(doc.data.records[0].recommendations, (err, playlist) => {
                 if (err) {
-                    console.log(err);
                     return;
                 }
                 
-                console.log(playlist.data.playlists.tracks);
                 api.getTracks(playlist.data.playlists.tracks.slice(0, 50), (err, tracks_data) => {
                     if (err) {
                         return;
                     }
-                    // setTracks(playlist.data.playlists.tracks);
-                    console.log(tracks_data);
+                    
                     setSelectedRecord(<Record record={doc.data.records[0]} tracks={tracks_data}/>)
                 })
             })
@@ -90,13 +82,13 @@ const RecordPathDetails = () => {
         <Container fluid>
             <div id='tree_container' className='d-flex'>
                 <Tree 
-                    svgProps={{style: {"minWidth": (node_count*200), "marginLeft": '20px'}}}
+                    svgProps={{style: {"minWidth": (node_count*75), "marginLeft": '20px', overflow: 'visible'}}}
                     gProps={{
                         onClick: handleClick
                     }}
                     keyProp="id"
                     data={data_for_tree}
-                    width={node_count*200}
+                    width={node_count*75}
                     height={400}
                 />
             </div>
