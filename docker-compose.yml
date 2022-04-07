@@ -2,31 +2,37 @@ version: '3.8'
 
 services:
   nginx:
-    depends_on:
-      - api
-      - client
-    build: ./nginx
-    restart: always
+    image: nginx:1.15-alpine
+    container_name: nginx
     ports:
       - "80:80"
-      - "8888:8888"
+      - "443:443"
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   api:
     build: ./server
+    container_name: api
     restart: unless-stopped
     volumes:
       - /app/node_modules
       - ./server:/app
-    ports:
-      - "3001:3001"
 
   client:
     build: 
       context: ./client
-      dockerfile: Dockerfile.dev
-    ports:
-      - "3000:3000"
-    volumes:
-      - /app/node_modules
-      - ./client:/app
-  
+      dockerfile: Dockerfile.prod
+    container_name: client
+    
+
