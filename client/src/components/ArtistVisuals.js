@@ -13,8 +13,6 @@ const ArtistVisuals = ({artists}) => {
         'Very Unpopular': 0
     }
 
-    console.log(artists);
-
     artists.forEach((artist) => {
         artist.genres.forEach((genre) => {
             if (genres[genre.toUpperCase()] != null) {
@@ -34,9 +32,6 @@ const ArtistVisuals = ({artists}) => {
             popularity['Very Unpopular'] += 1
         } 
     })
-
-    console.log('genres')
-    console.log(genres);
 
     let background_colors = []
     let border_colors = []

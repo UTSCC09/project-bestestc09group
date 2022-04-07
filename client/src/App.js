@@ -28,8 +28,6 @@ function App() {
         
         handleRedirect();
       })
-    } else {
-      console.log('hi');
     }
     isAuthorized();
   }, []);

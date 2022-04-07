@@ -5,7 +5,6 @@ import PieContainer from './PieContainer';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const TrackVisuals = ({tracks}) => {
-    console.log(tracks);
     let tracks_per_year = {}
     let popularity = {
       'Very Popular': 0,
@@ -30,8 +29,6 @@ const TrackVisuals = ({tracks}) => {
         popularity['Very Unpopular'] += 1
       } 
     })
-    console.log(tracks_per_year)
-    console.log(popularity)
     const year_data = {
       labels: Object.keys(tracks_per_year),
       datasets: [

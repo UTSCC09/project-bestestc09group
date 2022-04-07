@@ -196,34 +196,6 @@ const TuningEdit = ({ tuning, record, tracks }) => {
                 })
             })
         })
-
-        // api.getArtists(seed_artists, (err, artists) => {
-        //     console.log(artists);
-        //     let seed_genre = artists.map((artist) => {
-        //         return encodeURIComponent(artist.genres[0]);
-        //     }).filter((genre) => {
-        //         return genre != "undefined";
-        //     })
-
-        //     seed_genre = [...new Set(seed_genre)]
-
-        //     // Get Recommendations
-        //     let query = {
-        //         seed_artists: seed_artists.slice(0, 5),
-        //         seed_tracks: seed_tracks.slice(0, 5),
-        //         seed_genre: seed_genre.slice(0, 5)
-        //     }
-
-        //     console.log(query);
-        //     api.getRecommendations("seed_artists=" + query.seed_artists.join(',') + "&seed_tracks=" + query.seed_tracks.join(',') + "&seed_genres=" + query.seed_genre.join(','), (err, recommendations) => {
-        //         if (err) {
-        //             return;
-        //         }
-
-        //         console.log(recommendations);
-        //     })
-        // })
-        // api.getRecommendations()
     }
 
     return (
