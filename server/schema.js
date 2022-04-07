@@ -233,6 +233,22 @@ const Mutation = new GraphQLObjectType({
                 user: { type: GraphQLString }
             },
             resolve(parent, args) {
+                const name_exists = RecordPath.findOne({name: args.name})
+                    .then(doc => {
+                        console.log("Already Exists!");
+                        return true;
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        
+                    });
+                
+                if (name_exists) {
+                    return {
+                        errors: ["Name already Exists"]
+                    }
+                }
+
                 let recordPath = new RecordPath({
                     starting_record: args.starting_record,
                     name: args.name,

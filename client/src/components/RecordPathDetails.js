@@ -52,8 +52,10 @@ const RecordPathDetails = () => {
     function handleClick(event, node) {
         if (previousClicked) {
             previousClicked.style.stroke = '#000000'
+            previousClicked.style.strokeWidth = '10px'
         }
         event.target.style.stroke = '#0d6efd';
+        event.target.style.strokeWidth = '20px'
         setPreviousClicked(event.target);
 
         console.log(event.target.style);

@@ -14,11 +14,13 @@ const tooltips = {
     "acousticness": {
         description: <>How acoustic a track is. Decimal &ge;0, &le;1</>,
         max: 1,
+        step: '.1',
         min: 0
     },
     "danceability": {
         description: <>How suitable a track is for dancing. Decimal &ge; 0, &le; 1</>,
         max: 1,
+        step: '.1',
         min: 0
     },
     "duration_ms": {
@@ -28,11 +30,13 @@ const tooltips = {
     "energy": {
         description: <>How intense and active a track is (fast, loud, noisy). Decimal &ge; 0, &le; 1</>,
         max: 1,
+        step: '.1',
         min: 0
     },
     "instrumentalness": {
         description: <>How much of a track is instrumental. Decimal &ge; 0, &le; 1</>,
         max: 1,
+        step: '.1',
         min: 0
     },
     "key": {
@@ -43,6 +47,7 @@ const tooltips = {
     "liveness": {
         description: <>Detects whether an audience is present in a track. Decimal &ge; 0, &le; 1</>,
         max: 1,
+        step: '.1',
         min: 0
     },
     "loudness": {
@@ -53,6 +58,7 @@ const tooltips = {
     "mode": {
         description: <>Whether the track's modality is minor or major. 0 (minor) or 1 (major)</>,
         max: 1,
+        step: '.1',
         min: 0
     },
     "popularity": {
@@ -63,6 +69,7 @@ const tooltips = {
     "speechiness": {
         description: <>How much of a track is spoken words. Decimal &ge; 0, &le; 1</>,
         max: 1,
+        step: '.1',
         min: 0
     },
     "tempo": {
@@ -77,26 +84,27 @@ const tooltips = {
     "valence": {
         description: <>How positive (cheerful, happy) a track is. Decimal &ge; 0, &le; 1</>,
         max: 1,
+        step: '.1',
         min: 0
     }
 }
 
-const TuningEdit = ({tuning, record, tracks}) => {
+const TuningEdit = ({ tuning, record, tracks }) => {
     const [tuning_data, setTuningData] = useState(tuning);
     let forms = Object.keys(tuning_data).map((key) => {
         return <Form.Group key={key} className="mb-3" controlId={"form" + key}>
-            <OverlayTrigger placement="right" delay={{show: 250, hide: 400}} overlay={<Tooltip>{tooltips[key]['description']}</Tooltip>}> 
+            <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={<Tooltip>{tooltips[key]['description']}</Tooltip>}>
                 <Form.Label>{key.toUpperCase()} &#9432;</Form.Label>
             </OverlayTrigger>
             <Row>
-                <Col> 
-                    <Form.Control name={key + ":min"} onChange={handleChange} type="text" value={tuning_data[key].min} placeholder="Min" />
+                <Col>
+                    <Form.Control name={key + ":min"} onChange={handleChange} type="number" min={tooltips[key]['min']} step={tooltips[key]['step']} max={tooltips[key]['max']} value={tuning_data[key].min} placeholder="Min" />
                 </Col>
                 <Col>
-                    <Form.Control name={key + ":target"} onChange={handleChange} type="text" value={tuning_data[key].target} min={tuning_data[key].min} max={tuning_data[key].max} placeholder="Tgt" />
+                    <Form.Control name={key + ":target"} onChange={handleChange} type="number" step={tooltips[key]['step']} value={tuning_data[key].target} min={tuning_data[key].min} max={tuning_data[key].max} placeholder="Tgt" />
                 </Col>
-                <Col>  
-                    <Form.Control name={key + ":max"} onChange={handleChange} type="text" value={tuning_data[key].max} placeholder="Max" />
+                <Col>
+                    <Form.Control name={key + ":max"} onChange={handleChange} type="number" min={tooltips[key]['min']} step={tooltips[key]['step']} max={tooltips[key]['max']} value={tuning_data[key].max} placeholder="Max" />
                 </Col>
             </Row>
         </Form.Group>
@@ -109,7 +117,7 @@ const TuningEdit = ({tuning, record, tracks}) => {
         let attribute = name_arr[1];
         let val = target.value;
 
-        let new_tuning_data = {...tuning_data};
+        let new_tuning_data = { ...tuning_data };
         new_tuning_data[key][attribute] = val;
         setTuningData(new_tuning_data);
     }
@@ -126,13 +134,13 @@ const TuningEdit = ({tuning, record, tracks}) => {
 
     function handleSubmission(event) {
         event.preventDefault();
-        
+
         // let seed_artists = tracks.map((track) => {
         //     return track.artists[0].id;
         // });
 
         // seed_artists = [...new Set(seed_artists)]
-        
+
         let seed_tracks = tracks.map((track) => {
             return track.id;
         });
@@ -170,7 +178,7 @@ const TuningEdit = ({tuning, record, tracks}) => {
 
                 // make a new record with the created playlist and tuning data
                 api.newRecordMongo(record._id, tuning_data, created_playlist.data.addPlaylist._id, record.rp_id, (err, created_record) => {
-                    if (err) { 
+                    if (err) {
                         return
                     }
 
@@ -207,7 +215,7 @@ const TuningEdit = ({tuning, record, tracks}) => {
         //     })
 
         //     seed_genre = [...new Set(seed_genre)]
-    
+
         //     // Get Recommendations
         //     let query = {
         //         seed_artists: seed_artists.slice(0, 5),
@@ -229,12 +237,12 @@ const TuningEdit = ({tuning, record, tracks}) => {
 
     return (
         <Form className='d-flex justify-content-center flex-column' onSubmit={handleSubmission}>
-            <Button variant="primary" type="submit">Generate New Recommendations</Button>    
+            <Button variant="primary" type="submit">Generate New Recommendations</Button>
             <Row>
                 <Col>
                     {forms}
                 </Col>
-            </Row>  
+            </Row>
         </Form>
     );
 }
