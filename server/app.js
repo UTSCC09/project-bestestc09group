@@ -73,7 +73,7 @@ function make_query_without_access_token(json) {
         return Object.keys(json).map((key) => {
             if (key === 'access_token') {
                 return null;
-            } else if (key == "seed_tracks") {
+            } else if (key === "seed_tracks") {
                 return key + "=" + encodeURIComponent(seed_track);
             } else {
                 return key + "=" + encodeURIComponent(json[key]);
@@ -156,6 +156,7 @@ app.get('/api/top_tracks', (req, res) => {
     })
 })
 
+// Get list of tracks by id
 app.get('/api/tracks', (req, res) => {
     if (req.query.ids === undefined || req.query.ids == 0)
         res.status(400).end();
@@ -172,6 +173,7 @@ app.get('/api/tracks', (req, res) => {
     })
 })
 
+// Get list of artists by id
 app.get('/api/artists', (req, res) => {
     axios.get('https://api.spotify.com/v1/artists?ids=' + req.query.ids, {
         headers: {

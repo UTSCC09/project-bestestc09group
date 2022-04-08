@@ -534,19 +534,6 @@ let api = (function () {
         }`, null, callback);
     }
 
-    module.incrementRPCount = function(id, increment_by, callback) {
-        send("POST", server_url + `/graphql?query=mutation {
-            updateRecordPathCount(_id: "${id}", incrementBy: ${increment_by}) {
-                _id
-                name
-                count
-                starting_record
-                likes
-                dislikes
-            }
-        }`, null, callback);
-    }
-
     module.addLikedTrack = function(rp_id, track, callback) {
         send("POST", server_url + `/graphql?query=mutation {
             addLikedTrack(record_path: "${rp_id}", track: "${track}") {
@@ -584,6 +571,27 @@ let api = (function () {
             tracks(record_path: "${rp_id}") {
                 likes
                 dislikes
+            }
+        }`, null, callback);
+    }
+
+    module.getSimilarityTuning = function(rp_id, callback) {
+        let access_token = sessionStorage.getItem('access_token');
+        send("POST", server_url + `/graphql?query=query {
+            similarity(record_path: "${rp_id}", access_token: "${access_token}") {
+                acousticness
+                danceability
+                duration_ms
+                energy
+                instrumentalness
+                key
+                liveness
+                loudness
+                mode
+                speechiness
+                tempo
+                time_signature
+                valence
             }
         }`, null, callback);
     }
