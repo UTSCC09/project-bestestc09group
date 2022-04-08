@@ -73,7 +73,7 @@ function make_query_without_access_token(json) {
         return Object.keys(json).map((key) => {
             if (key === 'access_token') {
                 return null;
-            } else if (key == "seed_tracks") {
+            } else if (key === "seed_tracks") {
                 return key + "=" + encodeURIComponent(seed_track);
             } else {
                 return key + "=" + encodeURIComponent(json[key]);

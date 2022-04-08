@@ -394,24 +394,6 @@ const Mutation = new GraphQLObjectType({
                 return result;
             }
         },
-        updateRecordPathCount: {
-            type: RecordPathType,
-            args: {
-                _id: {type: GraphQLID},
-                incrementBy: {type: GraphQLInt}
-            },
-            resolve(parent, args) {
-                const result = RecordPath.findByIdAndUpdate(args._id, {$inc: {count: args.incrementBy}}, {lean: true, returnDocument:"after"})
-                    .then((doc) => {
-                        return doc;
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    })
-
-                return result;
-            }
-        },
         deleteRecordPath: {
             type: RecordPathType,
             args: {
