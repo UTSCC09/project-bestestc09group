@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-
+import React, { useState, useContext } from 'react';
+import { UpdateRecordContext } from './RecordPathDetails';
 import { api } from '../api';
 
 /* ----- Styling ----- */
@@ -97,6 +97,7 @@ const TuningEdit = ({ tuning, record, tracks }) => {
     const [showError, setShowError] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const { update, setUpdate } = useContext(UpdateRecordContext);
 
     function handleError(msg) {
         // console.log("ERROR: ", msg);
@@ -229,7 +230,7 @@ const TuningEdit = ({ tuning, record, tracks }) => {
                                 return;
                             }
                             setLoading(false);
-                            // window.location.reload();
+                            setUpdate(!update);
                         })
                     })
                 })
