@@ -97,10 +97,11 @@ const TuningEdit = ({ tuning, record, tracks }) => {
     const [showError, setShowError] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [seeded, setSeeded] = useState(true);
     const { update, setUpdate } = useContext(UpdateRecordContext);
 
+
     function handleError(msg) {
-        // console.log("ERROR: ", msg);
         setShowError(true);
         setError(msg)
     }
@@ -145,16 +146,12 @@ const TuningEdit = ({ tuning, record, tracks }) => {
             }
             
             let tuning = {...tuning_data};
-            console.log(tuning);
             let sim = res.data.similarity;
-            console.log(sim);
             Object.keys(tuning_data).forEach(key => {
                 if (key in sim)
                     tuning[key].target = sim[key];
             });
-            console.log(tuning);
             setTuningData(tuning);
-            console.log(tuning_data);
         });
     }
 
@@ -162,41 +159,40 @@ const TuningEdit = ({ tuning, record, tracks }) => {
         event.preventDefault();
         setLoading(true);
 
-        // let seed_artists = tracks.map((track) => {
-        //     return track.artists[0].id;
-        // });
+        api.getRPTracks(record.rp_id, (err, rp_tracks) => {
+            let seed_tracks;
 
-        // seed_artists = [...new Set(seed_artists)]
-
-        let seed_tracks = tracks.map((track) => {
-            return track.id;
-        });
-
-        seed_tracks = [...new Set(seed_tracks)]
-
-        let query = {
-            seed_artists: [],//seed_artists.slice(0, 5),
-            seed_tracks: seed_tracks,
-            seed_genre: []//seed_genre.slice(0, 5)
-        }
-
-        api.getRecommendations("seed_artists=" + query.seed_artists.join(',') + "&seed_tracks=" + query.seed_tracks.join(',') + "&seed_genres=" + query.seed_genre.join(',') + "&" + convertTuningToQuery(tuning_data), (err, recommendations) => {
-            if (err) {
-                console.log(err);
-                return;
+            if (!seeded || rp_tracks.data.tracks.likes.length === 0) {
+                seed_tracks = tracks.map((track) => {
+                    return track.id;
+                });
+            } else {
+                seed_tracks = rp_tracks.data.tracks.likes;
             }
+    
+            seed_tracks = [...new Set(seed_tracks)]
+    
+            let query = {
+                seed_artists: [],
+                seed_tracks: seed_tracks,
+                seed_genre: []
+            }
+            api.getRecommendations("seed_artists=" + query.seed_artists.join(',') + "&seed_tracks=" + query.seed_tracks.join(',') + "&seed_genres=" + query.seed_genre.join(',') + "&" + convertTuningToQuery(tuning_data), (err, recommendations) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
 
-            let new_tracks = []
+                let new_tracks = []
 
-            recommendations.forEach((recommendation) => {
-                recommendation.tracks.forEach((track) => {
-                    new_tracks.push(track.id);
+                recommendations.forEach((recommendation) => {
+                    recommendation.tracks.forEach((track) => {
+                        new_tracks.push(track.id);
+                    })
                 })
-            })
 
-            new_tracks = [...new Set(new_tracks)]
+                new_tracks = [...new Set(new_tracks)]
 
-            api.getRPTracks(record.rp_id, (err, rp_tracks) => {
                 // using recommendations create mongo playlist object
                 if (err) {
                     console.log(err);
@@ -252,6 +248,9 @@ const TuningEdit = ({ tuning, record, tracks }) => {
                     <Button variant="primary" onClick={getSimilarityTuning}>Tune by similarities</Button>
                 </OverlayTrigger>
             </Col>
+            <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={<Tooltip>{"Recommendations are seeded based on liked songs (default), by record otherwise"}</Tooltip>}>
+                <Form.Check type="switch" label="&#9432; seed" checked={seeded} onChange={() => setSeeded(!seeded)}/>
+            </OverlayTrigger>
             <Row>
                 <Col>
                     {
