@@ -62,11 +62,6 @@ const CreateRecordPath = () => {
                                 return;
                             }
                             let rp_id = path.data.addRecordPath._id;
-                            if (!rp_id) {
-                                alert("Could not create new Discovery Record, please choose a unique name and try again.");
-                                navigate("/");
-                                return;
-                            }
 
                             api.updateRecordParentMongo(starting_record.data.addRecord._id, rp_id, (error, updated_record) => {
                                 if (error) {
@@ -87,6 +82,7 @@ const CreateRecordPath = () => {
 
     return (
         <Container fluid>
+            <h1>Select a Playlist</h1>
             {loading? <Spinner animation="border"/> : playlists.map((data) => {
                 return (
                     <Card className="mb-3" key={data.name} onClick={() => addPath(data.id)}>
