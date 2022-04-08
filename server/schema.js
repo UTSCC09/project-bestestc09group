@@ -233,40 +233,40 @@ const Mutation = new GraphQLObjectType({
                 user: { type: GraphQLString }
             },
             resolve(parent, args) {
-                const name_exists = RecordPath.findOne({name: args.name})
+                const rp_response = RecordPath.findOne({name: args.name, user: args.user})
                     .then(doc => {
-                        console.log("Already Exists!");
-                        return true;
+                        if (doc) {
+                            console.log("Already Exists!");
+                            return {
+                                errors: ["Name already exists"]
+                            }
+                        }
+
+                        let recordPath = new RecordPath({
+                            starting_record: args.starting_record,
+                            name: args.name,
+                            user: args.user,
+                            count: 1,
+                            likes: [],
+                            dislikes: []
+                        });
+        
+                        const result = recordPath.save()
+                            .then(doc => {
+                                return doc
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            })
+        
+                        return result
                     })
                     .catch(err => {
                         console.log(err);
                         
                     });
                 
-                if (name_exists) {
-                    return {
-                        errors: ["Name already Exists"]
-                    }
-                }
-
-                let recordPath = new RecordPath({
-                    starting_record: args.starting_record,
-                    name: args.name,
-                    user: args.user,
-                    count: 1,
-                    likes: [],
-                    dislikes: []
-                });
-
-                const result = recordPath.save()
-                    .then(doc => {
-                        return doc
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    })
-
-                return result
+                return rp_response;
             }
 
         },
