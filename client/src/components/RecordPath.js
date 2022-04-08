@@ -64,6 +64,9 @@ const RecordPath = () => {
                 <Row className='d-flex h1 fw-bold justify-content-center'>
                     {recordPathName}
                 </Row>
+                <Row className='d-flex h3 justify-content-center'>
+                    Click a node to get started!
+                </Row>
                 <Row>
                     {currentRecord}
                 </Row>
