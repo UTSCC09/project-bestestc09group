@@ -18,7 +18,6 @@ const TopTracksArtists = () => {
                 return;
             }
 
-            console.log(artists[0])
             const artist_data = artists.map((artist) => {
                 return {
                     name: artist.name,
@@ -40,8 +39,6 @@ const TopTracksArtists = () => {
             if (err) {
                 return
             }
-
-            console.log(data);
 
             const track_data = data.map((track) => {
                 return {

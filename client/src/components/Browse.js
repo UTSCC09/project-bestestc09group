@@ -28,15 +28,12 @@ const Browse = () => {
     function updateRecordPaths() {
         api.getUserInfo((error, user) => {
           if (error) {
-            console.log(error);
             return;
           }
           api.getRecordPathsMongo(user.id, (error, paths) => {
             if (error) {
-              console.log(error);
               return;
             }
-            console.log(paths.data.recordPaths);
             setRecordPaths(paths.data.recordPaths);
           });
         });
@@ -55,7 +52,6 @@ const Browse = () => {
     }
 
     useEffect(() => {
-        console.log("BROWSE")
         updateRecordPaths();
     }, []);
 

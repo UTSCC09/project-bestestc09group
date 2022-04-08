@@ -15,29 +15,25 @@ const RecordPath = () => {
     const [recordPathName, setRecordPathName] = useState("");
 
     useEffect( () => {
-        console.log("RECORDPATH")
         getNumRecords();
     }, []);
     
     function getNumRecords(){
         api.getUserInfo((error, user) => {
             if (error) {
-                console.log(error);
                 return;
             }
             api.getRecordPathMongo(state.rp_id, (error, path) => {
                 if (error) {
-                    console.log(error);
                     return;
                 }
-                console.log(path.data.recordPath);
+                
                 setRecordPathName(path.data.recordPath.name);
                 api.getRecordsMongo([path.data.recordPath.starting_record], (err, record) => {
                     if (err) {
                         return;
                     }
         
-                    console.log(record.data.records[0]);
                     api.getPlaylistMongo(record.data.records[0].recommendations, (err, playlist) => {
                         if (err) {
                             return
@@ -47,7 +43,6 @@ const RecordPath = () => {
                             if (err) {
                                 return;
                             }
-                            console.log(tracks_data);
                             setCurrentRecord(<RecordContext.Provider value={{records: record.data.records[0]}}>
                                 <RecordPathDetails/>
                             </RecordContext.Provider>)
