@@ -7,6 +7,9 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    depends_on:
+      - api
+      - client
     volumes:
       - ./data/nginx:/etc/nginx/conf.d
       - ./data/certbot/conf:/etc/letsencrypt
@@ -34,5 +37,4 @@ services:
       context: ./client
       dockerfile: Dockerfile.prod
     container_name: client
-    
 

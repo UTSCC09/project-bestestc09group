@@ -58,22 +58,6 @@ app.get('/api/client_info', (req, res) => {
     })
 })
 
-/*
-
-{
-    seed_tracks: 1,2,3,4,5,6,7,8,9,10
-}
-=>
-[
-    {
-        seed_tracks: 1,2,3,4,5
-    },
-    {
-        seed_tracks: 6,7,8,9,10
-    }
-]
-*/
-
 function make_query_without_access_token(json) {
     console.log(json.seed_tracks);
     const seed_track_split = json.seed_tracks.split(',');
@@ -125,17 +109,6 @@ app.get('/api/recommendations', (req, res) => {
             res.status(500).end("uh oh");
         })
 })
-    // axios.get('https://api.spotify.com/v1/recommendations?' + make_query_without_access_token(req.query).substring(1), {
-    //     headers: {
-    //         Authorization: ('Bearer ' + req.query.access_token)
-    //     }
-    // }).then((response) => {
-    //     // console.log(response.data);
-    //     res.status(200).json(response.data)
-    // }).catch((error) => {
-    //     // console.log(error);
-    //     res.status(500).end(error)
-    // })
 
 // Get Playlist Info
 app.get('/api/playlists/:id', (req, res) => {
