@@ -182,8 +182,6 @@ const TuningEdit = ({ tuning, record, tracks }) => {
                         return
                     }
 
-                    const next_record_length = record.next.length;
-
                     // add new record id to previous records next array
                     api.updateRecordNextMongo(record._id, created_record.data.addRecord._id, (err, updated_record) => {
                         if (err) {
