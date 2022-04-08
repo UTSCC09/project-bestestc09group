@@ -10,6 +10,7 @@ import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/esm/Collapse';
 import Modal from 'react-bootstrap/Modal';
 import { Form } from 'react-bootstrap';
+import Alert from 'react-bootstrap/Alert';
 import { Download } from 'react-bootstrap-icons';
 import 'react-tree-graph/dist/style.css'
 import '../css/Record.css';
@@ -17,9 +18,19 @@ import '../css/Record.css';
 const Record = ({record, tracks}) => {
     const [show, setShow] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
     const handleClose = () => setShowModal(false);
     const handleShow = () => setShowModal(true);
     const [name, setName] = useState('');
+
+    function handleSuccess(msg) {
+        // console.log("ERROR: ", msg);
+        setShowSuccess(true);
+    }
+
+    function dismissSuccess() {
+        setShowSuccess(false);
+    }
 
     function savePlaylist(e) {
         e.preventDefault();
@@ -40,6 +51,7 @@ const Record = ({record, tracks}) => {
                 }
 
                 handleClose();
+                handleSuccess();
             })
         })
     }
@@ -63,6 +75,13 @@ const Record = ({record, tracks}) => {
                     <Button variant="danger" onClick={handleClose}>Cancel</Button>
                 </Modal.Footer>
             </Modal>
+            <Row className='d-flex justify-content-center mt-3'>
+                <div className='d-flex justify-content-center mt-3'>
+                    <Alert variant="success" show={showSuccess} onClose={dismissSuccess} dismissible>
+                        <Alert.Heading>Created new Playlist</Alert.Heading>
+                    </Alert>
+                </div>
+            </Row>
             <Container className='d-flex justify-content-center mt-3'>
                 <div className='d-flex w-50 justify-content-evenly'>
                     <Button className="mb-3" onClick={() => setShow(!show)}>Edit Tuning</Button>
