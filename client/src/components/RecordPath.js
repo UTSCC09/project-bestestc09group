@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 /* ----- Styling ----- */
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import Spinner from 'react-bootstrap/Spinner';
 
 export const RecordContext = React.createContext();
 
@@ -13,9 +14,11 @@ const RecordPath = () => {
     const {state} = useLocation();
     const [currentRecord, setCurrentRecord] = useState(null);
     const [recordPathName, setRecordPathName] = useState("");
+    const [loading, setLoading] = useState(false);
 
     useEffect( () => {
         function getNumRecords(){
+            setLoading(true);
             api.getUserInfo((error, user) => {
                 if (error) {
                     return;
@@ -40,6 +43,7 @@ const RecordPath = () => {
                                 if (err) {
                                     return;
                                 }
+                                setLoading(false);
                                 setCurrentRecord(<RecordContext.Provider value={{records: record.data.records[0]}}>
                                     <RecordPathDetails/>
                                 </RecordContext.Provider>)
@@ -52,19 +56,21 @@ const RecordPath = () => {
         getNumRecords();
     }, [state.rp_id]);
     
+    if (loading) {
+        return <Spinner animation="border"/>;
+    } else {
+        return (
+            <Container fluid>
+                <Row className='d-flex h1 fw-bold justify-content-center'>
+                    {recordPathName}
+                </Row>
+                <Row>
+                    {currentRecord}
+                </Row>
+            </Container>
+        );
+    }
 
-
-
-    return (
-        <Container fluid>
-            <Row className='d-flex h1 fw-bold justify-content-center'>
-                {recordPathName}
-            </Row>
-            <Row>
-                {currentRecord}
-            </Row>
-        </Container>
-    );
 }
 
 export default RecordPath;
