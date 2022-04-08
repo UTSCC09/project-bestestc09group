@@ -19,11 +19,34 @@ Users have a lot more control on their recommendations by using our app, as they
 ## Development
 
 **Task:** Leaving deployment aside, explain how the app is built. Please describe the overall code design and be specific about the programming languages, framework, libraries and third-party api that you have used. 
+- **Tech Stack**:
+    - Frontend: React, Bootstrap, Bootstrap-icons, Apollo
+    - Backend: Graphql, ExpressJS, Axios, MongoDB, Mongoose
+    - APIs: Spotify API
+
+- **Frontend**:
+    - The application's UI is built on React and connected to an ExpressJS server with Apollo
+    - Using React Router, the user can navigate the application using client-side routing (smoother UX, no reloading)
+    - React Bootstrap lets us create a more consistent and responsive UI, and a better feeling UX (loading statuses, transitions, animations, etc.)
+    - The main UI elements are organized into React components where states, props, and contexts are used to control the application flow.
+    - Requests to the backend come in the form of GraphQL queries (which we wrapped in convenience functions in client/src/api.js) 
+        - In the same file, we have wrapper functions to send requests directly to the Spotify API (/api route on our server)
+
+- **Backend**: 
+    - The ExpressJS server is connected to MongoDB Atlas using Mongoose
+    - GraphQL is used to transfer data between the client, server, and database
+        - The GraphQL schema dictates the structure of all data from requests/response. This structure is defined in server/schema.js where they exist as GraphQLObject types. 
+        - The Mongoose/MongoDB schema mirrors the GraphQL schema for data stored on the database (playlists, records, recordpaths). This can be found in server/models.js. 
+    - To make calls to the Spotify API we used Axios
+
+- **Misc**:
+    - Several .env files are defined so that sensitive information is not committed on the repository. They also let us differentiate between production and development mode.
 
 ## Deployment
 
 - Deployed on a Digital Ocean Droplet.
 - The app is containerized using docker-compose/docker
+    - Both the frontend and backend are run in a docker container
 - Nginx acts as a reverse proxy and forwards the appropriate requests to the backend/frontend from the server name bestestc09group.ml. 
 - Certbot is used to generate a certificate and validate it with letsencrypt
 
