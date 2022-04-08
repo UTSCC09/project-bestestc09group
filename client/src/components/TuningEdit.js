@@ -9,6 +9,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import Alert from 'react-bootstrap/Alert';
 
 const tooltips = {
     "acousticness": {
@@ -59,7 +60,6 @@ const tooltips = {
     "mode": {
         description: <>Whether the track's modality is minor or major. 0 (minor) or 1 (major)</>,
         max: 1,
-        step: '.001',
         min: 0
     },
     "popularity": {
@@ -75,6 +75,7 @@ const tooltips = {
     },
     "tempo": {
         description: <>Estimated tempo of a track in beats per minute (BPM). Decimal &gt; 0</>,
+        step: '.001',
         min: 0
     },
     "time_signature": {
@@ -92,6 +93,19 @@ const tooltips = {
 
 const TuningEdit = ({ tuning, record, tracks }) => {
     const [tuning_data, setTuningData] = useState(tuning);
+    const [showError, setShowError] = useState(false);
+    const [error, setError] = useState('');
+
+    function handleError(msg) {
+        // console.log("ERROR: ", msg);
+        setShowError(true);
+        setError(msg)
+    }
+
+    function dismissError() {
+        setShowError(false);
+        setError('');
+    }
 
     function handleChange(event) {
         let target = event.target;
@@ -117,6 +131,16 @@ const TuningEdit = ({ tuning, record, tracks }) => {
 
     function getSimilarityTuning() {
         api.getSimilarityTuning(record.rp_id, (error, res) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+
+            if (!res.data.similarity) {
+                handleError("Please like at least one song to Tune by similarity")
+                return;
+            }
+            
             let tuning = {...tuning_data};
             console.log(tuning);
             let sim = res.data.similarity;
@@ -176,11 +200,11 @@ const TuningEdit = ({ tuning, record, tracks }) => {
                 }
 
                 new_tracks = new_tracks.filter((track) => {
-                    return rp_tracks.data.tracks.likes.indexOf(track) == -1;
+                    return rp_tracks.data.tracks.likes.indexOf(track) === -1;
                 })
 
                 new_tracks = new_tracks.filter((track) => {
-                    return rp_tracks.data.tracks.dislikes.indexOf(track) == -1;
+                    return rp_tracks.data.tracks.dislikes.indexOf(track) === -1;
                 })
 
                 api.newPlaylistMongo(new_tracks, (err, created_playlist) => {
@@ -212,11 +236,17 @@ const TuningEdit = ({ tuning, record, tracks }) => {
 
     return (
         <Form onSubmit={handleSubmission} className="border-top pt-3">
+            <Alert variant="danger" show={showError} onClose={dismissError} dismissible>
+                <Alert.Heading>Something went wrong...</Alert.Heading>
+                <p>{error}</p>
+            </Alert>
             <Col className='mb-2'>
                 <Button variant="primary" type="submit">Generate Recommendations</Button>
             </Col>
             <Col className='mb-2'>
-                <Button variant="primary" onClick={getSimilarityTuning}>Tune by similarities</Button>
+                <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={<Tooltip>{"Generates a tuning based on liked songs."}</Tooltip>}>
+                    <Button variant="primary" onClick={getSimilarityTuning}>Tune by similarities</Button>
+                </OverlayTrigger>
             </Col>
             <Row>
                 <Col>

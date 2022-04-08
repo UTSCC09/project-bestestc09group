@@ -64,8 +64,10 @@ const Record = ({record, tracks}) => {
                 </Modal.Footer>
             </Modal>
             <Container className='d-flex justify-content-center mt-3'>
-                <Button className="mb-3" onClick={() => setShow(!show)}>Edit Tuning</Button>
-                <Button className="mb-3" variant="success" onClick={handleShow}>Save <Download /></Button>
+                <div className='d-flex w-50 justify-content-evenly'>
+                    <Button className="mb-3" onClick={() => setShow(!show)}>Edit Tuning</Button>
+                    <Button className="mb-3" variant="success" onClick={handleShow}>Save <Download /></Button>
+                </div>
             </Container>
             <Row>
                 <Collapse in={show} className="w-50">

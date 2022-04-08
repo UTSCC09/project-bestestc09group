@@ -28,7 +28,7 @@ const Track = ({data, liked, disliked, rp_id}) => {
 
     function removeLikedTrack() {
         setLike(false);
-        api.addLikedTrack(rp_id, data.id, (error, rp) => {
+        api.removeLikedTrack(rp_id, data.id, (error, rp) => {
             if (error) return;
         });
     }
