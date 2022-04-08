@@ -211,9 +211,13 @@ const TuningEdit = ({ tuning, record, tracks }) => {
     }
 
     return (
-        <Form className='d-flex justify-content-center flex-column' onSubmit={handleSubmission}>
-            <Button variant="primary" type="submit">Generate New Recommendations</Button>
-            <Button variant="primary" onClick={getSimilarityTuning}>Tune by similarities</Button>
+        <Form onSubmit={handleSubmission} className="border-top pt-3">
+            <Col className='mb-2'>
+                <Button variant="primary" type="submit">Generate Recommendations</Button>
+            </Col>
+            <Col className='mb-2'>
+                <Button variant="primary" onClick={getSimilarityTuning}>Tune by similarities</Button>
+            </Col>
             <Row>
                 <Col>
                     {

@@ -1,4 +1,5 @@
 import { React, useState } from 'react';
+import { api } from '../api';
 
 /* ----- Styling ----- */
 import Container from 'react-bootstrap/Container';
@@ -9,9 +10,9 @@ import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/esm/Collapse';
 import Modal from 'react-bootstrap/Modal';
 import { Form } from 'react-bootstrap';
+import { Download } from 'react-bootstrap-icons';
 import 'react-tree-graph/dist/style.css'
 import '../css/Record.css';
-import { api } from '../api';
 
 const Record = ({record, tracks}) => {
     const [show, setShow] = useState(false);
@@ -62,12 +63,10 @@ const Record = ({record, tracks}) => {
                     <Button variant="danger" onClick={handleClose}>Cancel</Button>
                 </Modal.Footer>
             </Modal>
-            <div className='d-flex justify-content-center mt-3'>
-                <Button className="mb-3 w-25" onClick={handleShow}>Save Playlist to Spotify</Button>
-            </div>
-            <div className='d-flex justify-content-center mt-3'>
-                <Button className="mb-3 w-25" onClick={() => setShow(!show)}>Edit Tuning</Button>
-            </div>
+            <Container className='d-flex justify-content-center mt-3'>
+                <Button className="mb-3" onClick={() => setShow(!show)}>Edit Tuning</Button>
+                <Button className="mb-3" variant="success" onClick={handleShow}>Save <Download /></Button>
+            </Container>
             <Row>
                 <Collapse in={show} className="w-50">
                     <Container fluid>
