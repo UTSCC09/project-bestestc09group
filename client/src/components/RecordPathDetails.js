@@ -82,13 +82,13 @@ const RecordPathDetails = () => {
         <Container fluid>
             <div id='tree_container' className='d-flex'>
                 <Tree 
-                    svgProps={{style: {"minWidth": (node_count*75), "marginLeft": '20px', overflow: 'visible'}}}
+                    svgProps={{style: {"minWidth": (node_count*150), "marginLeft": '20px', overflow: 'visible'}}}
                     gProps={{
                         onClick: handleClick
                     }}
                     keyProp="id"
                     data={data_for_tree}
-                    width={node_count*75}
+                    width={node_count*150}
                     height={400}
                 />
             </div>
