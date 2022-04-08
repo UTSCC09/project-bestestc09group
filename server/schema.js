@@ -26,12 +26,12 @@ const defaultTuning = {
     instrumentalness: {min: 0.0, max: 1.0, target: 0.5},
     key: {min: 0, max: 11, target: 6},
     liveness: {min: 0.0, max: 1.0, target: 0.5},
-    loudness: {min: -24, max: 0, target: -14}, // Measured in LUFS ~ DB, -14 is what spotify targets
+    loudness: {min: -70, max: 0, target: -25}, 
     mode: {min: 0, max: 1, target: 1},
     popularity: {min: 0, max: 100, target: 50},
     speechiness: {min: 0.0, max: 1.0, target: 0.5},
     tempo: {min: 0, max: 300, target: 120},
-    time_signature: {min: 3, max: 7, target: 4}, // Measured x/4 (e.g. 7/4 time signature)
+    time_signature: {min: 3, max: 7, target: 4},
     valence: {min: 0.0, max: 1.0, target: 0.5}
 }
 
