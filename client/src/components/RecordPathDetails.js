@@ -1,4 +1,4 @@
-import { React, useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 /* ----- Styling ----- */
 import Container from 'react-bootstrap/Container';
@@ -9,6 +9,8 @@ import 'react-tree-graph/dist/style.css'
 import '../css/Record.css';
 import { api } from '../api';
 
+export const UpdateRecordContext = React.createContext();
+
 const RecordPathDetails = () => {
     const record = useContext(RecordContext).records;
     let data_tree = {};
@@ -16,6 +18,7 @@ const RecordPathDetails = () => {
     const [data_for_tree, setDataForTree] = useState({});
     const [node_count, setNodeCount] = useState(0);
     const [selected_record, setSelectedRecord] = useState(null);
+    const [update, setUpdate] = useState(false);
 
     useEffect(() => {
         api.getRecordsByRPID(record.rp_id, (err, rp_records) => {
@@ -33,7 +36,7 @@ const RecordPathDetails = () => {
             setNodeCount(Object.keys(data_tree).length);
             setDataForTree(getGraph(record._id));
         })
-    }, [])
+    }, [update])
 
     function getGraph(root) {
         let temp = {};
@@ -72,7 +75,11 @@ const RecordPathDetails = () => {
                         return;
                     }
                     
-                    setSelectedRecord(<Record record={doc.data.records[0]} tracks={tracks_data}/>)
+                    setSelectedRecord(
+                        <UpdateRecordContext.Provider value={{update: update, setUpdate: setUpdate}}>
+                            <Record record={doc.data.records[0]} tracks={tracks_data}/>
+                        </UpdateRecordContext.Provider>
+                    );
                 })
             })
         })
