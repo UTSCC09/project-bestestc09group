@@ -24,7 +24,7 @@ const tooltips = {
         min: 0
     },
     "duration_ms": {
-        description: <>Duration of a track in milliseconds. Number > 0</>,
+        description: <>Duration of a track in milliseconds. Number &gt; 0</>,
         min: 0
     },
     "energy": {
@@ -53,7 +53,7 @@ const tooltips = {
     "loudness": {
         description: <>How loud a track is on average, measured in decibels (dB). Number typically &ge; -60, &le; 0</>,
         max: 0,
-        min: -60
+        min: -70
     },
     "mode": {
         description: <>Whether the track's modality is minor or major. 0 (minor) or 1 (major)</>,
@@ -73,7 +73,7 @@ const tooltips = {
         min: 0
     },
     "tempo": {
-        description: <>Estimated tempo of a track in beats per minute (BPM). Decimal > 0</>,
+        description: <>Estimated tempo of a track in beats per minute (BPM). Decimal &gt; 0</>,
         min: 0
     },
     "time_signature": {
