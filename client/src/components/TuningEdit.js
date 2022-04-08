@@ -14,7 +14,7 @@ const tooltips = {
     "acousticness": {
         description: <>How acoustic a track is. Decimal &ge;0, &le;1</>,
         max: 1,
-        step: '.1',
+        step: '.001',
         min: 0
     },
     "danceability": {
@@ -69,7 +69,7 @@ const tooltips = {
     "speechiness": {
         description: <>How much of a track is spoken words. Decimal &ge; 0, &le; 1</>,
         max: 1,
-        step: '.1',
+        step: '.01',
         min: 0
     },
     "tempo": {

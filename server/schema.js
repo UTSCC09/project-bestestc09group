@@ -1,5 +1,6 @@
 const graphql = require('graphql');
 const models = require('./models');
+const axios = require('axios');
 const Playlist = models.Playlist;
 const Record = models.Record;
 const RecordPath = models.RecordPath;
@@ -146,6 +147,25 @@ const TuningType = new GraphQLObjectType({
         tempo: { type: TuningFloatType },
         time_signature: { type: TuningIntType },
         valence: { type: TuningFloatType },
+    })
+});
+
+const TuningTargetType = new GraphQLObjectType({
+    name: 'TuningTarget',
+    fields: () => ({
+        acousticness: { type: GraphQLFloat },
+        danceability: { type: GraphQLFloat },
+        duration_ms: { type: GraphQLInt },
+        energy: { type: GraphQLFloat },
+        instrumentalness: { type: GraphQLFloat },
+        key: { type: GraphQLInt },
+        liveness: { type: GraphQLFloat },
+        loudness: { type: GraphQLFloat },
+        mode: { type: GraphQLInt },
+        speechiness: { type: GraphQLFloat },
+        tempo: { type: GraphQLFloat },
+        time_signature: { type: GraphQLInt },
+        valence: { type: GraphQLFloat},
     })
 });
 
@@ -522,10 +542,71 @@ const RootQuery = new GraphQLObjectType({
             },
             resolve(parent, args) {
                 const result = RecordPath.findOne({_id: args.record_path})
-                    .then((doc)=>{
+                    .then((doc) => {
                         const tracks = { likes: doc.likes, dislikes: doc.dislikes};
                         console.log(tracks);
                         return tracks;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+                return result;
+            }
+        },
+        similarity: {
+            type: TuningTargetType,
+            args: {
+                record_path: { type: GraphQLID },
+                access_token: { type: GraphQLString }
+            },
+            resolve(parent, args) {
+                const result = RecordPath.findOne({_id: args.record_path})
+                    .then((doc) => {
+                        const tracks = doc.likes.join(",");
+                        console.log(tracks);
+                        const response = axios.get('https://api.spotify.com/v1/audio-features?ids=' + tracks, {
+                            headers: {
+                                Authorization: ('Bearer ' + args.access_token)
+                            }
+                        })
+                        return response;
+                    })
+                    .then((response) => {
+                        const tunings = response.data.audio_features;
+                        tunings.forEach(x => {
+                            delete x.id;
+                            delete x.uri;
+                            delete x.track_href;
+                            delete x.analysis_url;
+                            delete x.type;
+                        });
+                        
+                        console.log('1', tunings);
+
+
+                        const sum = tunings.reduce((prev, cur, index, array) => {
+                            Object.keys(cur).forEach(key => {
+                                cur[key] += prev[key];
+                            });
+                            return cur
+                        });
+                        console.log('2',sum);
+                        const num_tunings = tunings.length;
+                        console.log('3',num_tunings);
+                        Object.keys(sum).forEach(key => {
+                            sum[key] = sum[key]/num_tunings;
+
+                            // Round to 3 decimal places
+                            sum[key] = Math.round(sum[key] * 1000) / 1000;
+                        });
+
+                        sum['mode'] = Math.ceil(sum['mode']);
+                        sum['duration_ms'] = Math.ceil(sum['duration_ms']);
+                        sum['time_signature'] = Math.ceil(sum['time_signature']);
+                        sum['key'] = Math.ceil(sum['key']);
+
+                        console.log('4',sum);
+                        return sum;
                     })
                     .catch((err) => {
                         console.log(err);
