@@ -22,6 +22,7 @@ require("dotenv").config();
 
 const cookie = require('cookie');
 const { User, Playlist, Track, Record, Tuning } = require("./models");
+const { renderGraphiQL } = require("express-graphql/renderGraphiQL");
 
 var app = express();
 
@@ -206,6 +207,49 @@ app.get('/api/user', (req, res) => {
         headers: {
             Authorization: ('Bearer ' + req.query.access_token)
         }
+    }).then((response) => {
+        console.log(response);
+        res.status(200).json(response.data)
+    }).catch((error) => {
+        console.log(error);
+        res.status(error.response.status).end(error.response.statusText);
+    })
+})
+
+// Add tracks to playlist
+app.post('/api/playlists/tracks', (req, res) => {
+    axios('https://api.spotify.com/v1/playlists/' + req.body.playlist_id + '/tracks', {
+        method: 'POST',
+        headers: {
+            'Authorization' : 'Bearer ' + req.query.access_token,
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            uris: req.body.tracks,
+        })
+    }).then((response) => {
+        console.log(response);
+        res.status(200).json(response.data)
+    }).catch((error) => {
+        console.log(error);
+        res.status(error.response.status).end(error.response.statusText);
+    })
+})
+
+// Create new playlist
+app.post('/api/playlists', (req, res) => {
+    console.log('https://api.spotify.com/v1/users/' + req.body.user_id + "/playlists");
+    console.log(req.body.name);
+
+    axios('https://api.spotify.com/v1/users/' + req.body.user_id + '/playlists', {
+        method: 'POST',
+        headers: {
+            'Authorization' : 'Bearer ' + req.query.access_token,
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            name: req.body.name,
+        })
     }).then((response) => {
         console.log(response);
         res.status(200).json(response.data)

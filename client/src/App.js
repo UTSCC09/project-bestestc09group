@@ -103,7 +103,7 @@ function App() {
   }
 
   function handleAuthorization() {
-    const scope = 'user-read-private user-read-email user-top-read playlist-read-collaborative playlist-read-private';
+    const scope = 'user-read-private user-read-email user-top-read playlist-read-collaborative playlist-read-private playlist-modify-public playlist-modify-private';
     api.getClientInfo((error, client_info) => {
       client_id = client_info.id;
       client_secret = client_info.secret;
@@ -127,6 +127,7 @@ function App() {
         setAuth(false);
         return false;
       }
+      sessionStorage.setItem('user_id', data.id)
       setAuth(true);
       return true;
     });

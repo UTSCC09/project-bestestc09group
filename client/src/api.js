@@ -625,6 +625,20 @@ let api = (function () {
         send("GET", server_url + "/api/top_artists?access_token=" + sessionStorage.getItem('access_token'), null, callback);
     }
 
+    module.createPlaylist = function(name, callback) {
+        send("POST", server_url + "/api/playlists?access_token=" + sessionStorage.getItem('access_token'), {
+            name: name,
+            user_id: sessionStorage.getItem('user_id')
+        }, callback);
+    }
+
+    module.addTracksToPlaylist = function(tracks, playlist_id, callback) {
+        send("POST", server_url + "/api/playlists/tracks?access_token=" + sessionStorage.getItem('access_token'), {
+            tracks: tracks,
+            playlist_id: playlist_id
+        }, callback);
+    }
+
     return module;
 })();
 
