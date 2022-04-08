@@ -12,6 +12,7 @@ import Button from 'react-bootstrap/Button';
 import RecordPathCard from './RecordPathCard';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
+import Spinner from 'react-bootstrap/Spinner';
 
 const Browse = () => {
     
@@ -23,6 +24,7 @@ const Browse = () => {
     const [recordPaths, setRecordPaths] = useState([]);
     const [showError, setShowError] = useState(false);
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false); 
 
     function handleError(msg) {
         console.log("ERROR: ", msg);
@@ -47,6 +49,7 @@ const Browse = () => {
     }
 
     function updateRecordPaths() {
+        setLoading(true);
         api.getUserInfo((error, user) => {
           if (error) {
             return;
@@ -56,6 +59,7 @@ const Browse = () => {
               return;
             }
             setRecordPaths(paths.data.recordPaths);
+            setLoading(false);
           });
         });
     }
@@ -110,7 +114,8 @@ const Browse = () => {
                             </Card.Body>
                         </Card>
                     </Col>
-                    {recordPaths.map((data) => {
+                    {loading? <Spinner animation="border"/> :
+                    recordPaths.map((data) => {
                         return (
                             <Col sm="3" key={data.name}>
                                 <RecordPathCard title={data.name} date={data.updatedAt} rp_id={data._id} handleDelete={deleteRP(data._id)}/>
