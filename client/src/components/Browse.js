@@ -11,18 +11,39 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import RecordPathCard from './RecordPathCard';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 
 const Browse = () => {
+    
+    const navigate = useNavigate();
+
+    /* States */
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
     const [name, setName] = useState('');
     const [recordPaths, setRecordPaths] = useState([]);
-    const navigate = useNavigate();
+    const [showError, setShowError] = useState(false);
+    const [error, setError] = useState('');
+
+    function handleError(msg) {
+        console.log("ERROR: ", msg);
+        setShowError(true);
+        setError(msg)
+    }
+
+    function dismissError() {
+        setShowError(false);
+        setError('');
+    }
 
     function navigateCreatePage(e) {
         e.preventDefault();
-        navigate("/create", { state: {name: name}})
+        let record_path = recordPaths.find(rp => rp.name === name);
+        if (record_path === undefined)
+            navigate("/create", { state: {name: name}})
+        else {
+            setShow(false);
+            handleError("Record path with name: " + name + " already exists");
+        }
     }
 
     function updateRecordPaths() {
@@ -57,7 +78,11 @@ const Browse = () => {
 
     return (
         <>
-            <Modal show={show} onHide={handleClose}>
+            <Alert variant="danger" show={showError} onClose={dismissError} dismissible>
+                <Alert.Heading>Something went wrong...</Alert.Heading>
+                <p>{error}</p>
+            </Alert>
+            <Modal show={show} onHide={() => setShow(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Create new Discover Record</Modal.Title>
                 </Modal.Header>
@@ -71,16 +96,17 @@ const Browse = () => {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={handleClose}>Cancel</Button>
+                    <Button variant="danger" onClick={() => setShow(false)}>Cancel</Button>
                 </Modal.Footer>
             </Modal>
             <Container fluid>
                 <Row>
                     <Col sm="3">
-                        <Card onClick={handleShow}>
+                        <Card onClick={() => setShow(true)}>
                             <Card.Body>
                                 <Card.Title>Create New</Card.Title>
                                 <Card.Text>Add a new Discovery Record</Card.Text>
+                                <Button onClick={() => setShow(true)}>Create</Button>
                             </Card.Body>
                         </Card>
                     </Col>
