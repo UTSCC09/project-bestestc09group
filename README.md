@@ -10,7 +10,11 @@ bestestc09group.ml
 
 ## Project Description
 
-**Task:** Provide a detailed description of your app
+Our app "Spotify Recommendations" allows users to view their statistics and also generate recommendations using their created playlists. 
+
+For their statistics, users are able to view their top tracks and their top artists, as well as different visualizations for them such as Popularity, Genres, and Time Period.
+
+Users have a lot more control on their recommendations by using our app, as they can fine tune each audio feature to their preferences. They can also view how their preferences have changed over time by visiting the different nodes on their Discovery Record Timeline, these nodes contain information regarding what audio features were used to generate the recommendations as well as the recommendations themselves. In addition to being able to manually tune individual audio features, users can also choose to generate audio features based on their liked tracks. After having generated their recommendations, users are able to listen to individual tracks by expanding their title cards, or they can choose to save the playlist to their spotify account. 
 
 ## Development
 
