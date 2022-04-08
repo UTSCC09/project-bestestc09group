@@ -10,6 +10,7 @@ import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Alert from 'react-bootstrap/Alert';
+import Spinner from 'react-bootstrap/Spinner';
 
 const tooltips = {
     "acousticness": {
@@ -95,6 +96,7 @@ const TuningEdit = ({ tuning, record, tracks }) => {
     const [tuning_data, setTuningData] = useState(tuning);
     const [showError, setShowError] = useState(false);
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     function handleError(msg) {
         // console.log("ERROR: ", msg);
@@ -157,6 +159,7 @@ const TuningEdit = ({ tuning, record, tracks }) => {
 
     function handleSubmission(event) {
         event.preventDefault();
+        setLoading(true);
 
         // let seed_artists = tracks.map((track) => {
         //     return track.artists[0].id;
@@ -225,8 +228,8 @@ const TuningEdit = ({ tuning, record, tracks }) => {
                                 console.log(err);
                                 return;
                             }
-
-                            window.location.reload();
+                            setLoading(false);
+                            // window.location.reload();
                         })
                     })
                 })
@@ -241,7 +244,7 @@ const TuningEdit = ({ tuning, record, tracks }) => {
                 <p>{error}</p>
             </Alert>
             <Col className='mb-2'>
-                <Button variant="primary" type="submit">Generate Recommendations</Button>
+                <Button variant="primary" type="submit">{loading? <Spinner animation="border"/> : "Generate Recommendations"}</Button>
             </Col>
             <Col className='mb-2'>
                 <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={<Tooltip>{"Generates a tuning based on liked songs."}</Tooltip>}>

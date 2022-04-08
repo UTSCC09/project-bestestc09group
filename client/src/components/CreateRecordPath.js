@@ -5,19 +5,23 @@ import { useLocation, useNavigate } from 'react-router-dom';
 /* ----- Styling ----- */
 import Container from 'react-bootstrap/esm/Container';
 import Card from 'react-bootstrap/Card';
+import Spinner from 'react-bootstrap/Spinner';
 
 const CreateRecordPath = () => {
     const {state} = useLocation();
     const [playlists, setPlaylists] = useState([]);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     function renderPlaylists() {
+        setLoading(true);
         api.getUserPlaylists((error, data) => {
             if (error) {
                 console.log(error);
                 return;
             }
             setPlaylists(data);
+            setLoading(false);
         });
     }
 
@@ -83,7 +87,7 @@ const CreateRecordPath = () => {
 
     return (
         <Container fluid>
-            {playlists.map((data) => {
+            {loading? <Spinner animation="border"/> : playlists.map((data) => {
                 return (
                     <Card className="mb-3" key={data.name} onClick={() => addPath(data.id)}>
                         <Card.Body>
