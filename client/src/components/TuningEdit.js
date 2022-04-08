@@ -168,27 +168,42 @@ const TuningEdit = ({ tuning, record, tracks }) => {
 
             new_tracks = [...new Set(new_tracks)]
 
-            // using recommendations create mongo playlist object
-            api.newPlaylistMongo(new_tracks, (err, created_playlist) => {
+            api.getRPTracks(record.rp_id, (err, rp_tracks) => {
+                // using recommendations create mongo playlist object
                 if (err) {
                     console.log(err);
                     return;
                 }
 
-                // make a new record with the created playlist and tuning data
-                api.newRecordMongo(record._id, tuning_data, created_playlist.data.addPlaylist._id, record.rp_id, (err, created_record) => {
+                new_tracks = new_tracks.filter((track) => {
+                    return rp_tracks.data.tracks.likes.indexOf(track) == -1;
+                })
+
+                new_tracks = new_tracks.filter((track) => {
+                    return rp_tracks.data.tracks.dislikes.indexOf(track) == -1;
+                })
+
+                api.newPlaylistMongo(new_tracks, (err, created_playlist) => {
                     if (err) {
-                        return
+                        console.log(err);
+                        return;
                     }
 
-                    // add new record id to previous records next array
-                    api.updateRecordNextMongo(record._id, created_record.data.addRecord._id, (err, updated_record) => {
+                    // make a new record with the created playlist and tuning data
+                    api.newRecordMongo(record._id, tuning_data, created_playlist.data.addPlaylist._id, record.rp_id, (err, created_record) => {
                         if (err) {
-                            console.log(err);
-                            return;
+                            return
                         }
 
-                       window.location.reload();
+                        // add new record id to previous records next array
+                        api.updateRecordNextMongo(record._id, created_record.data.addRecord._id, (err, updated_record) => {
+                            if (err) {
+                                console.log(err);
+                                return;
+                            }
+
+                            window.location.reload();
+                        })
                     })
                 })
             })
