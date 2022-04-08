@@ -10,7 +10,7 @@ bestestc09group.ml
 
 ## Project Description
 
-Our app "Spotify Recommendations" allows users to view their statistics and also generate recommendations using their created playlists. 
+Our app "Spotify Recommendations" allows users to view their spotify statistics and also generate recommendations using their created playlists. 
 
 For their statistics, users are able to view their top tracks and their top artists, as well as different visualizations for them such as Popularity, Genres, and Time Period.
 
