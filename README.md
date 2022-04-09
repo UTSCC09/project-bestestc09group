@@ -71,7 +71,10 @@ Users have a lot more control on their recommendations by using our app, as they
 **Mitravasu Prakash**:
 
 **Daniel Chua**:
-- 
+- Deployment
+- Some GraphQL/Spotify queries (deleting record paths, getting likes/dislikes, etc)
+- Some UI elements (Browsing Record Path, Header, Tuning Editing, etc.)
+
 
 # Note
 
