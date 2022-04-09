@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { UpdateRecordContext } from './RecordPathDetails';
 import { api } from '../api';
 
@@ -99,7 +99,7 @@ const TuningEdit = ({ tuning, record, tracks }) => {
     const [loading, setLoading] = useState(false);
     const [seeded, setSeeded] = useState(true);
     const { update, setUpdate } = useContext(UpdateRecordContext);
-
+    let updated = useRef(update);
 
     function handleError(msg) {
         setShowError(true);
@@ -226,7 +226,8 @@ const TuningEdit = ({ tuning, record, tracks }) => {
                                 return;
                             }
                             setLoading(false);
-                            setUpdate(!update);
+                            updated.current = !updated.current;
+                            setUpdate(updated.current);
                         })
                     })
                 })
