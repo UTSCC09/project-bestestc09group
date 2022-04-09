@@ -49,6 +49,7 @@ Users have a lot more control on their recommendations by using our app, as they
     - Both the frontend and backend are run in a docker container
 - Nginx acts as a reverse proxy and forwards the appropriate requests to the backend/frontend from the server name bestestc09group.ml
 - Certbot is used to generate a certificate and validate it with letsencrypt for https access
+- Images are stored on a Digital Ocean Container Registry
 
 ## Maintenance
 
@@ -61,11 +62,16 @@ Users have a lot more control on their recommendations by using our app, as they
 
 1. Configuring docker, docker-compose, nginx, and letsencrypt for deployment
 2. Learning GraphQL/setting up the schema to work with the Mongoose schemas. 
-3. 
+3. Learning/Using more complicated React hooks
 
 ## Contributions
 
 **Task:** Describe the contribution of each team member to the project. Please provide the full name of each team member (but no student number). 
+
+**Mitravasu Prakash**:
+
+**Daniel Chua**:
+- 
 
 # Note
 
