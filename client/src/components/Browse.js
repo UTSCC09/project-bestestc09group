@@ -40,6 +40,11 @@ const Browse = () => {
     function navigateCreatePage(e) {
         e.preventDefault();
         let record_path = recordPaths.find(rp => rp.name === name);
+        if (!name) {
+            handleError("Cannot have a blank name");
+            setShow(false);
+            return;
+        }
         if (record_path === undefined)
             navigate("/create", { state: {name: name}})
         else {

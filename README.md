@@ -2,7 +2,7 @@
 
 ## Project URL
 
-bestestc09group.ml
+bestestc09group.ml (**Please read the note at the bottom of the README**)
 
 ## Project Video URL 
 
@@ -47,26 +47,29 @@ Users have a lot more control on their recommendations by using our app, as they
 - Deployed on a Digital Ocean Droplet.
 - The app is containerized using docker-compose/docker
     - Both the frontend and backend are run in a docker container
-- Nginx acts as a reverse proxy and forwards the appropriate requests to the backend/frontend from the server name bestestc09group.ml. 
-- Certbot is used to generate a certificate and validate it with letsencrypt
+- Nginx acts as a reverse proxy and forwards the appropriate requests to the backend/frontend from the server name bestestc09group.ml
+- Certbot is used to generate a certificate and validate it with letsencrypt for https access
 
 ## Maintenance
 
-**Task:** Explain how you monitor your deployed app to make sure that everything is working as expected.
+- We can monitor the machine that the application is deployed on with Digital Ocean's dashboard
+- We can monitor the application itself with ssh
 
 ## Challenges
 
 **Task:** What is the top 3 most challenging things that you have learned/developed for you app? Please restrict your answer to only three items. 
 
-1.
-2.
+1. Configuring docker, docker-compose, nginx, and letsencrypt for deployment
+2. Learning GraphQL/setting up the schema to work with the Mongoose schemas. 
 3. 
 
 ## Contributions
 
 **Task:** Describe the contribution of each team member to the project. Please provide the full name of each team member (but no student number). 
 
-# One more thing? 
+# Note
 
-**Task:** Any additional comment you want to share with the course staff? 
+- Our request for extended quota mode in the Spotify API is still pending, so in order to access the application the user's email must be added in the Spotify Developer Dashboard.
+- All TA emails (from the course website) are added to the app for access
+- Please contact danielkchua@gmail.com to add an existing Spotify account to the app or if you want to use an account that we set up for testing.
 
