@@ -253,6 +253,17 @@ const TuningEdit = ({ tuning, record, tracks }) => {
             </OverlayTrigger>
             <Row>
                 <Col>
+                    <h4>Min</h4>
+                </Col>
+                <Col>
+                    <h4>Target</h4>
+                </Col>
+                <Col>
+                    <h4>Max</h4>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
                     {
                         Object.keys(tuning_data).map((key) => {
                             return <Form.Group key={key} className="mb-3" controlId={"form" + key}>
