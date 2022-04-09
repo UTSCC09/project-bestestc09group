@@ -69,6 +69,10 @@ Users have a lot more control on their recommendations by using our app, as they
 **Task:** Describe the contribution of each team member to the project. Please provide the full name of each team member (but no student number). 
 
 **Mitravasu Prakash**:
+- GraphQL/Spotify queries
+- UI Elements, such as the Node graph, the track cards, etc.
+- Data visualizations and top tracks/artists
+- Log in/Log out
 
 **Daniel Chua**:
 - Deployment
