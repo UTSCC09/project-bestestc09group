@@ -83,6 +83,4 @@ Users have a lot more control on their recommendations by using our app, as they
 # Note
 
 - Our request for extended quota mode in the Spotify API is still pending, so in order to access the application the user's email must be added in the Spotify Developer Dashboard.
-- All TA emails (from the course website) are added to the app for access
-- Please contact danielkchua@gmail.com to add an existing Spotify account to the app or if you want to use an account that we set up for testing.
 
